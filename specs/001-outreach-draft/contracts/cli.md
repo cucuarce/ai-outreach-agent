@@ -4,7 +4,7 @@
 
 ```text
 outreach generar --empresa RUTA|- --perfil RUTA [--idioma CODIGO] [--modelo NOMBRE]
-                 [--ollama-host URL] [--timeout SEG] [--reintentos N]
+                 [--ollama-host URL] [--timeout SEG] [--num-ctx TOKENS] [--reintentos N]
                  [--registros DIR] [--json]
 ```
 
@@ -13,7 +13,7 @@ outreach generar --empresa RUTA|- --perfil RUTA [--idioma CODIGO] [--modelo NOMB
 | `--empresa` | sí | Archivo de texto UTF-8 con el texto de la empresa; `-` lee de stdin. |
 | `--perfil` | sí | Archivo de texto UTF-8 con el perfil del usuario. |
 | `--idioma` | no | `es`, `en`, `pt`, `fr`, `de` o `it`. Fuerza el idioma del borrador (FR-018). |
-| `--modelo`, `--ollama-host`, `--timeout`, `--reintentos`, `--registros` | no | Ver research R9 (flag > variable de entorno > default). |
+| `--modelo`, `--ollama-host`, `--timeout`, `--num-ctx`, `--reintentos`, `--registros` | no | Ver research R9 (flag > variable de entorno > default). |
 | `--json` | no | Imprime el `Resultado` como JSON en stdout en lugar del formato legible. |
 
 No existe ningún flag ni subcomando para enviar mensajes ni para elegir Bedrock (principios III y
@@ -51,4 +51,4 @@ El objeto `Resultado` de `data-model.md`, serializado con claves en español y `
 | 2 | Uso incorrecto: falta `--empresa` o `--perfil`, archivo inexistente, idioma no soportado (FR-017). No se ejecuta el grafo ni se crea registro. |
 | 3 | `insuficiente` (FR-009, FR-010) |
 | 4 | `invalido`: no se logró un borrador válido tras los reintentos (FR-011) |
-| 5 | `error`: proveedor no disponible o respuesta del LLM inválida |
+| 5 | `error`: proveedor no disponible, contexto excedido (`--num-ctx` insuficiente) o respuesta del LLM inválida |

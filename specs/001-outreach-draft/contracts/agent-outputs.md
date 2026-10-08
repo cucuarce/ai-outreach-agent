@@ -11,13 +11,15 @@ reintenta una vez con el mensaje de error; si vuelve a fallar → `error` /
 `<<<FIN_EMPRESA_{nonce}>>>` (research R3).
 
 **Responsabilidad única**: extraer datos concretos y verificables de la empresa. No conoce el
-perfil ni redacta.
+perfil ni redacta. El `ancla` de cada hecho debe ser un elemento que no se traduce (nombre
+propio, cifra o término técnico) presente en la cita; si es una cifra, solo los dígitos tal como
+aparecen ("2", no "2 millones") (research R5).
 
 ```json
 {
   "hechos": [
     {"id": "H1", "descripcion": "string", "cita": "string literal del texto",
-     "ancla": "string contenido en cita", "ancla_traducible": false}
+     "ancla": "elemento que no se traduce, contenido en cita"}
   ],
   "instrucciones_detectadas": ["string"]
 }
@@ -25,7 +27,7 @@ perfil ni redacta.
 
 ## Estratega
 
-**Recibe (`user`)**: los hechos verificados (`id`, `descripcion`, `cita`, `ancla`) como JSON, el
+**Recibe (`user`)**: de cada hecho verificado solo `id`, `cita` y `ancla` (nunca `descripcion`) como JSON, el
 perfil del usuario y el idioma objetivo. Nunca el texto crudo de la empresa.
 
 **Responsabilidad única**: elegir el enfoque, los hechos a usar y los puntos del perfil que se
@@ -35,7 +37,8 @@ conectan con ellos. No redacta el mensaje.
 {
   "angulo": "string",
   "hechos_elegidos": ["H1", "H3"],
-  "puntos_perfil": [{"id": "P1", "descripcion": "string", "cita": "string literal del perfil"}],
+  "puntos_perfil": [{"id": "P1", "descripcion": "string", "cita": "string literal del perfil",
+                     "ancla": "elemento que no se traduce, contenido en cita"}],
   "conexiones": [{"hecho_id": "H1", "punto_id": "P1", "razon": "string"}]
 }
 ```
@@ -44,7 +47,8 @@ conectan con ellos. No redacta el mensaje.
 
 **Recibe (`user`)**: la estrategia verificada, los hechos elegidos, el idioma objetivo, los
 límites de longitud y, en reintentos, la lista de fallos del intento anterior
-(`[{criterio, detalle}]`). Nunca el texto crudo de la empresa.
+(`[{criterio, detalle}]`). De los hechos recibe solo `id`, `cita` y `ancla`. Nunca el texto crudo
+de la empresa ni la `descripcion` de los hechos.
 
 **Responsabilidad única**: escribir el mensaje según la estrategia.
 
@@ -55,6 +59,19 @@ límites de longitud y, en reintentos, la lista de fallos del intento anterior
   "puntos_usados": ["P1"]
 }
 ```
+
+## Límite de tokens de salida (`max_tokens`)
+
+Cada agente llama al proveedor con su propio `max_tokens` (en Ollama, `options.num_predict`):
+
+| Agente | Default | Variable de entorno |
+|--------|---------|---------------------|
+| Investigador | 2000 | `OUTREACH_MAX_TOKENS_INVESTIGADOR` |
+| Estratega | 1200 | `OUTREACH_MAX_TOKENS_ESTRATEGA` |
+| Redactor | 800 | `OUTREACH_MAX_TOKENS_REDACTOR` |
+
+Los valores viven en `Config` (research R9). Una respuesta cortada por el límite produce un JSON
+inválido y sigue la regla general: un reintento y después `error`/`respuesta_invalida_llm`.
 
 ## Reglas del system prompt comunes a los tres agentes
 

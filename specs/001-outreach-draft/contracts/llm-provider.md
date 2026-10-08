@@ -15,7 +15,8 @@ class LLMProvider(Protocol):
     ) -> str: ...
 
 class ProviderError(Exception):
-    """Fallo del proveedor: red, timeout, respuesta vacía o mal formada."""
+    """Fallo del proveedor: red, timeout, respuesta vacía o mal formada, contexto excedido."""
+    motivo: str  # "proveedor_no_disponible" (default) | "contexto_excedido"
 ```
 
 ## Reglas comunes
@@ -30,11 +31,17 @@ class ProviderError(Exception):
 
 ## OllamaProvider
 
-- Constructor: `OllamaProvider(modelo: str, host: str, timeout_s: float)`.
+- Constructor: `OllamaProvider(modelo: str, host: str, timeout_s: float, num_ctx: int)`.
 - Petición: `POST {host}/api/chat`, cuerpo:
   `{"model": modelo, "messages": [{"role":"system","content":system},{"role":"user","content":user}],
   "stream": false, "format": "json" (solo si json=True), "options": {"temperature": temperatura,
-  "num_predict": max_tokens}}`.
+  "num_predict": max_tokens, "num_ctx": num_ctx}}`.
+- **Control previo**: antes de enviar, se calcula `estimado = self._estimar_tokens(system, user)`
+  (= `(len(system) + len(user)) / 3`). Si `estimado > 0,85 × num_ctx` o
+  `estimado + max_tokens > num_ctx`, no se hace la petición y se lanza `ProviderError` con
+  motivo `contexto_excedido` y un mensaje que sugiere subir `--num-ctx` (research R4).
+- **Control posterior**: si la respuesta trae `prompt_eval_count ≥ 0,95 × num_ctx`, se asume que
+  Ollama recortó el prompt → el mismo `ProviderError` con motivo `contexto_excedido`.
 - Respuesta: `message.content`. Conexión rechazada → `ProviderError` con un mensaje que indica
   iniciar Ollama (`ollama serve`) y descargar el modelo (`ollama pull <modelo>`).
 

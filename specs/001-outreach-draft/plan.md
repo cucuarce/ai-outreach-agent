@@ -36,7 +36,8 @@ fixture que bloquea sockets (research R10).
 laptop sin GPU dedicada, una ejecución debería terminar en pocos minutos. Timeout por llamada
 configurable (default 180 s).
 
-**Constraints**: sin cuenta real de AWS; sin red en los tests; sin scraping ni APIs de terceros;
+**Constraints**: textos largos sin recorte silencioso (`num_ctx` configurable, default 16384;
+research R4); sin cuenta real de AWS; sin red en los tests; sin scraping ni APIs de terceros;
 sin envío de mensajes; máximo 3 intentos de redacción por defecto.
 
 **Scale/Scope**: un usuario, una ejecución a la vez; textos de entrada de hasta unas pocas
@@ -70,7 +71,7 @@ START → preparar_entrada ─(vacío / idioma indeterminado)→ END [insuficien
             ↓
         investigador* → verificar_hechos ─(< 2 hechos válidos)→ END [insuficiente]
                               ↓
-                          estratega* → verificar_estrategia ─(0 conexiones)→ END [insuficiente]
+                          estratega* → verificar_estrategia ─(0 puntos o 0 conexiones)→ END [insuficiente]
                                              ↓
                                          redactor* → validar_borrador ─(ok)→ END [borrador]
                                              ↑              ├─(falla, intento ≤ max)→ redactor*
@@ -94,10 +95,11 @@ Resumen; la justificación completa está en research R3.
   delimitadores con un nonce aleatorio por ejecución y saneado de `<<<`/`>>>`; regla explícita de
   no obedecer ni contar instrucciones como hechos y reportarlas en `instrucciones_detectadas`;
   salida JSON con esquema fijo.
-- **Grafo**: solo el investigador ve el texto crudo; estratega y redactor ven hechos verificados
-  con citas ≤ 300 caracteres; `verificar_hechos` exige citas literales y descarta citas que
-  coinciden con patrones de instrucción; el ruteo es determinista; `validar_borrador` rechaza
-  enlaces, emails y números que no vengan de las entradas permitidas.
+- **Grafo**: solo el investigador ve el texto crudo; estratega y redactor ven de cada hecho
+  verificado solo `id`, `cita` (≤ 300 caracteres) y `ancla`, nunca la `descripcion`;
+  `verificar_hechos` exige citas literales y descarta citas que coinciden con patrones de
+  instrucción; el ruteo es determinista; `validar_borrador` rechaza enlaces y emails que no
+  vengan del perfil y números que no estén en citas verificadas o en el perfil.
 - **Verificación**: pytest cubre las capas deterministas; el comportamiento del modelo real ante
   inyecciones lo mide el script de evaluación con casos de canario (SC-005).
 

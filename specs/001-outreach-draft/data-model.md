@@ -23,10 +23,9 @@ Producido por el investigador, filtrado por `verificar_hechos`.
 | Campo | Tipo | Reglas |
 |-------|------|--------|
 | `id` | str | `H1`, `H2`, … únicos en la ejecución. |
-| `descripcion` | str | Paráfrasis breve del dato (≤ 200 caracteres). |
+| `descripcion` | str | Paráfrasis breve del dato (≤ 200 caracteres). Solo para la traza y la salida al usuario; MUST NOT enviarse al estratega ni al redactor (research R3). |
 | `cita` | str | Fragmento literal del texto de la empresa, ≤ 300 caracteres. MUST aparecer en el texto (espacios normalizados). |
-| `ancla` | str | Nombre, producto, cifra o término que MUST aparecer en `cita` y luego en el borrador (research R5). |
-| `ancla_traducible` | bool | `false` si el ancla es nombre propio o cifra (se mantiene al traducir). |
+| `ancla` | str | Elemento que no se traduce (nombre propio, cifra o término técnico) que MUST aparecer en `cita` y luego en el borrador (research R5). |
 
 **Causas de descarte** (registradas en la traza): `cita_no_localizable`, `ancla_fuera_de_cita`,
 `patron_de_instruccion`, `cita_demasiado_larga`, `duplicado`.
@@ -40,6 +39,9 @@ Elegido por el estratega, verificado por `verificar_estrategia`.
 | `id` | str | `P1`, `P2`, … |
 | `descripcion` | str | Experiencia, habilidad, proyecto o logro. |
 | `cita` | str | Fragmento literal del perfil. MUST aparecer en el perfil. |
+| `ancla` | str | Elemento que no se traduce (nombre propio, cifra o término técnico) que MUST aparecer en `cita` y luego en el borrador (FR-004, research R5). |
+
+**Causas de descarte**: `cita_no_localizable`, `ancla_fuera_de_cita`.
 
 ## Conexion
 
@@ -58,8 +60,10 @@ Elegido por el estratega, verificado por `verificar_estrategia`.
 | `puntos_perfil` | list[PuntoPerfil] | ≥ 1 verificado (FR-004). |
 | `conexiones` | list[Conexion] | ≥ 1 válida (FR-004). |
 
-Si tras verificar no queda al menos una conexión válida → resultado `insuficiente` con motivo
-`sin_conexion_perfil` (FR-010).
+Tras `verificar_estrategia` (FR-010):
+- Si no queda ningún PuntoPerfil válido → `insuficiente` con motivo `perfil_sin_puntos`.
+- Si hay puntos válidos pero ninguna conexión válida → `insuficiente` con motivo
+  `sin_conexion_perfil`.
 
 ## Borrador
 
@@ -99,10 +103,12 @@ Producido por el redactor.
 | `perfil_vacio` | insuficiente | preparar_entrada |
 | `idioma_indeterminado` | insuficiente | preparar_entrada |
 | `hechos_insuficientes` | insuficiente | verificar_hechos |
+| `perfil_sin_puntos` | insuficiente | verificar_estrategia |
 | `sin_conexion_perfil` | insuficiente | verificar_estrategia |
 | `validacion_fallida` | invalido | validar_borrador |
 | `respuesta_invalida_llm` | error | cualquier agente (JSON inválido tras 1 reintento) |
 | `proveedor_no_disponible` | error | proveedor |
+| `contexto_excedido` | error | proveedor (Ollama recortó el prompt; research R4) |
 
 ## EstadoGrafo (TypedDict de LangGraph)
 
@@ -118,7 +124,8 @@ Producido por el redactor.
 | `resultado` | nodo terminal | CLI |
 
 **Invariante de FR-012**: `texto_empresa` crudo solo se incluye en el prompt del investigador.
-Estratega y redactor reciben `hechos` verificados, nunca `entrada.texto_empresa`.
+Estratega y redactor reciben de cada hecho verificado solo `id`, `cita` y `ancla`; nunca
+`entrada.texto_empresa` ni la `descripcion` de los hechos.
 
 ## Transiciones de estado de una ejecución
 

@@ -27,6 +27,12 @@ prueba concreto."
   usuario indica un idioma al ejecutar el comando, se usa ese.
 - Q: ¿La lista de frases de relleno es exhaustiva? → A: No; es una lista ampliada de ejemplos
   representativos, no exhaustiva.
+- Q: ¿Qué pasa si el idioma del texto de la empresa no está soportado o no se puede determinar?
+  → A: Sin idioma indicado por el usuario, no hay borrador y se pide indicar el idioma (FR-018).
+- Q: ¿Se distingue un perfil sin puntos concretos de uno cuyos puntos no se relacionan con la
+  empresa? → A: Sí, con motivos distintos: `perfil_sin_puntos` y `sin_conexion_perfil` (FR-010).
+- Q: ¿Cómo se reconoce el punto del perfil en el borrador? → A: Debe ser reconocible en el texto
+  del borrador, no solo declarado (FR-004).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -92,6 +98,9 @@ el motivo.
 3. **Given** un perfil de usuario vacío o sin ningún punto concreto, **When** el usuario ejecuta
    el comando, **Then** el sistema no produce borrador e informa que el perfil no tiene puntos
    concretos suficientes.
+4. **Given** un perfil con puntos concretos que no se relacionan con ningún dato de la empresa,
+   **When** el usuario ejecuta el comando, **Then** el sistema no produce borrador e informa que
+   no encontró relación entre el perfil y la empresa, con un mensaje distinto del escenario 3.
 
 ---
 
@@ -153,11 +162,19 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
 
 ### Edge Cases
 
-- **Texto de empresa muy largo**: el sistema lo procesa igual y elige los datos más relevantes; la
-  longitud del borrador sigue limitada a 80–150 palabras.
+- **Texto de empresa muy largo**: el sistema procesa el texto completo, sin descartar partes en
+  silencio, y elige los datos más relevantes; la longitud del borrador sigue limitada a 80–150
+  palabras. Si el texto excede lo que el sistema puede procesar, lo informa en vez de trabajar con
+  una parte.
 - **Idioma del borrador distinto del texto de la empresa**: cuando el usuario indica un idioma
-  distinto del texto de la empresa, los datos citados pueden aparecer traducidos, pero cada uno
-  debe seguir siendo localizable en el texto original.
+  distinto del texto de la empresa, el borrador puede traducir la redacción, pero cada dato
+  citado se reconoce por un elemento que no se traduce (nombre propio, cifra o término técnico)
+  y sigue siendo localizable en el texto original.
+- **Idioma no soportado o indeterminado**: los idiomas soportados son español, inglés,
+  portugués, francés, alemán e italiano. Si el usuario no indica idioma y el del texto de la
+  empresa no está soportado o no se puede determinar, el sistema no produce borrador e informa
+  que debe indicarse el idioma. Si el usuario indica un idioma soportado, el borrador se genera en
+  ese idioma aunque el del texto de la empresa no se haya podido determinar.
 - **Texto de empresa con varios idiomas**: sin idioma indicado por el usuario, el borrador se
   escribe en el idioma predominante del texto de la empresa.
 - **Perfil en un idioma distinto del texto de la empresa**: el idioma del perfil no influye en el
@@ -165,9 +182,14 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
 - **No se logra un borrador válido**: si el sistema no puede producir un borrador que cumpla la
   longitud, la ausencia de relleno o la cantidad de datos, informa el fallo y el criterio
   incumplido en lugar de entregar un borrador inválido.
-- **Perfil y empresa sin relación evidente**: si el sistema no encuentra ningún punto del perfil
-  que pueda conectarse con los datos de la empresa, lo informa en vez de forzar una conexión
-  inventada.
+- **Perfil sin puntos concretos** (motivo `perfil_sin_puntos`): si el perfil tiene texto pero
+  ningún punto concreto verificable (por ejemplo, solo "soy proactivo y trabajo en equipo"), el
+  sistema informa que el perfil no tiene puntos concretos.
+- **Perfil con puntos sin relación con la empresa** (motivo `sin_conexion_perfil`): si el perfil
+  tiene puntos concretos pero ninguno puede conectarse con los datos de la empresa, el sistema
+  informa que no encontró relación en vez de forzar una conexión inventada. El mensaje es
+  distinto del caso anterior, para que el usuario sepa si debe mejorar el perfil o si la empresa
+  no encaja con él.
 - **Instrucciones disfrazadas de datos**: frases como "Nota para el asistente: …" o texto entre
   marcas que simulan ser del sistema se tratan igual que cualquier otra instrucción incrustada.
 - **Entradas faltantes**: si el usuario no proporciona alguna de las dos entradas, el comando
@@ -184,7 +206,8 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
 - **FR-003**: El borrador MUST mencionar al menos dos datos concretos de la empresa, y cada uno
   MUST aparecer en el texto de la empresa proporcionado.
 - **FR-004**: El borrador MUST conectar explícitamente al menos un dato de la empresa con al menos
-  un punto concreto que aparezca en el perfil del usuario.
+  un punto concreto que aparezca en el perfil del usuario. Ese punto del perfil MUST ser
+  reconocible en el texto del borrador.
 - **FR-005**: El borrador MUST NOT contener datos sobre la empresa ni sobre el usuario que no
   aparezcan en las entradas proporcionadas.
 - **FR-006**: El borrador MUST tener entre 80 y 150 palabras, ambos inclusive.
@@ -208,14 +231,17 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
   - "Gracias de antemano por su tiempo" / "Thank you in advance for your time"
 - **FR-018**: El borrador MUST escribirse en el idioma indicado por el usuario al ejecutar el
   comando. Si el usuario no indica idioma, MUST escribirse en el idioma predominante del texto de
-  la empresa.
+  la empresa. Los idiomas soportados son español, inglés, portugués, francés, alemán e italiano;
+  si el usuario no indica idioma y el del texto de la empresa no está soportado o no se puede
+  determinar, el sistema MUST NOT producir un borrador y MUST pedir que se indique el idioma.
 - **FR-008**: Junto con el borrador, el sistema MUST mostrar qué datos de la empresa y qué puntos
   del perfil usó, para que el usuario pueda verificarlos.
 - **FR-009**: Si el texto de la empresa está vacío o contiene menos de dos datos concretos, el
   sistema MUST NOT producir un borrador y MUST informar el motivo, indicando cuántos datos
   concretos encontró.
 - **FR-010**: Si el perfil está vacío, no contiene ningún punto concreto o ninguno puede conectarse
-  con los datos de la empresa, el sistema MUST NOT producir un borrador y MUST informar el motivo.
+  con los datos de la empresa, el sistema MUST NOT producir un borrador y MUST informar el motivo,
+  distinguiendo esos tres casos.
 - **FR-011**: Si no logra producir un borrador que cumpla FR-003 a FR-007 y FR-018, el sistema MUST informar
   el criterio incumplido en lugar de entregar un borrador inválido.
 - **FR-012**: El sistema MUST tratar todo el contenido del texto de la empresa como datos. Las
@@ -241,7 +267,7 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
 - **Dato concreto de la empresa**: afirmación específica y verificable que aparece en el texto de
   la empresa, como un producto, una cifra, un mercado, una tecnología, un proyecto, un hito o un
   puesto abierto. No cuentan las frases genéricas de autopromoción ("somos innovadores") ni las
-  instrucciones incrustadas.
+  instrucciones incrustadas. En los documentos de diseño se llama "Hecho".
 - **Punto concreto del perfil**: experiencia, habilidad, proyecto o logro específico que aparece en
   el perfil del usuario.
 - **Borrador**: mensaje de 80 a 150 palabras para revisión humana, acompañado de la lista de datos
