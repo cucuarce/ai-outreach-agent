@@ -48,6 +48,7 @@ completa de criterios incumplidos:
 | `perfil` | ≥ 1 id de punto de perfil verificado citado cuyo `ancla` aparece en el borrador (ver R5) | FR-004 |
 | `numeros` | todo número del borrador aparece en la `cita` de algún hecho verificado o en el perfil; no alcanza con que aparezca en otra parte del texto de la empresa (ver R3) | FR-005 (parcial), FR-012 |
 | `enlaces` | toda URL o email del borrador aparece en el perfil | FR-012 |
+| `empresa` | si hay `nombre_empresa`, aparece en el borrador por palabra completa (`contiene_palabra`); si no hay, el criterio no aplica (ver R12) | FR-019 |
 
 Si falla algún criterio y `intento < 1 + max_reintentos`, el grafo vuelve al redactor con un
 feedback estructurado (criterio + detalle, por ejemplo "142 → 163 palabras; máximo 150"). Por
@@ -298,7 +299,7 @@ fiable; se puede agregar más adelante).
 
 | Parámetro | Flag | Variable | Default |
 |-----------|------|----------|---------|
-| Modelo | `--modelo` | `OUTREACH_OLLAMA_MODEL` | `qwen2.5:7b-instruct` |
+| Modelo | `--modelo` | `OUTREACH_OLLAMA_MODEL` | `qwen2.5:7b` |
 | Host | `--ollama-host` | `OLLAMA_HOST` | `http://localhost:11434` |
 | Timeout por llamada | `--timeout` | `OUTREACH_TIMEOUT_S` | `180` |
 | Ventana de contexto | `--num-ctx` | `OUTREACH_OLLAMA_NUM_CTX` | `16384` |
@@ -341,3 +342,45 @@ convención, sin agregar `pytest-socket`.
 
 **Rationale**: 3.11 ofrece `tomllib`, mejores mensajes de error y es soportado por LangGraph.
 `dataclasses` y `TypedDict` cubren el modelo de datos sin agregar librerías de validación.
+
+## R12. Nombre de la empresa (FR-019)
+
+**Contexto**: en el checkpoint de la Historia 1 con Ollama real, el borrador se dirigió a
+"Granix" (un empleador anterior del perfil) en lugar de a "Campo Claro". El nombre de la empresa
+no estaba en ninguna cita, el redactor solo recibe citas, y el modelo tomó un nombre del perfil.
+Ninguna validación lo detectó porque "Granix" sí aparece en las entradas.
+
+**Decision**:
+- **Origen del nombre**, en orden de prioridad:
+  1. `--nombre-empresa` del usuario: se usa tal cual (es una entrada del usuario, no contenido
+     externo) y no se verifica contra el texto.
+  2. `nombre_empresa` que devuelve el investigador (texto o `null`). `verificar_hechos` lo acepta
+     solo si no está vacío, tiene ≤ 80 caracteres y aparece literalmente en el texto de la
+     empresa (`contiene_literal`); desde la Historia 3, además, no debe cumplir `es_instruccion`.
+     Si no pasa, se descarta y queda registrado con su causa (`nombre_no_localizable`,
+     `nombre_demasiado_largo`, `patron_de_instruccion`).
+- **Uso**: el redactor recibe el nombre verificado y la orden de dirigir el mensaje a esa
+  empresa. Si no hay nombre, recibe la orden explícita de no nombrar ninguna empresa como
+  destinataria.
+- **Validación** (`validar_borrador`, criterio `empresa`): si hay nombre, debe aparecer en el
+  borrador por palabra completa. Si no hay nombre, el criterio no aplica.
+- **Números**: los números que aparezcan en el nombre de la empresa no se agregan a los
+  permitidos por el criterio `numeros`. Así un nombre falso tomado de una instrucción incrustada
+  ("ZEBRA-7731") no habilita su número. Un nombre real con dígitos hará fallar `numeros`; en ese
+  caso, el usuario puede indicar el nombre con `--nombre-empresa` y el borrador igual tendrá que
+  respetar la regla de números de R2 (limitación aceptada).
+
+**Rationale**: convierte "no dirigirse a la empresa equivocada" en una comprobación determinista
+cuando el nombre se conoce, y reduce el riesgo cuando no se conoce. Exigir que el nombre
+aparezca literal en el texto impide que el investigador lo invente.
+
+**Limitación**: cuando no hay nombre, que el borrador no nombre otra empresa depende solo del
+prompt. No hay un control determinista porque no se puede distinguir, sin un modelo, qué nombres
+propios del borrador son empresas. Lo revisa el usuario y lo mide el script de evaluación
+(SC-010).
+
+**Alternatives considered**:
+- Pedir siempre el nombre al usuario (flag obligatorio): agrega fricción; el texto de la empresa
+  casi siempre lo trae.
+- Prohibir en el borrador los nombres propios del perfil: también eliminaría menciones
+  legítimas a empleadores anteriores ("En Pagosur lideré…").

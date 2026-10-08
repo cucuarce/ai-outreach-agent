@@ -15,6 +15,7 @@ Datos que el usuario provee al CLI.
 | `texto_empresa` | str | Obligatorio (FR-017). Contenido no confiable. Vacío tras `strip()` → `insuficiente` (FR-009). |
 | `perfil` | str | Obligatorio (FR-017). Vacío tras `strip()` → `insuficiente` (FR-010). |
 | `idioma_solicitado` | str \| None | Opcional. Código ISO 639-1 de los idiomas soportados (`es`, `en`, `pt`, `fr`, `de`, `it`). |
+| `nombre_empresa_solicitado` | str \| None | Opcional (`--nombre-empresa`). Tiene prioridad sobre el nombre extraído del texto y no se verifica contra él (research R12). |
 
 ## Hecho (dato concreto de la empresa)
 
@@ -80,7 +81,7 @@ Producido por el redactor.
 | Campo | Tipo | Reglas |
 |-------|------|--------|
 | `ok` | bool | `true` si `fallos` está vacío. |
-| `fallos` | list[Fallo] | `Fallo = {criterio, detalle}`; criterios: `longitud`, `relleno`, `idioma`, `hechos`, `perfil`, `numeros`, `enlaces` (research R2). |
+| `fallos` | list[Fallo] | `Fallo = {criterio, detalle}`; criterios: `longitud`, `relleno`, `idioma`, `hechos`, `perfil`, `numeros`, `enlaces`, `empresa` (research R2). |
 
 ## Resultado (salida de la ejecución)
 
@@ -89,6 +90,8 @@ Producido por el redactor.
 | `estado` | enum | `borrador` \| `insuficiente` \| `invalido` \| `error`. |
 | `run_id` | str | Identificador de ejecución (FR-015). |
 | `idioma` | str \| None | Idioma objetivo usado. |
+| `nombre_empresa` | str \| None | Nombre de la empresa usado en el borrador, o `None` si no se conoce. |
+| `origen_nombre_empresa` | str \| None | `"usuario"` (flag) o `"texto"` (extraído y verificado); `None` si no hay nombre. |
 | `borrador` | Borrador \| None | Solo si `estado = borrador`. |
 | `hechos_usados` | list[Hecho] | Datos de empresa usados, con su cita (FR-008). |
 | `puntos_usados` | list[PuntoPerfil] | Puntos de perfil usados, con su cita (FR-008). |
@@ -116,6 +119,9 @@ Producido por el redactor.
 |-------|---------|-----|
 | `entrada` | CLI | preparar_entrada |
 | `run_id`, `nonce`, `idioma_objetivo`, `idioma_empresa` | preparar_entrada | todos |
+| `nombre_empresa`, `origen_nombre_empresa` | preparar_entrada (si hay flag) o verificar_hechos (si el nombre del texto se verifica) | redactor, validar_borrador, finalizar |
+| `nombre_empresa_candidato` | investigador | verificar_hechos |
+| `nombre_empresa_descartado` | verificar_hechos (`{"nombre": ..., "causa": ...}`) | traza |
 | `hechos_candidatos`, `instrucciones_detectadas` | investigador | verificar_hechos |
 | `hechos` (verificados), `hechos_descartados` | verificar_hechos | estratega, redactor, validar_borrador |
 | `estrategia` | estratega → verificar_estrategia | redactor |

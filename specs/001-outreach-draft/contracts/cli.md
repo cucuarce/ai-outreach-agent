@@ -13,6 +13,7 @@ outreach generar --empresa RUTA|- --perfil RUTA [--idioma CODIGO] [--modelo NOMB
 | `--empresa` | sí | Archivo de texto UTF-8 con el texto de la empresa; `-` lee de stdin. |
 | `--perfil` | sí | Archivo de texto UTF-8 con el perfil del usuario. |
 | `--idioma` | no | `es`, `en`, `pt`, `fr`, `de` o `it`. Fuerza el idioma del borrador (FR-018). |
+| `--nombre-empresa` | no | Nombre de la empresa destinataria. Tiene prioridad sobre el extraído del texto (FR-019). |
 | `--modelo`, `--ollama-host`, `--timeout`, `--num-ctx`, `--reintentos`, `--registros` | no | Ver research R9 (flag > variable de entorno > default). |
 | `--json` | no | Imprime el `Resultado` como JSON en stdout en lugar del formato legible. |
 
@@ -23,6 +24,7 @@ IV).
 
 ```text
 === Borrador (es, 112 palabras) ===
+Empresa: Campo Claro (tomado del texto)   ← o "(indicado por vos)", o "no identificada; el borrador no nombra ninguna empresa"
 <texto del borrador>
 
 === Datos de la empresa usados ===

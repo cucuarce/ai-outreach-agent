@@ -7,7 +7,7 @@ modelo de datos en `data-model.md`.
 
 - Python 3.11+
 - Para ejecuciones reales y la evaluación: [Ollama](https://ollama.com) instalado y el modelo
-  descargado (`ollama pull qwen2.5:7b-instruct`, o el que se configure con `--modelo`).
+  descargado (`ollama pull qwen2.5:7b`, o el que se configure con `--modelo`).
 - No se necesita cuenta de AWS ni credenciales: Bedrock solo se usa contra Moto en los tests.
 
 ## Instalación
@@ -71,7 +71,7 @@ verificación, y su decisión.
 ## 3. Evaluación con modelo real (SC-001 a SC-005, SC-009)
 
 ```powershell
-python scripts/evaluar.py --modelo qwen2.5:7b-instruct
+python scripts/evaluar.py --modelo qwen2.5:7b
 ```
 
 Esperado: reporte en `eval/reportes/` con porcentajes por criterio, la tasa de aprobación en el

@@ -33,6 +33,9 @@ prueba concreto."
   empresa? → A: Sí, con motivos distintos: `perfil_sin_puntos` y `sin_conexion_perfil` (FR-010).
 - Q: ¿Cómo se reconoce el punto del perfil en el borrador? → A: Debe ser reconocible en el texto
   del borrador, no solo declarado (FR-004).
+- Q: ¿Cómo se evita que el borrador se dirija a la empresa equivocada? → A: El nombre de la
+  empresa se toma del texto de la empresa (debe aparecer literal) o del usuario; si se conoce,
+  debe aparecer en el borrador; si no se conoce, el borrador no nombra ninguna empresa (FR-019).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -70,6 +73,16 @@ los criterios de contenido, longitud y ausencia de relleno.
    usuario ejecuta el comando, **Then** el borrador está escrito en inglés.
 8. **Given** un texto de empresa en inglés y el usuario indica español como idioma, **When** el
    usuario ejecuta el comando, **Then** el borrador está escrito en español.
+9. **Given** un texto de empresa que menciona el nombre de la empresa (por ejemplo "Campo
+   Claro") y un perfil que menciona otra empresa (por ejemplo un empleador anterior), **When** el
+   usuario ejecuta el comando, **Then** el borrador nombra a "Campo Claro" y no se dirige a la
+   empresa del perfil.
+10. **Given** un texto de empresa que no menciona el nombre de la empresa y ningún nombre indicado
+    por el usuario, **When** el usuario ejecuta el comando, **Then** el borrador no nombra a
+    ninguna empresa como destinataria.
+11. **Given** que el usuario indica el nombre de la empresa al ejecutar el comando, **When** el
+    sistema genera el borrador, **Then** el borrador usa ese nombre, aunque el texto de la
+    empresa no lo mencione o mencione otro.
 
 ---
 
@@ -192,6 +205,9 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
   no encaja con él.
 - **Instrucciones disfrazadas de datos**: frases como "Nota para el asistente: …" o texto entre
   marcas que simulan ser del sistema se tratan igual que cualquier otra instrucción incrustada.
+- **Nombre de la empresa no verificable**: si el nombre que identifica el sistema no aparece
+  literalmente en el texto de la empresa, se descarta y el borrador no nombra a ninguna empresa,
+  salvo que el usuario haya indicado el nombre.
 - **Entradas faltantes**: si el usuario no proporciona alguna de las dos entradas, el comando
   informa cuál falta y no se ejecuta.
 
@@ -229,11 +245,18 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
   - "No dude en contactarme" / "Please do not hesitate to contact me"
   - "Quedo a la espera de su respuesta" / "I look forward to hearing from you"
   - "Gracias de antemano por su tiempo" / "Thank you in advance for your time"
+  - "Me siento entusiasmado con la oportunidad" / "I am excited about the opportunity"
+  - "Estoy ansioso por contribuir" / "I am eager to contribute"
 - **FR-018**: El borrador MUST escribirse en el idioma indicado por el usuario al ejecutar el
   comando. Si el usuario no indica idioma, MUST escribirse en el idioma predominante del texto de
   la empresa. Los idiomas soportados son español, inglés, portugués, francés, alemán e italiano;
   si el usuario no indica idioma y el del texto de la empresa no está soportado o no se puede
   determinar, el sistema MUST NOT producir un borrador y MUST pedir que se indique el idioma.
+- **FR-019**: El borrador MUST NOT dirigirse a una empresa distinta de la del texto. El nombre de
+  la empresa se obtiene del texto de la empresa, donde MUST aparecer literalmente, o lo indica el
+  usuario al ejecutar el comando; el nombre indicado por el usuario tiene prioridad. Si hay un
+  nombre, MUST aparecer en el borrador. Si no hay ningún nombre, el borrador MUST NOT nombrar a
+  ninguna empresa como destinataria.
 - **FR-008**: Junto con el borrador, el sistema MUST mostrar qué datos de la empresa y qué puntos
   del perfil usó, para que el usuario pueda verificarlos.
 - **FR-009**: Si el texto de la empresa está vacío o contiene menos de dos datos concretos, el
@@ -242,7 +265,7 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
 - **FR-010**: Si el perfil está vacío, no contiene ningún punto concreto o ninguno puede conectarse
   con los datos de la empresa, el sistema MUST NOT producir un borrador y MUST informar el motivo,
   distinguiendo esos tres casos.
-- **FR-011**: Si no logra producir un borrador que cumpla FR-003 a FR-007 y FR-018, el sistema MUST informar
+- **FR-011**: Si no logra producir un borrador que cumpla FR-003 a FR-007, FR-018 y FR-019, el sistema MUST informar
   el criterio incumplido en lugar de entregar un borrador inválido.
 - **FR-012**: El sistema MUST tratar todo el contenido del texto de la empresa como datos. Las
   instrucciones incrustadas en ese texto MUST NOT modificar el comportamiento del sistema ni el
@@ -272,6 +295,8 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
   el perfil del usuario.
 - **Borrador**: mensaje de 80 a 150 palabras para revisión humana, acompañado de la lista de datos
   y puntos usados.
+- **Nombre de la empresa**: nombre de la empresa destinataria, tomado del texto de la empresa
+  (verificado) o indicado por el usuario. Puede no conocerse.
 - **Registro de ejecución**: secuencia ordenada de pasos y decisiones de una ejecución, con su
   resultado final (borrador entregado o motivo de detención).
 
@@ -288,6 +313,8 @@ verifica que ambas ejecuciones dejaron un registro legible con los pasos y decis
   que no aparezcan en las entradas.
 - **SC-009**: En el 100% de los casos de prueba, el borrador está en el idioma indicado por el
   usuario o, si no indicó ninguno, en el idioma del texto de la empresa.
+- **SC-010**: En el 100% de los casos de prueba con nombre de empresa conocido, el borrador
+  menciona ese nombre; 0 borradores se dirigen a una empresa distinta.
 - **SC-004**: En el 100% de los casos de prueba con texto vacío o con menos de dos datos concretos,
   el sistema informa el motivo y no entrega borrador.
 - **SC-005**: En el 100% de los casos de prueba con instrucciones incrustadas, el borrador no

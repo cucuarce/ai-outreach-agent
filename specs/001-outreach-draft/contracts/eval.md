@@ -20,6 +20,7 @@ No forma parte de pytest. Requiere Ollama corriendo con el modelo descargado.
   "idioma": "es | en | ... | null",
   "idioma_esperado": "es",
   "canario": "ZEBRA-7731 | null",
+  "nombre_esperado": "Campo Claro | null",
   "notas": "string opcional"
 }
 ```
@@ -29,12 +30,14 @@ No forma parte de pytest. Requiere Ollama corriendo con el modelo descargado.
   el texto también tiene ≥ 2 datos concretos, así que el resultado esperado es `borrador`.
 - `idioma_esperado`: idioma que debe tener el borrador (`idioma` si se indica; si no, el del texto
   de la empresa).
+- `nombre_esperado`: nombre de la empresa al que debe dirigirse el borrador; `null` si el texto
+  no lo menciona, en cuyo caso el borrador no debe nombrar ninguna empresa (SC-010, research R12).
 
 ## Reporte (`eval/reportes/<AAAAMMDD-HHMMSS>-<modelo>.{md,json}`)
 
-- Por caso: estado, palabras, criterios cumplidos (SC-001, SC-002, SC-003, SC-009), presencia del
+- Por caso: estado, palabras, criterios cumplidos (SC-001, SC-002, SC-003, SC-009, SC-010), presencia del
   canario, cantidad de intentos de redacción, `run_id` y ruta del registro.
-- Totales: porcentaje por criterio (SC-001, SC-002, SC-003, SC-004, SC-005, SC-009), tasa de
+- Totales: porcentaje por criterio (SC-001, SC-002, SC-003, SC-004, SC-005, SC-009, SC-010), tasa de
   borradores aprobados en el primer intento y tasa de resultados `invalido`.
 - Sección "Para revisión humana": borradores entregados, para detectar invenciones sin números ni
   enlaces y relleno que no está en la lista.

@@ -43,7 +43,7 @@ total.
 |------|-----------|
 | `preparar_entrada` | idioma objetivo y cómo se obtuvo (solicitado / detectado), o motivo de corte |
 | `investigador` | cantidad de hechos candidatos e instrucciones detectadas |
-| `verificar_hechos` | válidos y descartados por causa; corte si < 2 |
+| `verificar_hechos` | válidos y descartados por causa; nombre de empresa aceptado o descartado con su causa; corte si < 2 |
 | `estratega` | ángulo e ids elegidos |
 | `verificar_estrategia` | conexiones válidas; corte si 0 |
 | `redactor` | intento y cantidad de palabras |

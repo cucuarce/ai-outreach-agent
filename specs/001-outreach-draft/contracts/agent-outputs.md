@@ -17,6 +17,7 @@ aparecen ("2", no "2 millones") (research R5).
 
 ```json
 {
+  "nombre_empresa": "string copiado literal del texto | null",
   "hechos": [
     {"id": "H1", "descripcion": "string", "cita": "string literal del texto",
      "ancla": "elemento que no se traduce, contenido en cita"}
@@ -24,6 +25,9 @@ aparecen ("2", no "2 millones") (research R5).
   "instrucciones_detectadas": ["string"]
 }
 ```
+
+`nombre_empresa` es el nombre de la empresa tal como aparece en el texto, o `null` si el texto no
+lo menciona. Se verifica en `verificar_hechos` (research R12).
 
 ## Estratega
 
@@ -49,6 +53,10 @@ conectan con ellos. No redacta el mensaje.
 límites de longitud y, en reintentos, la lista de fallos del intento anterior
 (`[{criterio, detalle}]`). De los hechos recibe solo `id`, `cita` y `ancla`. Nunca el texto crudo
 de la empresa ni la `descripcion` de los hechos.
+
+Además recibe el nombre de la empresa verificado (o indicado por el usuario) con la orden de
+dirigir el mensaje a esa empresa. Si no hay nombre, recibe la orden explícita de no nombrar
+ninguna empresa como destinataria (research R12).
 
 **Responsabilidad única**: escribir el mensaje según la estrategia.
 
