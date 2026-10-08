@@ -1,0 +1,41 @@
+"""Agente investigador: extrae datos concretos del texto de la empresa.
+
+Es el único agente que recibe el texto crudo de la empresa (research R3).
+"""
+
+from outreach_agent.agentes.base import exigir_lista, exigir_texto, llamar_json
+from outreach_agent.agentes.prompts import mensajes_investigador
+from outreach_agent.config import Config
+from outreach_agent.estado import EstadoGrafo
+from outreach_agent.modelos import Hecho
+from outreach_agent.proveedores.base import LLMProvider
+
+TEMPERATURA = 0.1
+
+
+def _validar(datos: dict) -> None:
+    for i, hecho in enumerate(exigir_lista(datos, "hechos", dict, "la respuesta")):
+        for campo in ("id", "descripcion", "cita", "ancla"):
+            exigir_texto(hecho, campo, f"hechos[{i}]")
+    if "instrucciones_detectadas" in datos:
+        exigir_lista(datos, "instrucciones_detectadas", str, "la respuesta")
+
+
+def investigador(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict:
+    system, user = mensajes_investigador(estado["entrada"].texto_empresa)
+    datos = llamar_json(
+        provider,
+        system,
+        user,
+        _validar,
+        max_tokens=config.max_tokens_investigador,
+        temperatura=TEMPERATURA,
+    )
+    hechos = [
+        Hecho(id=h["id"], descripcion=h["descripcion"], cita=h["cita"], ancla=h["ancla"])
+        for h in datos["hechos"]
+    ]
+    return {
+        "hechos_candidatos": hechos,
+        "instrucciones_detectadas": datos.get("instrucciones_detectadas", []),
+    }

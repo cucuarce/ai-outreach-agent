@@ -11,6 +11,21 @@ class RespuestaInvalidaLLM(Exception):
     """El LLM no devolvió un JSON válido para el esquema, ni siquiera tras un reintento."""
 
 
+def exigir_texto(objeto: dict, campo: str, donde: str) -> str:
+    valor = objeto.get(campo)
+    if not isinstance(valor, str):
+        raise ValueError(f"'{campo}' en {donde} debe ser un texto")
+    return valor
+
+
+def exigir_lista(objeto: dict, campo: str, tipo: type, donde: str) -> list:
+    valor = objeto.get(campo)
+    if not isinstance(valor, list) or not all(isinstance(x, tipo) for x in valor):
+        nombre = "objetos" if tipo is dict else "textos"
+        raise ValueError(f"'{campo}' en {donde} debe ser una lista de {nombre}")
+    return valor
+
+
 def llamar_json(
     provider: LLMProvider,
     system: str,
