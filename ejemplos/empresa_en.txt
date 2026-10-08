@@ -1,0 +1,7 @@
+About us
+
+Harborline builds route-planning software for regional shipping companies in Northern Europe. More than 300 vessels use our platform every day to plan port calls and reduce fuel consumption.
+
+In 2024 we released Tidewise, a forecasting engine that cut average fuel use by 12% for our customers. Our backend runs on Go and PostgreSQL, and our forecasting models are written in Python.
+
+We are hiring a senior backend engineer to scale our real-time tracking service, which processes position updates from every vessel on the platform.

@@ -26,7 +26,7 @@ def entorno_limpio(monkeypatch):
 
 def test_defaults():
     config = cargar_config()
-    assert config.modelo == "qwen2.5:7b-instruct"
+    assert config.modelo == "qwen2.5:7b"
     assert config.ollama_host == "http://localhost:11434"
     assert config.timeout_s == 180.0
     assert config.num_ctx == 16384
@@ -61,7 +61,7 @@ def test_flag_pisa_variable_de_entorno(monkeypatch):
 def test_env_explicito_no_lee_os_environ(monkeypatch):
     monkeypatch.setenv("OUTREACH_OLLAMA_MODEL", "llama3.1:8b")
     config = cargar_config(env={})
-    assert config.modelo == "qwen2.5:7b-instruct"
+    assert config.modelo == "qwen2.5:7b"
 
 
 def test_variable_invalida_da_error_claro(monkeypatch):

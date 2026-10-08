@@ -36,7 +36,7 @@ def capturar(monkeypatch):
 
 
 def proveedor(num_ctx=16384):
-    return OllamaProvider("qwen2.5:7b-instruct", "http://localhost:11434/", 30.0, num_ctx)
+    return OllamaProvider("qwen2.5:7b", "http://localhost:11434/", 30.0, num_ctx)
 
 
 def test_peticion_y_cuerpo(capturar):
@@ -50,7 +50,7 @@ def test_peticion_y_cuerpo(capturar):
     assert enviada["timeout"] == 30.0
     cuerpo = json.loads(peticion.data)
     assert cuerpo == {
-        "model": "qwen2.5:7b-instruct",
+        "model": "qwen2.5:7b",
         "messages": [
             {"role": "system", "content": "reglas"},
             {"role": "user", "content": "datos"},
@@ -114,7 +114,7 @@ def test_ollama_no_disponible(capturar, falla):
         proveedor().generar("reglas", "datos", max_tokens=10, temperatura=0.0, json=True)
     mensaje = str(error.value)
     assert "ollama serve" in mensaje
-    assert "ollama pull qwen2.5:7b-instruct" in mensaje
+    assert "ollama pull qwen2.5:7b" in mensaje
     assert error.value.motivo == "proveedor_no_disponible"
 
 

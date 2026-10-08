@@ -88,3 +88,120 @@ REDACTOR = {"texto": TEXTO_BORRADOR, "hechos_usados": ["H1", "H2"], "puntos_usad
 def respuestas_flujo_valido() -> list[str]:
     """Respuestas del investigador, el estratega y el redactor, en ese orden."""
     return [json.dumps(INVESTIGADOR), json.dumps(ESTRATEGA), json.dumps(REDACTOR)]
+
+
+def hechos(datos: dict = INVESTIGADOR) -> list:
+    """Hechos del investigador como objetos Hecho."""
+    from outreach_agent.modelos import Hecho
+
+    return [Hecho(**h) for h in datos["hechos"]]
+
+
+def estrategia(datos: dict = ESTRATEGA):
+    """Estrategia del estratega como objeto Estrategia."""
+    from outreach_agent.modelos import Conexion, Estrategia, PuntoPerfil
+
+    return Estrategia(
+        angulo=datos["angulo"],
+        hechos_elegidos=list(datos["hechos_elegidos"]),
+        puntos_perfil=[PuntoPerfil(**p) for p in datos["puntos_perfil"]],
+        conexiones=[Conexion(**c) for c in datos["conexiones"]],
+    )
+
+
+# --- Empresa en inglés (FR-018) ---
+
+TEXTO_EMPRESA_EN = (
+    "Nubeluz is a payments fintech based in Montevideo. Our platform processes 2 million "
+    "transactions per month for merchants in Uruguay and Paraguay. We migrated our whole "
+    "infrastructure to Kubernetes in 2024 and we are building a data team for real-time fraud "
+    "detection. We are hiring a backend engineer with Python experience."
+)
+
+INVESTIGADOR_EN = {
+    "hechos": [
+        {
+            "id": "H1",
+            "descripcion": "Processes 2 million transactions per month",
+            "cita": "processes 2 million transactions per month",
+            "ancla": "2",
+        },
+        {
+            "id": "H2",
+            "descripcion": "Migrated to Kubernetes in 2024",
+            "cita": "We migrated our whole infrastructure to Kubernetes in 2024",
+            "ancla": "Kubernetes",
+        },
+    ],
+    "instrucciones_detectadas": [],
+}
+
+TEXTO_BORRADOR_EN = (
+    "Hi Nubeluz team. I saw that you moved your whole infrastructure to Kubernetes in 2024 "
+    "and that your platform already processes 2 million transactions per month. At Pagosur I "
+    "led the migration of 40 microservices to Kubernetes, so I know the deployment and "
+    "observability problems that show up during that kind of change. I also built a fraud "
+    "alert system that cut chargebacks by 30%, which could help the data team you are building "
+    "for real-time fraud detection. I have worked with Python on the backend for 5 years. "
+    "Would you have fifteen minutes to talk about how I could help that team?"
+)
+
+REDACTOR_EN = {
+    "texto": TEXTO_BORRADOR_EN,
+    "hechos_usados": ["H1", "H2"],
+    "puntos_usados": ["P1", "P2"],
+}
+
+# --- Texto de empresa largo (≈ 40.000 caracteres) con un dato al principio y otro al final ---
+
+_RELLENO_LARGO = (
+    "El equipo trabaja de forma remota y se reúne una vez por trimestre para planificar los "
+    "objetivos del producto con todas las áreas de la empresa. "
+)
+CITA_FINAL_LARGO = "Este año abrimos una oficina en Lisboa con 25 personas."
+TEXTO_EMPRESA_LARGO = (
+    "Nubeluz procesa 2 millones de transacciones al mes. "
+    + _RELLENO_LARGO * 280
+    + CITA_FINAL_LARGO
+)
+
+INVESTIGADOR_LARGO = {
+    "hechos": [
+        {
+            "id": "H1",
+            "descripcion": "Procesa 2 millones de transacciones por mes",
+            "cita": "procesa 2 millones de transacciones al mes",
+            "ancla": "2",
+        },
+        {
+            "id": "H2",
+            "descripcion": "Abrió una oficina en Lisboa",
+            "cita": CITA_FINAL_LARGO,
+            "ancla": "Lisboa",
+        },
+    ],
+    "instrucciones_detectadas": [],
+}
+
+ESTRATEGA_LARGO = {
+    "angulo": "Escalar pagos y equipos fuera de Uruguay.",
+    "hechos_elegidos": ["H1", "H2"],
+    "puntos_perfil": [ESTRATEGA["puntos_perfil"][0]],
+    "conexiones": [{"hecho_id": "H1", "punto_id": "P1", "razon": "Volumen alto."}],
+}
+
+TEXTO_BORRADOR_LARGO = (
+    "Hola, equipo de Nubeluz. Vi que la plataforma procesa 2 millones de transacciones al mes y "
+    "que este año abrieron una oficina en Lisboa. En Pagosur lideré la migración de 40 "
+    "microservicios a Kubernetes, un trabajo que me enseñó a sostener sistemas de pagos con "
+    "mucho volumen sin cortar el servicio. Me interesa aportar esa experiencia ahora que el "
+    "equipo crece fuera de Uruguay, y también la de las alertas antifraude que redujeron un 30% "
+    "los contracargos. ¿Podemos coordinar una charla breve esta semana o la próxima para "
+    "contarles más sobre esos proyectos?"
+)
+
+REDACTOR_LARGO = {
+    "texto": TEXTO_BORRADOR_LARGO,
+    "hechos_usados": ["H1", "H2"],
+    "puntos_usados": ["P1"],
+}

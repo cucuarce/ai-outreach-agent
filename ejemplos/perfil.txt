@@ -1,0 +1,6 @@
+Ingeniera de software con 6 años de experiencia en backend y datos.
+
+- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.
+- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.
+- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.
+- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.

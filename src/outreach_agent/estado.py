@@ -23,6 +23,7 @@ class EstadoGrafo(TypedDict, total=False):
     hechos: list[Hecho]  # verificados
     hechos_descartados: list[dict]  # {"id": ..., "causa": ...}
     estrategia: Estrategia
+    puntos_descartados: list[dict]  # {"id": ..., "causa": ...}
     borrador: Borrador
     intento: int
     validacion: ResultadoValidacion

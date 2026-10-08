@@ -7,7 +7,7 @@ from pathlib import Path
 
 # campo de Config -> (atributo del flag en argparse o None, variable de entorno, default, tipo)
 _PARAMETROS = {
-    "modelo": ("modelo", "OUTREACH_OLLAMA_MODEL", "qwen2.5:7b-instruct", str),
+    "modelo": ("modelo", "OUTREACH_OLLAMA_MODEL", "qwen2.5:7b", str),
     "ollama_host": ("ollama_host", "OLLAMA_HOST", "http://localhost:11434", str),
     "timeout_s": ("timeout", "OUTREACH_TIMEOUT_S", 180.0, float),
     "num_ctx": ("num_ctx", "OUTREACH_OLLAMA_NUM_CTX", 16384, int),

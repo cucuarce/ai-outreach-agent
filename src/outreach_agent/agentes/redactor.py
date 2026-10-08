@@ -12,6 +12,7 @@ from outreach_agent.config import Config
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Borrador
 from outreach_agent.proveedores.base import LLMProvider
+from outreach_agent.verificacion.relleno import ejemplos_relleno
 
 TEMPERATURA = 0.7
 
@@ -23,24 +24,16 @@ def _validar(datos: dict) -> None:
     exigir_lista(datos, "puntos_usados", str, "la respuesta")
 
 
-def redactor(
-    estado: EstadoGrafo,
-    provider: LLMProvider,
-    config: Config,
-    ejemplos_relleno: list[str] | None = None,
-) -> dict:
+def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict:
     estrategia = estado["estrategia"]
     elegidos = set(estrategia.hechos_elegidos)
     hechos_elegidos = [h for h in hechos_disponibles(estado) if h.id in elegidos]
     validacion = estado.get("validacion")
     fallos = validacion.fallos if validacion and not validacion.ok else []
 
+    idioma = estado.get("idioma_objetivo")
     system, user = mensajes_redactor(
-        estrategia,
-        hechos_elegidos,
-        estado.get("idioma_objetivo"),
-        ejemplos_relleno or [],
-        fallos,
+        estrategia, hechos_elegidos, idioma, ejemplos_relleno(idioma), fallos
     )
     datos = llamar_json(
         provider,
