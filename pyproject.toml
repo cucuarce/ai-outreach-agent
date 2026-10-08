@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "outreach-agent"
+version = "0.1.0"
+description = "Genera borradores de mensajes de outreach para búsqueda laboral. No envía nada."
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph",
+    "boto3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "moto",
+]
+
+[project.scripts]
+outreach = "outreach_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+outreach_agent = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# El plugin de pytest de langsmith (dependencia transitiva de langgraph) no se usa; se
+# desactiva para que la suite no cargue langsmith al arrancar.
+addopts = "-p no:langsmith_plugin"
