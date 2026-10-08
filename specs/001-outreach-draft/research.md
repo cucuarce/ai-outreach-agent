@@ -364,11 +364,15 @@ Ninguna validación lo detectó porque "Granix" sí aparece en las entradas.
   destinataria.
 - **Validación** (`validar_borrador`, criterio `empresa`): si hay nombre, debe aparecer en el
   borrador por palabra completa. Si no hay nombre, el criterio no aplica.
-- **Números**: los números que aparezcan en el nombre de la empresa no se agregan a los
-  permitidos por el criterio `numeros`. Así un nombre falso tomado de una instrucción incrustada
-  ("ZEBRA-7731") no habilita su número. Un nombre real con dígitos hará fallar `numeros`; en ese
-  caso, el usuario puede indicar el nombre con `--nombre-empresa` y el borrador igual tendrá que
-  respetar la regla de números de R2 (limitación aceptada).
+- **Números**: depende del origen del nombre.
+  - Nombre indicado con `--nombre-empresa` (`origen_nombre_empresa = "usuario"`): sus dígitos
+    **sí** se agregan a los permitidos por el criterio `numeros`. Es una entrada del usuario, no
+    contenido externo, así que una empresa como "Grupo 3M" o "Studio 54" no hace fallar la
+    validación.
+  - Nombre extraído del texto (`origen_nombre_empresa = "texto"`): sus dígitos **no** se agregan.
+    Así un nombre falso tomado de una instrucción incrustada ("ZEBRA-7731") no habilita su
+    número. Si una empresa real tiene dígitos en el nombre, el borrador fallará `numeros`; el
+    usuario puede resolverlo indicando el nombre con `--nombre-empresa`.
 
 **Rationale**: convierte "no dirigirse a la empresa equivocada" en una comprobación determinista
 cuando el nombre se conoce, y reduce el riesgo cuando no se conoce. Exigir que el nombre
