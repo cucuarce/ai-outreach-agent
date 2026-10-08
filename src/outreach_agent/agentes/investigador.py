@@ -14,6 +14,9 @@ TEMPERATURA = 0.1
 
 
 def _validar(datos: dict) -> None:
+    # nombre_empresa puede faltar o ser null: los modelos chicos a veces lo omiten.
+    if datos.get("nombre_empresa") is not None and not isinstance(datos["nombre_empresa"], str):
+        raise ValueError("'nombre_empresa' debe ser un texto o null")
     for i, hecho in enumerate(exigir_lista(datos, "hechos", dict, "la respuesta")):
         for campo in ("id", "descripcion", "cita", "ancla"):
             exigir_texto(hecho, campo, f"hechos[{i}]")
@@ -36,6 +39,7 @@ def investigador(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> 
         for h in datos["hechos"]
     ]
     return {
+        "nombre_empresa_candidato": datos.get("nombre_empresa"),
         "hechos_candidatos": hechos,
         "instrucciones_detectadas": datos.get("instrucciones_detectadas", []),
     }

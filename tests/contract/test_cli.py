@@ -118,3 +118,42 @@ def test_unico_subcomando_es_generar():
     ]
     assert len(subcomandos) == 1
     assert set(subcomandos[0].choices) == {"generar"}
+
+
+# --- Nombre de la empresa (T033g, FR-019) ---
+
+
+def test_linea_empresa_tomada_del_texto(archivos, proveedor_falso, capsys):
+    empresa, perfil = archivos
+    assert generar("--empresa", empresa, "--perfil", perfil) == 0
+    assert "Empresa: Nubeluz (tomado del texto)" in capsys.readouterr().out
+
+
+def test_nombre_empresa_llega_a_la_entrada_y_se_imprime(archivos, monkeypatch, capsys):
+    import json as jsonlib
+
+    texto = escenarios.TEXTO_BORRADOR.replace("Nubeluz", "Campo Claro")
+    respuestas = escenarios.respuestas_flujo_valido()
+    respuestas[2] = jsonlib.dumps(dict(escenarios.REDACTOR, texto=texto))
+    provider = FakeProvider(respuestas)
+    monkeypatch.setattr(cli, "crear_proveedor", lambda config: provider)
+
+    empresa, perfil = archivos
+    codigo = generar("--empresa", empresa, "--perfil", perfil, "--nombre-empresa", " Campo Claro ")
+
+    assert codigo == 0
+    assert "Empresa: Campo Claro (indicado por vos)" in capsys.readouterr().out
+    assert "dirigido a Campo Claro" in provider.llamadas[2]["user"]
+
+
+def test_linea_empresa_no_identificada(archivos, monkeypatch, capsys):
+    import json as jsonlib
+
+    respuestas = escenarios.respuestas_flujo_valido()
+    respuestas[0] = jsonlib.dumps(dict(escenarios.INVESTIGADOR, nombre_empresa=None))
+    monkeypatch.setattr(cli, "crear_proveedor", lambda config: FakeProvider(respuestas))
+
+    empresa, perfil = archivos
+    assert generar("--empresa", empresa, "--perfil", perfil) == 0
+    salida = capsys.readouterr().out
+    assert "Empresa: no identificada; el borrador no nombra ninguna empresa" in salida

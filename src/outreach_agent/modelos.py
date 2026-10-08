@@ -39,6 +39,9 @@ class Entrada:
     texto_empresa: str  # contenido no confiable
     perfil: str
     idioma_solicitado: str | None = None  # uno de IDIOMAS_SOPORTADOS
+    # --nombre-empresa: tiene prioridad sobre el nombre extraído del texto y no se verifica
+    # contra él (research R12).
+    nombre_empresa_solicitado: str | None = None
 
 
 @dataclass(frozen=True)
@@ -93,7 +96,7 @@ class Borrador:
 
 @dataclass(frozen=True)
 class Fallo:
-    criterio: str  # longitud | relleno | idioma | hechos | perfil | numeros | enlaces
+    criterio: str  # longitud | relleno | idioma | hechos | perfil | numeros | enlaces | empresa
     detalle: str
 
 
@@ -108,6 +111,8 @@ class Resultado:
     estado: Estado
     run_id: str
     idioma: str | None = None
+    nombre_empresa: str | None = None
+    origen_nombre_empresa: str | None = None  # "usuario" | "texto" | None
     borrador: Borrador | None = None
     hechos_usados: list[Hecho] = field(default_factory=list)
     puntos_usados: list[PuntoPerfil] = field(default_factory=list)

@@ -47,6 +47,10 @@ def construir_parser() -> argparse.ArgumentParser:
     generar.add_argument(
         "--idioma", choices=IDIOMAS_SOPORTADOS, help="Idioma del borrador (por defecto, el de la empresa)."
     )
+    generar.add_argument(
+        "--nombre-empresa",
+        help="Nombre de la empresa destinataria (por defecto, el que aparece en el texto).",
+    )
     generar.add_argument("--modelo", help="Modelo de Ollama.")
     generar.add_argument("--ollama-host", help="URL de Ollama.")
     generar.add_argument("--timeout", type=float, help="Segundos máximos por llamada al modelo.")
@@ -73,6 +77,7 @@ def _leer(ruta: str | None, flag: str, permite_stdin: bool) -> str:
 def _imprimir_borrador(resultado: Resultado) -> None:
     borrador = resultado.borrador
     print(f"=== Borrador ({resultado.idioma}, {contar_palabras(borrador.texto)} palabras) ===")
+    print(_linea_empresa(resultado))
     print(borrador.texto)
     print()
     print("=== Datos de la empresa usados ===")
@@ -85,6 +90,13 @@ def _imprimir_borrador(resultado: Resultado) -> None:
     print()
     print("Revisá el borrador antes de enviarlo. Este programa no envía nada.")
     _imprimir_registro(resultado, sys.stdout)
+
+
+def _linea_empresa(resultado: Resultado) -> str:
+    if not resultado.nombre_empresa:
+        return "Empresa: no identificada; el borrador no nombra ninguna empresa"
+    origen = "indicado por vos" if resultado.origen_nombre_empresa == "usuario" else "tomado del texto"
+    return f"Empresa: {resultado.nombre_empresa} ({origen})"
 
 
 def _imprimir_sin_borrador(resultado: Resultado) -> None:
@@ -115,7 +127,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: {error}", file=sys.stderr)
         return CODIGO_USO_INCORRECTO
 
-    entrada = Entrada(texto_empresa=texto_empresa, perfil=perfil, idioma_solicitado=args.idioma)
+    entrada = Entrada(
+        texto_empresa=texto_empresa,
+        perfil=perfil,
+        idioma_solicitado=args.idioma,
+        nombre_empresa_solicitado=(args.nombre_empresa or "").strip() or None,
+    )
     resultado = ejecutar(entrada, crear_proveedor(config), config)
 
     if args.json:

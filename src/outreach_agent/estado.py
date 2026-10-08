@@ -18,6 +18,10 @@ class EstadoGrafo(TypedDict, total=False):
     nonce: str
     idioma_objetivo: str | None
     idioma_empresa: str | None
+    nombre_empresa: str | None  # el del usuario o el del texto, verificado
+    origen_nombre_empresa: str | None  # "usuario" | "texto"
+    nombre_empresa_candidato: str | None  # el que devolvió el investigador
+    nombre_empresa_descartado: dict  # {"nombre": ..., "causa": ...}
     hechos_candidatos: list[Hecho]
     instrucciones_detectadas: list[str]
     hechos: list[Hecho]  # verificados

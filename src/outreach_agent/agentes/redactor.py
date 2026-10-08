@@ -33,7 +33,12 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
 
     idioma = estado.get("idioma_objetivo")
     system, user = mensajes_redactor(
-        estrategia, hechos_elegidos, idioma, ejemplos_relleno(idioma), fallos
+        estrategia,
+        hechos_elegidos,
+        idioma,
+        ejemplos_relleno(idioma),
+        fallos,
+        estado.get("nombre_empresa"),
     )
     datos = llamar_json(
         provider,

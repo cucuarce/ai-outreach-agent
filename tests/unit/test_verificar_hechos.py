@@ -50,3 +50,51 @@ def test_duplicado():
     resultado = verificar(original, copia)
     assert [h.id for h in resultado["hechos"]] == ["H1"]
     assert resultado["hechos_descartados"] == [{"id": "H2", "causa": "duplicado"}]
+
+
+# --- Nombre de la empresa (T033d, research R12) ---
+
+
+def verificar_nombre(candidato, **extra):
+    estado = {
+        "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
+        "hechos_candidatos": [],
+        "nombre_empresa_candidato": candidato,
+        **extra,
+    }
+    return verificar_hechos(estado)
+
+
+def test_nombre_literal_se_acepta():
+    resultado = verificar_nombre("Nubeluz")
+    assert resultado["nombre_empresa"] == "Nubeluz"
+    assert resultado["origen_nombre_empresa"] == "texto"
+
+
+def test_nombre_no_literal_se_descarta():
+    resultado = verificar_nombre("Nube Luz SA")
+    assert "nombre_empresa" not in resultado
+    assert resultado["nombre_empresa_descartado"] == {
+        "nombre": "Nube Luz SA",
+        "causa": "nombre_no_localizable",
+    }
+
+
+def test_nombre_demasiado_largo_se_descarta():
+    resultado = verificar_nombre("Nubeluz " * 11)  # > 80 caracteres
+    assert resultado["nombre_empresa_descartado"]["causa"] == "nombre_demasiado_largo"
+
+
+def test_nombre_vacio_o_null_no_se_registra():
+    for candidato in (None, "", "   "):
+        resultado = verificar_nombre(candidato)
+        assert "nombre_empresa" not in resultado
+        assert "nombre_empresa_descartado" not in resultado
+
+
+def test_nombre_del_usuario_no_se_pisa():
+    resultado = verificar_nombre(
+        "Nubeluz", nombre_empresa="Campo Claro", origen_nombre_empresa="usuario"
+    )
+    assert "nombre_empresa" not in resultado  # el nodo no lo toca; queda el del usuario
+    assert "nombre_empresa_descartado" not in resultado

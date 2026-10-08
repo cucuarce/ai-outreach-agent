@@ -1,12 +1,15 @@
-"""Nodo determinista verificar_hechos (research R3 y R5).
+"""Nodo determinista verificar_hechos (research R3, R5 y R12).
 
 Pasa a `hechos` los candidatos del investigador que se pueden comprobar contra el texto de la
-empresa y deja el resto en `hechos_descartados` con su causa.
+empresa y deja el resto en `hechos_descartados` con su causa. También verifica el nombre de la
+empresa que propuso el investigador, salvo que el usuario haya indicado uno.
 """
 
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import MAX_CITA, Hecho
 from outreach_agent.verificacion.texto import contiene_ancla, contiene_literal, normalizar
+
+MAX_NOMBRE_EMPRESA = 80
 
 
 def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) -> str | None:
@@ -21,6 +24,26 @@ def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) 
     return None
 
 
+def causa_de_descarte_nombre(nombre: str, texto_empresa: str) -> str | None:
+    if len(nombre) > MAX_NOMBRE_EMPRESA:
+        return "nombre_demasiado_largo"
+    if not contiene_literal(texto_empresa, nombre):
+        return "nombre_no_localizable"
+    return None
+
+
+def _verificar_nombre(estado: EstadoGrafo, texto_empresa: str) -> dict:
+    if estado.get("origen_nombre_empresa") == "usuario":
+        return {}  # el nombre del usuario tiene prioridad
+    nombre = (estado.get("nombre_empresa_candidato") or "").strip()
+    if not nombre:
+        return {}
+    causa = causa_de_descarte_nombre(nombre, texto_empresa)
+    if causa:
+        return {"nombre_empresa_descartado": {"nombre": nombre, "causa": causa}}
+    return {"nombre_empresa": nombre, "origen_nombre_empresa": "texto"}
+
+
 def verificar_hechos(estado: EstadoGrafo) -> dict:
     texto_empresa = estado["entrada"].texto_empresa
     validos: list[Hecho] = []
@@ -33,4 +56,8 @@ def verificar_hechos(estado: EstadoGrafo) -> dict:
         else:
             validos.append(hecho)
             citas_vistas.add(normalizar(hecho.cita))
-    return {"hechos": validos, "hechos_descartados": descartados}
+    return {
+        "hechos": validos,
+        "hechos_descartados": descartados,
+        **_verificar_nombre(estado, texto_empresa),
+    }

@@ -29,6 +29,11 @@ def preparar_entrada(estado: EstadoGrafo) -> dict:
         "idioma_empresa": idioma_empresa,
         "idioma_objetivo": idioma_objetivo,
     }
+    nombre_usuario = (entrada.nombre_empresa_solicitado or "").strip()
+    if nombre_usuario:
+        # Entrada del usuario: tiene prioridad y no se verifica contra el texto (research R12).
+        actualizacion["nombre_empresa"] = nombre_usuario
+        actualizacion["origen_nombre_empresa"] = "usuario"
     if idioma_objetivo is None:
         actualizacion["resultado"] = Resultado(
             estado=Estado.INSUFICIENTE,

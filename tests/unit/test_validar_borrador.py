@@ -94,3 +94,36 @@ def test_falla_varios_criterios_a_la_vez():
     texto = " ".join(["word"] * 60) + " I look forward to hearing from you."
     resultado = validar(texto, idioma_objetivo="es")
     assert set(criterios(resultado)) == {"longitud", "relleno", "idioma", "hechos", "perfil"}
+
+
+# --- Criterio empresa (T033f, FR-019) ---
+
+
+def test_empresa_presente_no_falla():
+    assert validar(nombre_empresa="Nubeluz").ok
+
+
+def test_empresa_ausente_falla():
+    texto = TEXTO.replace("Nubeluz", "Pagosur")
+    resultado = validar(texto, nombre_empresa="Nubeluz")
+    assert criterios(resultado) == ["empresa"]
+    assert resultado.fallos[0].detalle == 'el borrador no menciona a "Nubeluz"'
+
+
+def test_sin_nombre_el_criterio_no_aplica():
+    assert validar(TEXTO.replace("Nubeluz", "Pagosur")).ok
+
+
+def test_nombre_dentro_de_otra_palabra_no_cuenta():
+    texto = TEXTO.replace("Nubeluz", "Nubeluzia")
+    assert criterios(validar(texto, nombre_empresa="Nubeluz")) == ["empresa"]
+
+
+def test_numeros_permitidos_por_nombre_solo_si_lo_indico_el_usuario():
+    from outreach_agent.verificacion.borrador import numeros_permitidos_por_nombre
+
+    usuario = {"nombre_empresa": "Grupo 3M", "origen_nombre_empresa": "usuario"}
+    texto = {"nombre_empresa": "ZEBRA-7731", "origen_nombre_empresa": "texto"}
+    assert numeros_permitidos_por_nombre(usuario) == {"3"}
+    assert numeros_permitidos_por_nombre(texto) == set()
+    assert numeros_permitidos_por_nombre({}) == set()

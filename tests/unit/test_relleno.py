@@ -13,13 +13,21 @@ def test_lista_tiene_las_frases_de_la_spec_expandidas():
     assert {"Soy una persona apasionada", "Soy una persona proactiva"} <= set(es)
     assert "Me pongo en contacto con usted para" in es  # sin "…"
     assert "I am a results-driven professional" in en
-    assert len(es) == 13 and len(en) == 12
+    assert len(es) == 15 and len(en) == 14
     assert frases_relleno("pt") == []
 
 
 def test_detecta_con_mayusculas_y_tildes_distintas():
     texto = "ESPERO QUE ESTE MENSAJE TE ENCUENTRE BIÉN. Quería contarte algo."
     assert encontrar_relleno(texto) == ["Espero que este mensaje te encuentre bien"]
+
+
+def test_detecta_las_frases_del_checkpoint_de_la_historia_1():
+    texto = "Me siento entusiasmado con la oportunidad de unirme a su equipo."
+    assert encontrar_relleno(texto) == ["Me siento entusiasmado con la oportunidad"]
+    assert encontrar_relleno("Estoy ansioso por contribuir a la innovación.") == [
+        "Estoy ansioso por contribuir"
+    ]
 
 
 def test_detecta_frases_de_cualquier_idioma():

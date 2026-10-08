@@ -25,6 +25,7 @@ PERFIL = (
 )
 
 INVESTIGADOR = {
+    "nombre_empresa": "Nubeluz",
     "hechos": [
         {
             "id": "H1",
@@ -119,6 +120,7 @@ TEXTO_EMPRESA_EN = (
 )
 
 INVESTIGADOR_EN = {
+    "nombre_empresa": "Nubeluz",
     "hechos": [
         {
             "id": "H1",
@@ -166,6 +168,7 @@ TEXTO_EMPRESA_LARGO = (
 )
 
 INVESTIGADOR_LARGO = {
+    "nombre_empresa": "Nubeluz",
     "hechos": [
         {
             "id": "H1",

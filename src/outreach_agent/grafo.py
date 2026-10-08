@@ -35,6 +35,10 @@ def finalizar(estado: EstadoGrafo) -> dict:
     con un resultado, lo deja como está."""
     if "resultado" in estado:
         return {}
+    empresa = {
+        "nombre_empresa": estado.get("nombre_empresa"),
+        "origen_nombre_empresa": estado.get("origen_nombre_empresa"),
+    }
     validacion = estado.get("validacion")
     if validacion is not None and not validacion.ok:
         intentos = estado.get("intento", 0)
@@ -45,6 +49,7 @@ def finalizar(estado: EstadoGrafo) -> dict:
             motivo=Motivo.VALIDACION_FALLIDA,
             detalle=f"No se logró un borrador válido en {intentos} intento(s) de redacción.",
             fallos=validacion.fallos,
+            **empresa,
         )
         return {"resultado": resultado}
 
@@ -58,6 +63,7 @@ def finalizar(estado: EstadoGrafo) -> dict:
         borrador=borrador,
         hechos_usados=[h for h in hechos_disponibles(estado) if h.id in usados_h],
         puntos_usados=[p for p in estado["estrategia"].puntos_perfil if p.id in usados_p],
+        **empresa,
     )
     return {"resultado": resultado}
 

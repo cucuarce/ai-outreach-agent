@@ -9,7 +9,12 @@ from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Fallo, ResultadoValidacion
 from outreach_agent.verificacion.idioma import detectar_idioma
 from outreach_agent.verificacion.relleno import encontrar_relleno
-from outreach_agent.verificacion.texto import contar_palabras, contiene_ancla
+from outreach_agent.verificacion.texto import (
+    contar_palabras,
+    contiene_ancla,
+    contiene_palabra,
+    extraer_numeros,
+)
 
 MIN_PALABRAS = 80
 MAX_PALABRAS = 150
@@ -61,6 +66,22 @@ def _anclas(texto: str, usados: list[str], disponibles: dict, minimo: int, crite
     return Fallo(criterio, detalle)
 
 
+def _empresa(texto: str, nombre: str | None) -> Fallo | None:
+    """Si se conoce el nombre de la empresa, debe aparecer en el borrador (FR-019). Sin nombre,
+    el criterio no aplica: que el borrador no nombre otra empresa depende del prompt (R12)."""
+    if not nombre or contiene_palabra(texto, nombre):
+        return None
+    return Fallo("empresa", f'el borrador no menciona a "{nombre}"')
+
+
+def numeros_permitidos_por_nombre(estado: EstadoGrafo) -> set[str]:
+    """Dígitos del nombre de la empresa que el criterio `numeros` (T046) acepta: solo los de un
+    nombre indicado por el usuario, nunca los de uno extraído del texto (research R12)."""
+    if estado.get("origen_nombre_empresa") != "usuario":
+        return set()
+    return set(extraer_numeros(estado.get("nombre_empresa") or ""))
+
+
 def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
     borrador = estado["borrador"]
     texto = borrador.texto
@@ -75,6 +96,7 @@ def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
             _idioma(texto, estado.get("idioma_objetivo")),
             _anclas(texto, borrador.hechos_usados, hechos, MIN_HECHOS, "hechos"),
             _anclas(texto, borrador.puntos_usados, puntos, MIN_PUNTOS, "perfil"),
+            _empresa(texto, estado.get("nombre_empresa")),
         )
         if fallo is not None
     ]
