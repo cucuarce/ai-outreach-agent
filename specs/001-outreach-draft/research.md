@@ -101,11 +101,24 @@ estructura del grafo limita qué puede lograr una instrucción aunque el modelo 
    aparezca literalmente en el texto de la empresa (tras normalizar espacios). Los hechos sin
    cita localizable se descartan. Esto impide que una instrucción haga "inventar" hechos.
 3. **Filtro de patrones de instrucción** (`verificar_hechos`): se descarta todo hecho cuya cita
-   coincida con la lista de patrones de instrucción (por ejemplo `ignor(a|á|e) (lo|todo|las)
-   (anterior|instrucciones)`, `ignore (all |the )?previous`, `(asistente|assistant|IA|AI|modelo)\s*[:,]`,
-   `system prompt`, `nota para`). Es una red de seguridad para el caso en que el modelo trate una
-   instrucción como hecho; los descartes quedan en la traza. Después del filtro rige el umbral
-   de 2 hechos, lo que implementa el escenario 4 de la Historia 3.
+   coincida con la lista de patrones de instrucción. Es una red de seguridad para el caso en que
+   el modelo trate una instrucción como hecho; los descartes quedan en la traza. Después del
+   filtro rige el umbral de 2 hechos, lo que implementa el escenario 4 de la Historia 3.
+   Los patrones son acotados para no descartar citas legítimas de empresas de IA (por ejemplo
+   "soluciones de IA, visión y NLP", "AI, data and cloud" o un título "IA: escribimos…").
+   Todos son case-insensitive:
+   - Anulación de instrucciones: `\bignor(a|á|e|ar)\s+(todo\s+)?(lo|las|los)\s+(anterior(es)?|instrucciones|reglas)`,
+     `\bignore\s+(all\s+|any\s+)?(the\s+)?(previous|prior|above)`, `\bolvid(a|á|e)\s+(todo\s+)?(lo|las)\s+(anterior|instrucciones)`,
+     `\bforget\s+(all\s+|everything\s+)?(previous|prior|above|your)`, `\bsystem\s+prompt\b`.
+   - Mensajes dirigidos al modelo: `\b(nota|mensaje|instrucci(o|ó)n(es)?)\s+para\s+(el|la|los)?\s*(asistente|ia|modelo|llm|chatbot)\b`,
+     `\bnote\s+to\s+(the\s+)?(ai|assistant|model|llm|chatbot)\b`.
+   - Vocativo seguido de una orden: el término debe estar al inicio de línea u oración, seguido
+     de `:` (no de `,`) y de un verbo en imperativo:
+     `(^|[.!?]\s+)(asistente|assistant|ia|ai|modelo|model|llm|chatbot)\s*:\s*(por\s+favor\s+|please\s+)?(ignor(a|á|e)|olvid(a|á|e)|escrib(í|e|a)|inclu(í|ye|ya)|agreg(á|a|ue)|añad(í|e|a)|respond(é|e|a)|dec(í)|di|diga|ignore|forget|write|include|add|reply|respond|say|output)\b`
+     (con `re.MULTILINE`).
+
+   La coma no se usa como señal de vocativo, porque "IA," y "AI," aparecen en enumeraciones
+   legítimas. Un test con el texto de una empresa de IA verifica que esas citas no se descartan.
 4. **Ruteo no controlable por el LLM**: las aristas condicionales dependen solo de conteos y
    resultados de verificación deterministas. Ningún agente tiene herramientas, ninguna salida se
    ejecuta y no existe ningún nodo capaz de enviar nada (principio III).
