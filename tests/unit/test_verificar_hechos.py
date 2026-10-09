@@ -100,3 +100,37 @@ def test_nombre_del_usuario_no_se_pisa():
     )
     assert "nombre_empresa" not in resultado  # el nodo no lo toca; queda el del usuario
     assert "nombre_empresa_descartado" not in resultado
+
+
+# --- Reducción del ancla a su cifra (research R5) ---
+
+
+def test_ancla_frase_con_cifra_se_reduce_a_la_cifra():
+    hecho = Hecho("H1", "d", "procesa 2 millones de transacciones al mes", "2 millones de transacciones")
+    [verificado] = verificar(hecho)["hechos"]
+    assert verificado.ancla == "2"
+    assert verificado.cita == hecho.cita  # solo cambia el ancla
+
+
+def test_ancla_con_cifra_decimal_conserva_el_formato_de_la_cita():
+    texto = "Hoy monitoreamos 1,2 millones de hectáreas en Argentina."
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(texto, escenarios.PERFIL),
+        "hechos_candidatos": [
+            Hecho("H1", "d", "monitoreamos 1,2 millones de hectáreas", "1,2 millones de hectáreas")
+        ],
+    }
+    [verificado] = verificar_hechos(estado)["hechos"]
+    assert verificado.ancla == "1,2"
+
+
+def test_nombre_propio_con_digitos_no_se_reduce():
+    texto = "En 2025 lanzamos Lote360, una app de rinde."
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(texto, escenarios.PERFIL),
+        "hechos_candidatos": [Hecho("H1", "d", "En 2025 lanzamos Lote360", "Lote360")],
+    }
+    [verificado] = verificar_hechos(estado)["hechos"]
+    assert verificado.ancla == "Lote360"

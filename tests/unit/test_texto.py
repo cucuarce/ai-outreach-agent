@@ -96,3 +96,24 @@ def test_extraer_urls_emails():
         "ana.perez@mail.com",
     ]
     assert extraer_urls_emails("sin enlaces") == []
+
+
+@pytest.mark.parametrize(
+    "ancla, esperada",
+    [
+        ("1,2 millones de hectáreas", "1,2"),
+        ("2 millones", "2"),
+        ("10.000 consultas diarias", "10.000"),
+        ("un 30% menos", "30%"),
+        ("2", "2"),
+        (" 30% ", "30%"),
+        ("Lote360", "Lote360"),
+        ("Sentinel-2", "Sentinel-2"),
+        ("Kubernetes", "Kubernetes"),
+        ("pipelines de imágenes satelitales", "pipelines de imágenes satelitales"),
+    ],
+)
+def test_reducir_ancla(ancla, esperada):
+    from outreach_agent.verificacion.texto import reducir_ancla
+
+    assert reducir_ancla(ancla) == esperada

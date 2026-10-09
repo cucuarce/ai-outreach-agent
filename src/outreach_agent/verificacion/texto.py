@@ -48,6 +48,22 @@ def es_cifra(s: str) -> bool:
     return _CIFRA.fullmatch(s.strip()) is not None
 
 
+def reducir_ancla(ancla: str) -> str:
+    """Si el ancla es una frase con una cifra suelta, la reduce a esa cifra tal como aparece:
+    "1,2 millones de hectáreas" → "1,2". Las palabras que acompañan a la cifra se traducen y
+    harían fallar la validación de un borrador en otro idioma (research R5).
+
+    Solo cuenta una cifra que es una palabra completa: "Lote360" o "Sentinel-2" son nombres
+    propios con dígitos y quedan igual."""
+    if es_cifra(ancla):
+        return ancla.strip()
+    for palabra in ancla.split():
+        palabra = palabra.strip(".,;:()\"'¿?¡!")
+        if es_cifra(palabra):
+            return palabra
+    return ancla
+
+
 def contiene_ancla(texto: str, ancla: str) -> bool:
     """Una cifra se compara contra los números del texto ("2" no está en "2024"); cualquier
     otra ancla, por palabra completa."""

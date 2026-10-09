@@ -5,10 +5,17 @@ empresa y deja el resto en `hechos_descartados` con su causa. También verifica 
 empresa que propuso el investigador, salvo que el usuario haya indicado uno.
 """
 
+from dataclasses import replace
+
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
 from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
-from outreach_agent.verificacion.texto import contiene_ancla, contiene_literal, normalizar
+from outreach_agent.verificacion.texto import (
+    contiene_ancla,
+    contiene_literal,
+    normalizar,
+    reducir_ancla,
+)
 
 MAX_NOMBRE_EMPRESA = 80
 MIN_HECHOS = 2  # umbral de "datos concretos suficientes" (FR-009)
@@ -52,6 +59,7 @@ def verificar_hechos(estado: EstadoGrafo) -> dict:
     descartados: list[dict] = []
     citas_vistas: set[str] = set()
     for hecho in estado.get("hechos_candidatos", []):
+        hecho = replace(hecho, ancla=reducir_ancla(hecho.ancla))
         causa = causa_de_descarte(hecho, texto_empresa, citas_vistas)
         if causa:
             descartados.append({"id": hecho.id, "causa": causa})
