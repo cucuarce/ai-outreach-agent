@@ -220,6 +220,15 @@ Si el modelo elige un ancla que en realidad se traduce (por ejemplo "aprendizaje
 el borrador la traduce, la validación falla y el redactor reintenta con el detalle del ancla
 faltante; si no lo logra, el resultado es `invalido` en vez de un borrador sin verificar.
 
+Como el modelo no siempre respeta la regla de las cifras, `verificar_hechos` reduce el ancla de
+cada dato que es una frase con una cifra suelta a esa cifra, tal como aparece ("1,2 millones de
+hectáreas" → "1,2"). Una cifra pegada a letras forma parte de un nombre propio y no se reduce
+("Lote360", "Sentinel-2").
+
+Las frases comunes (anclas que no son nombres propios, cifras ni términos técnicos, como
+"pipelines de imágenes satelitales") no se pueden validar como intraducibles de forma
+determinista; su efecto se mide en la evaluación.
+
 **Rationale**: convierte "menciona al menos dos datos concretos" y "conecta explícitamente con un
 punto del perfil" en comprobaciones deterministas, localizables en las entradas (SC-002) e
 independientes del idioma del borrador. Al no depender del idioma, desaparece el caso en que la
