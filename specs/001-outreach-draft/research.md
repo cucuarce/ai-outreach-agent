@@ -308,6 +308,7 @@ fiable; se puede agregar más adelante).
 | `max_tokens` del investigador | — | `OUTREACH_MAX_TOKENS_INVESTIGADOR` | `2000` |
 | `max_tokens` del estratega | — | `OUTREACH_MAX_TOKENS_ESTRATEGA` | `1200` |
 | `max_tokens` del redactor | — | `OUTREACH_MAX_TOKENS_REDACTOR` | `800` |
+| Temperatura del redactor | `--temp-redactor` | `OUTREACH_TEMP_REDACTOR` | `0.3` |
 
 Los `max_tokens` por agente se configuran solo por variable de entorno, sin flag, para no
 cargar el CLI con opciones de ajuste fino (contracts/agent-outputs.md).
@@ -377,6 +378,11 @@ Ninguna validación lo detectó porque "Granix" sí aparece en las entradas.
 **Rationale**: convierte "no dirigirse a la empresa equivocada" en una comprobación determinista
 cuando el nombre se conoce, y reduce el riesgo cuando no se conoce. Exigir que el nombre
 aparezca literal en el texto impide que el investigador lo invente.
+
+**Limitación (afirmaciones inventadas)**: las afirmaciones inventadas que reutilizan datos de
+las entradas (por ejemplo, "similar a la mejora de Lote360", donde "Lote360" y las cifras sí están
+en las entradas) no se detectan automáticamente; se mitigan en el prompt del redactor y se miden
+en la evaluación.
 
 **Limitación**: cuando no hay nombre, que el borrador no nombre otra empresa depende solo del
 prompt. No hay un control determinista porque no se puede distinguir, sin un modelo, qué nombres

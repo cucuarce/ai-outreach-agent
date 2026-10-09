@@ -5,6 +5,7 @@
 ```text
 outreach generar --empresa RUTA|- --perfil RUTA [--idioma CODIGO] [--modelo NOMBRE]
                  [--ollama-host URL] [--timeout SEG] [--num-ctx TOKENS] [--reintentos N]
+                 [--temp-redactor T] [--nombre-empresa NOMBRE]
                  [--registros DIR] [--json]
 ```
 
@@ -14,7 +15,7 @@ outreach generar --empresa RUTA|- --perfil RUTA [--idioma CODIGO] [--modelo NOMB
 | `--perfil` | sí | Archivo de texto UTF-8 con el perfil del usuario. |
 | `--idioma` | no | `es`, `en`, `pt`, `fr`, `de` o `it`. Fuerza el idioma del borrador (FR-018). |
 | `--nombre-empresa` | no | Nombre de la empresa destinataria. Tiene prioridad sobre el extraído del texto (FR-019). |
-| `--modelo`, `--ollama-host`, `--timeout`, `--num-ctx`, `--reintentos`, `--registros` | no | Ver research R9 (flag > variable de entorno > default). |
+| `--modelo`, `--ollama-host`, `--timeout`, `--num-ctx`, `--reintentos`, `--temp-redactor`, `--registros` | no | Ver research R9 (flag > variable de entorno > default). |
 | `--json` | no | Imprime el `Resultado` como JSON en stdout en lugar del formato legible. |
 
 No existe ningún flag ni subcomando para enviar mensajes ni para elegir Bedrock (principios III y
