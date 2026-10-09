@@ -5,6 +5,7 @@ from tests import escenarios
 
 def verificar(*candidatos):
     estado = {
+        "run_id": "prueba",
         "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
         "hechos_candidatos": list(candidatos),
     }
@@ -57,6 +58,7 @@ def test_duplicado():
 
 def verificar_nombre(candidato, **extra):
     estado = {
+        "run_id": "prueba",
         "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
         "hechos_candidatos": [],
         "nombre_empresa_candidato": candidato,

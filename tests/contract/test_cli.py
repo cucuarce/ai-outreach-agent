@@ -157,3 +157,30 @@ def test_linea_empresa_no_identificada(archivos, monkeypatch, capsys):
     assert generar("--empresa", empresa, "--perfil", perfil) == 0
     salida = capsys.readouterr().out
     assert "Empresa: no identificada; el borrador no nombra ninguna empresa" in salida
+
+
+def test_temp_redactor_llega_al_proveedor(archivos, proveedor_falso):
+    empresa, perfil = archivos
+    generar("--empresa", empresa, "--perfil", perfil, "--temp-redactor", 0.1)
+    assert proveedor_falso["config"].temperatura_redactor == 0.1
+    assert proveedor_falso["provider"].llamadas[2]["temperatura"] == 0.1
+
+
+# --- Historia 2 (T035) ---
+
+
+def test_insuficiente_sale_con_3_y_explica_en_stderr(tmp_path, monkeypatch, capsys):
+    empresa = tmp_path / "vacia.txt"
+    perfil = tmp_path / "perfil.txt"
+    empresa.write_text("   \n", encoding="utf-8")
+    perfil.write_text(escenarios.PERFIL, encoding="utf-8")
+    monkeypatch.setattr(cli, "crear_proveedor", lambda config: FakeProvider([]))
+
+    codigo = generar("--empresa", empresa, "--perfil", perfil)
+    salida = capsys.readouterr()
+
+    assert codigo == 3
+    assert "Motivo: empresa_vacia" in salida.err
+    assert "Pegá el texto" in salida.err  # sugerencia de cómo corregir la entrada
+    assert "=== Borrador" not in salida.out
+    assert salida.out == ""

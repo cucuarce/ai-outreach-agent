@@ -78,3 +78,17 @@ def test_json_invalido_dos_veces_termina_en_respuesta_invalida():
 
     assert resultado.estado is Estado.ERROR
     assert resultado.motivo is Motivo.RESPUESTA_INVALIDA_LLM
+
+
+def test_temperatura_del_redactor_llega_al_proveedor():
+    from dataclasses import replace
+
+    provider = FakeProvider(escenarios.respuestas_flujo_valido())
+    correr(provider)
+    assert provider.llamadas[2]["temperatura"] == 0.3  # default
+
+    provider = FakeProvider(escenarios.respuestas_flujo_valido())
+    config = replace(cargar_config(env={}), temperatura_redactor=0.9)
+    entrada = Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL)
+    ejecutar(entrada, provider, config)
+    assert provider.llamadas[2]["temperatura"] == 0.9

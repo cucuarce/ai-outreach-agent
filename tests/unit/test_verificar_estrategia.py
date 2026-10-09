@@ -7,6 +7,7 @@ from tests import escenarios
 
 def verificar(datos_estrategia, hechos=None):
     estado = {
+        "run_id": "prueba",
         "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
         "hechos": escenarios.hechos() if hechos is None else hechos,
         "estrategia": escenarios.estrategia(datos_estrategia),

@@ -6,10 +6,12 @@ empresa que propuso el investigador, salvo que el usuario haya indicado uno.
 """
 
 from outreach_agent.estado import EstadoGrafo
-from outreach_agent.modelos import MAX_CITA, Hecho
+from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
+from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
 from outreach_agent.verificacion.texto import contiene_ancla, contiene_literal, normalizar
 
 MAX_NOMBRE_EMPRESA = 80
+MIN_HECHOS = 2  # umbral de "datos concretos suficientes" (FR-009)
 
 
 def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) -> str | None:
@@ -56,8 +58,14 @@ def verificar_hechos(estado: EstadoGrafo) -> dict:
         else:
             validos.append(hecho)
             citas_vistas.add(normalizar(hecho.cita))
-    return {
+    actualizacion = {
         "hechos": validos,
         "hechos_descartados": descartados,
         **_verificar_nombre(estado, texto_empresa),
     }
+    if len(validos) < MIN_HECHOS:
+        detalle = detalle_hechos_insuficientes(len(validos), MIN_HECHOS)
+        actualizacion.update(
+            cortar({**estado, **actualizacion}, Motivo.HECHOS_INSUFICIENTES, detalle)
+        )
+    return actualizacion

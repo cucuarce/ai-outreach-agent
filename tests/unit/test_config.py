@@ -15,6 +15,7 @@ VARIABLES = [
     "OUTREACH_MAX_TOKENS_INVESTIGADOR",
     "OUTREACH_MAX_TOKENS_ESTRATEGA",
     "OUTREACH_MAX_TOKENS_REDACTOR",
+    "OUTREACH_TEMP_REDACTOR",
 ]
 
 
@@ -35,6 +36,7 @@ def test_defaults():
     assert config.max_tokens_investigador == 2000
     assert config.max_tokens_estratega == 1200
     assert config.max_tokens_redactor == 800
+    assert config.temperatura_redactor == 0.3
 
 
 def test_variable_de_entorno_pisa_default(monkeypatch):
@@ -68,3 +70,9 @@ def test_variable_invalida_da_error_claro(monkeypatch):
     monkeypatch.setenv("OUTREACH_OLLAMA_NUM_CTX", "mucho")
     with pytest.raises(ValueError, match="OUTREACH_OLLAMA_NUM_CTX"):
         cargar_config()
+
+
+def test_temperatura_del_redactor_por_entorno_y_por_flag(monkeypatch):
+    monkeypatch.setenv("OUTREACH_TEMP_REDACTOR", "0.5")
+    assert cargar_config().temperatura_redactor == 0.5
+    assert cargar_config(Namespace(temp_redactor=0.0)).temperatura_redactor == 0.0

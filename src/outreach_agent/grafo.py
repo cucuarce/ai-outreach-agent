@@ -10,8 +10,6 @@
 
 Los tres agentes (investigador, estratega, redactor) llaman al LLM; el resto de los nodos son
 deterministas. Las decisiones de ruteo dependen solo de campos ya verificados del estado.
-Los cortes por datos insuficientes después de verificar_hechos y verificar_estrategia se
-agregan en la Historia 2.
 """
 
 from langgraph.graph import END, START, StateGraph
@@ -72,6 +70,16 @@ def ruta_despues_de_preparar(estado: EstadoGrafo) -> str:
     return END if "resultado" in estado else "investigador"
 
 
+def ruta_despues_de_verificar_hechos(estado: EstadoGrafo) -> str:
+    # verificar_hechos deja un resultado si hay menos de 2 hechos válidos.
+    return "finalizar" if "resultado" in estado else "estratega"
+
+
+def ruta_despues_de_verificar_estrategia(estado: EstadoGrafo) -> str:
+    # verificar_estrategia deja un resultado si no quedan puntos del perfil o conexiones.
+    return "finalizar" if "resultado" in estado else "redactor"
+
+
 def ruta_despues_de_validar(max_reintentos: int):
     def ruta(estado: EstadoGrafo) -> str:
         if estado["validacion"].ok:
@@ -102,9 +110,13 @@ def construir_grafo(provider: LLMProvider, config: Config):
         "preparar_entrada", ruta_despues_de_preparar, ["investigador", END]
     )
     grafo.add_edge("investigador", "verificar_hechos")
-    grafo.add_edge("verificar_hechos", "estratega")
+    grafo.add_conditional_edges(
+        "verificar_hechos", ruta_despues_de_verificar_hechos, ["estratega", "finalizar"]
+    )
     grafo.add_edge("estratega", "verificar_estrategia")
-    grafo.add_edge("verificar_estrategia", "redactor")
+    grafo.add_conditional_edges(
+        "verificar_estrategia", ruta_despues_de_verificar_estrategia, ["redactor", "finalizar"]
+    )
     grafo.add_edge("redactor", "validar_borrador")
     grafo.add_conditional_edges(
         "validar_borrador",

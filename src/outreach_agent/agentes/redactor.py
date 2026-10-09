@@ -14,8 +14,6 @@ from outreach_agent.modelos import Borrador
 from outreach_agent.proveedores.base import LLMProvider
 from outreach_agent.verificacion.relleno import ejemplos_relleno
 
-TEMPERATURA = 0.7
-
 
 def _validar(datos: dict) -> None:
     if not exigir_texto(datos, "texto", "la respuesta").strip():
@@ -46,7 +44,7 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
         user,
         _validar,
         max_tokens=config.max_tokens_redactor,
-        temperatura=TEMPERATURA,
+        temperatura=config.temperatura_redactor,
     )
     borrador = Borrador(
         texto=datos["texto"],

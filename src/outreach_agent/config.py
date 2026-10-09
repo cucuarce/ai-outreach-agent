@@ -13,6 +13,7 @@ _PARAMETROS = {
     "num_ctx": ("num_ctx", "OUTREACH_OLLAMA_NUM_CTX", 16384, int),
     "max_reintentos": ("reintentos", "OUTREACH_MAX_REINTENTOS", 2, int),
     "dir_registros": ("registros", "OUTREACH_RUNS_DIR", Path("runs"), Path),
+    "temperatura_redactor": ("temp_redactor", "OUTREACH_TEMP_REDACTOR", 0.3, float),
     # Los max_tokens por agente solo se configuran por variable de entorno, sin flag.
     "max_tokens_investigador": (None, "OUTREACH_MAX_TOKENS_INVESTIGADOR", 2000, int),
     "max_tokens_estratega": (None, "OUTREACH_MAX_TOKENS_ESTRATEGA", 1200, int),
@@ -28,6 +29,7 @@ class Config:
     num_ctx: int
     max_reintentos: int
     dir_registros: Path
+    temperatura_redactor: float
     max_tokens_investigador: int
     max_tokens_estratega: int
     max_tokens_redactor: int

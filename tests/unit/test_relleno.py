@@ -13,7 +13,7 @@ def test_lista_tiene_las_frases_de_la_spec_expandidas():
     assert {"Soy una persona apasionada", "Soy una persona proactiva"} <= set(es)
     assert "Me pongo en contacto con usted para" in es  # sin "…"
     assert "I am a results-driven professional" in en
-    assert len(es) == 15 and len(en) == 14
+    assert len(es) == 16 and len(en) == 15
     assert frases_relleno("pt") == []
 
 

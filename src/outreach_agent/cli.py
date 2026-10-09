@@ -56,6 +56,9 @@ def construir_parser() -> argparse.ArgumentParser:
     generar.add_argument("--timeout", type=float, help="Segundos máximos por llamada al modelo.")
     generar.add_argument("--num-ctx", type=int, help="Ventana de contexto del modelo, en tokens.")
     generar.add_argument("--reintentos", type=int, help="Reintentos de redacción.")
+    generar.add_argument(
+        "--temp-redactor", type=float, help="Temperatura del redactor (por defecto 0,3)."
+    )
     generar.add_argument("--registros", help="Carpeta donde se guardan los registros.")
     generar.add_argument("--json", action="store_true", help="Imprime el resultado como JSON.")
     return parser
