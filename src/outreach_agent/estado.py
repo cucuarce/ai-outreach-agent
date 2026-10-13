@@ -16,6 +16,7 @@ class EstadoGrafo(TypedDict, total=False):
     entrada: Entrada
     run_id: str
     nonce: str
+    texto_empresa_saneado: str  # sin "<<<" ni ">>>" (research R3); solo para el investigador
     idioma_objetivo: str | None
     idioma_empresa: str | None
     nombre_empresa: str | None  # el del usuario o el del texto, verificado

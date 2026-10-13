@@ -1,8 +1,7 @@
 """Validación determinista del borrador (research R2 y R5).
 
 Cada criterio es independiente y se devuelven todos los fallos, para que el redactor pueda
-corregirlos juntos en el reintento. Los criterios `numeros` y `enlaces` se agregan en la
-Historia 3.
+corregirlos juntos en el reintento.
 """
 
 from outreach_agent.estado import EstadoGrafo
@@ -14,6 +13,7 @@ from outreach_agent.verificacion.texto import (
     contiene_ancla,
     contiene_palabra,
     extraer_numeros,
+    extraer_urls_emails,
 )
 
 MIN_PALABRAS = 80
@@ -82,6 +82,35 @@ def numeros_permitidos_por_nombre(estado: EstadoGrafo) -> set[str]:
     return set(extraer_numeros(estado.get("nombre_empresa") or ""))
 
 
+def numeros_permitidos(estado: EstadoGrafo) -> set[str]:
+    """Números que el borrador puede usar: los de las citas de hechos verificados, los del perfil
+    y los del nombre indicado por el usuario. No alcanza con que un número esté en otra parte del
+    texto de la empresa: ahí puede estar una instrucción incrustada (research R3 y R12)."""
+    permitidos = set(extraer_numeros(estado["entrada"].perfil))
+    for hecho in estado.get("hechos", []):
+        permitidos.update(extraer_numeros(hecho.cita))
+    return permitidos | numeros_permitidos_por_nombre(estado)
+
+
+def _numeros(texto: str, estado: EstadoGrafo) -> Fallo | None:
+    no_permitidos = sorted(set(extraer_numeros(texto)) - numeros_permitidos(estado))
+    if not no_permitidos:
+        return None
+    return Fallo(
+        "numeros",
+        "números que no están en los datos verificados ni en el perfil: " + ", ".join(no_permitidos),
+    )
+
+
+def _enlaces(texto: str, perfil: str) -> Fallo | None:
+    """Solo se aceptan URLs o emails que estén en el perfil (FR-012)."""
+    perfil_min = perfil.lower()
+    no_permitidos = [e for e in extraer_urls_emails(texto) if e.lower() not in perfil_min]
+    if not no_permitidos:
+        return None
+    return Fallo("enlaces", "enlaces o emails que no están en el perfil: " + ", ".join(no_permitidos))
+
+
 def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
     borrador = estado["borrador"]
     texto = borrador.texto
@@ -97,6 +126,8 @@ def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
             _anclas(texto, borrador.hechos_usados, hechos, MIN_HECHOS, "hechos"),
             _anclas(texto, borrador.puntos_usados, puntos, MIN_PUNTOS, "perfil"),
             _empresa(texto, estado.get("nombre_empresa")),
+            _numeros(texto, estado),
+            _enlaces(texto, estado["entrada"].perfil),
         )
         if fallo is not None
     ]

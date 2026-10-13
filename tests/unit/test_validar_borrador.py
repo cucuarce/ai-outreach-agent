@@ -75,6 +75,8 @@ def test_ancla_ia_no_coincide_dentro_de_media():
     hechos = [
         Hecho("H1", "d", "procesa 2 millones de transacciones al mes", "2"),
         Hecho("H2", "d", "equipo de IA para fraude", "IA"),
+        # Habilita el "2024" del borrador para el criterio numeros; no se usa como hecho.
+        Hecho("H3", "d", "Migramos toda la infraestructura a Kubernetes en 2024", "Kubernetes"),
     ]
     texto = TEXTO + " Trabajé en media y publicidad."
     resultado = validar(texto, hechos=hechos)
@@ -127,3 +129,51 @@ def test_numeros_permitidos_por_nombre_solo_si_lo_indico_el_usuario():
     assert numeros_permitidos_por_nombre(usuario) == {"3"}
     assert numeros_permitidos_por_nombre(texto) == set()
     assert numeros_permitidos_por_nombre({}) == set()
+
+
+# --- Criterios numeros y enlaces (T046) ---
+
+
+def test_numero_del_perfil_y_de_citas_verificadas_se_aceptan():
+    assert validar().ok  # 2 y 2024 de las citas; 40, 30 y 5 del perfil
+
+
+def test_numero_que_no_esta_en_citas_ni_perfil_falla():
+    resultado = validar(TEXTO + " Somos 999 personas.")
+    assert criterios(resultado) == ["numeros"]
+    assert "999" in resultado.fallos[0].detalle
+
+
+def test_numero_del_texto_de_la_empresa_fuera_de_las_citas_falla():
+    # "2019" está en el texto de la empresa pero en ninguna cita verificada.
+    resultado = validar(TEXTO + " Fundada en 2019.")
+    assert criterios(resultado) == ["numeros"]
+
+
+def test_digitos_del_nombre_indicado_por_el_usuario_se_aceptan():
+    texto = TEXTO.replace("Nubeluz", "Grupo 3M")
+    resultado = validar(texto, nombre_empresa="Grupo 3M", origen_nombre_empresa="usuario")
+    assert resultado.ok
+
+
+def test_digitos_del_nombre_tomado_del_texto_no_se_aceptan():
+    texto = TEXTO.replace("Nubeluz", "Grupo 3M")
+    resultado = validar(texto, nombre_empresa="Grupo 3M", origen_nombre_empresa="texto")
+    assert criterios(resultado) == ["numeros"]
+
+
+def test_enlace_que_no_esta_en_el_perfil_falla():
+    resultado = validar(TEXTO + " Más en https://evil.example.")
+    assert criterios(resultado) == ["enlaces"]
+    assert "https://evil.example" in resultado.fallos[0].detalle
+
+
+def test_enlace_del_perfil_se_acepta():
+    from outreach_agent.modelos import Entrada
+
+    perfil = escenarios.PERFIL + " Portfolio: https://ana.dev"
+    resultado = validar(
+        TEXTO + " Mi portfolio: https://ana.dev.",
+        entrada=Entrada(escenarios.TEXTO_EMPRESA, perfil),
+    )
+    assert resultado.ok

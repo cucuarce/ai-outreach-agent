@@ -20,7 +20,7 @@ from outreach_agent.agentes.investigador import investigador
 from outreach_agent.agentes.redactor import redactor
 from outreach_agent.config import Config
 from outreach_agent.estado import EstadoGrafo
-from outreach_agent.modelos import Entrada, Estado, Motivo, Resultado
+from outreach_agent.modelos import ElementoUsado, Entrada, Estado, Motivo, Resultado
 from outreach_agent.proveedores.base import LLMProvider, ProviderError
 from outreach_agent.verificacion.borrador import nodo_validar_borrador
 from outreach_agent.verificacion.entrada import nuevo_run_id, preparar_entrada
@@ -59,8 +59,12 @@ def finalizar(estado: EstadoGrafo) -> dict:
         run_id=estado["run_id"],
         idioma=estado.get("idioma_objetivo"),
         borrador=borrador,
-        hechos_usados=[h for h in hechos_disponibles(estado) if h.id in usados_h],
-        puntos_usados=[p for p in estado["estrategia"].puntos_perfil if p.id in usados_p],
+        hechos_usados=[
+            ElementoUsado.de(h) for h in hechos_disponibles(estado) if h.id in usados_h
+        ],
+        puntos_usados=[
+            ElementoUsado.de(p) for p in estado["estrategia"].puntos_perfil if p.id in usados_p
+        ],
         **empresa,
     )
     return {"resultado": resultado}

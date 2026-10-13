@@ -74,9 +74,11 @@ def test_exito_imprime_borrador_datos_y_aviso(archivos, proveedor_falso, capsys)
     assert "=== Borrador (es, " in salida
     assert escenarios.TEXTO_BORRADOR in salida
     assert "=== Datos de la empresa usados ===" in salida
-    assert '[H1] Procesa 2 millones de transacciones por mes  —  "procesa 2 millones' in salida
+    assert '[H1] "procesa 2 millones de transacciones al mes"' in salida
+    assert '[P1] "lideré la migración de 40 microservicios a Kubernetes"' in salida
+    # La descripción escrita por el modelo no se muestra (queda solo en la traza).
+    assert "Procesa 2 millones de transacciones por mes" not in salida
     assert "=== Puntos de tu perfil usados ===" in salida
-    assert "[P1] " in salida
     assert "Este programa no envía nada." in salida
 
 

@@ -2,9 +2,11 @@
 
 Controla que las entradas no estén vacías (FR-009, FR-010), fija el idioma objetivo del borrador
 (FR-018) y, si el usuario lo indicó, el nombre de la empresa (FR-019). Si algo impide seguir,
-corta la ejecución antes de llamar al modelo. El nonce (T043) se agrega en la Historia 3.
+corta la ejecución antes de llamar al modelo. También genera el nonce de los delimitadores y
+sanea el texto de la empresa para el investigador (research R3).
 """
 
+import re
 import secrets
 from datetime import datetime
 
@@ -19,6 +21,19 @@ def nuevo_run_id() -> str:
     return f"{datetime.now():%Y%m%d-%H%M%S}-{secrets.token_hex(3)}"
 
 
+_DELIMITADOR = re.compile(r"<{3,}|>{3,}")
+
+
+def sanear(texto: str) -> str:
+    """Quita toda secuencia de 3 o más `<` o `>`, para que el texto no pueda simular un
+    delimitador. Se repite hasta que no quede ninguna (quitar una puede formar otra)."""
+    while True:
+        saneado = _DELIMITADOR.sub("", texto)
+        if saneado == texto:
+            return saneado
+        texto = saneado
+
+
 def preparar_entrada(estado: EstadoGrafo) -> dict:
     entrada = estado["entrada"]
     # ejecutar() ya asigna el run_id para poder informarlo aunque el grafo falle.
@@ -30,6 +45,8 @@ def preparar_entrada(estado: EstadoGrafo) -> dict:
     if not entrada.perfil.strip():
         return {**actualizacion, **cortar(contexto, Motivo.PERFIL_VACIO)}
 
+    actualizacion["nonce"] = secrets.token_hex(8)
+    actualizacion["texto_empresa_saneado"] = sanear(entrada.texto_empresa)
     idioma_empresa = detectar_idioma(entrada.texto_empresa)
     actualizacion["idioma_empresa"] = idioma_empresa
     actualizacion["idioma_objetivo"] = entrada.idioma_solicitado or idioma_empresa

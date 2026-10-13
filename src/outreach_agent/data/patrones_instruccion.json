@@ -1,0 +1,17 @@
+{
+  "_comentario": "Patrones acotados de research R3. Se compilan con re.IGNORECASE | re.MULTILINE. La coma no se usa como señal de vocativo: 'IA,' y 'AI,' aparecen en enumeraciones legítimas.",
+  "anulacion": [
+    "\\bignor(a|á|e|ar)\\s+(todo\\s+)?(lo|las|los)\\s+(anterior(es)?|instrucciones|reglas)",
+    "\\bignore\\s+(all\\s+|any\\s+)?(the\\s+)?(previous|prior|above)",
+    "\\bolvid(a|á|e)\\s+(todo\\s+)?(lo|las)\\s+(anterior|instrucciones)",
+    "\\bforget\\s+(all\\s+|everything\\s+)?(previous|prior|above|your)",
+    "\\bsystem\\s+prompt\\b"
+  ],
+  "dirigidos_al_modelo": [
+    "\\b(nota|mensaje|instrucci(o|ó)n(es)?)\\s+para\\s+(el|la|los)?\\s*(asistente|ia|modelo|llm|chatbot)\\b",
+    "\\bnote\\s+to\\s+(the\\s+)?(ai|assistant|model|llm|chatbot)\\b"
+  ],
+  "vocativo_con_orden": [
+    "(^|[.!?]\\s+)(asistente|assistant|ia|ai|modelo|model|llm|chatbot)\\s*:\\s*(por\\s+favor\\s+|please\\s+)?(ignor(a|á|e)|olvid(a|á|e)|escrib(í|e|a)|inclu(í|ye|ya)|agreg(á|a|ue)|añad(í|e|a)|respond(é|e|a)|dec(í)|di|diga|ignore|forget|write|include|add|reply|respond|say|output)\\b"
+  ]
+}

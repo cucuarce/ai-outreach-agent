@@ -25,7 +25,7 @@ def _validar(datos: dict) -> None:
 
 
 def investigador(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict:
-    system, user = mensajes_investigador(estado["entrada"].texto_empresa)
+    system, user = mensajes_investigador(estado["texto_empresa_saneado"], estado["nonce"])
     datos = llamar_json(
         provider,
         system,

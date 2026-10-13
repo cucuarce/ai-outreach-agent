@@ -1,7 +1,8 @@
 """Agente redactor: escribe el mensaje según la estrategia.
 
-Recibe de cada hecho solo `id`, `cita` y `ancla`; nunca el texto crudo de la empresa ni la
-`descripcion` de los hechos (research R3). En los reintentos recibe los fallos del intento
+Recibe el ángulo, los ids de las conexiones y, de cada hecho y punto del perfil, solo `id`, `cita`
+y `ancla`. Nunca recibe el texto crudo de la empresa, la `descripcion` de los hechos ni la
+`razon` de las conexiones (research R3). En los reintentos recibe los fallos del intento
 anterior.
 """
 

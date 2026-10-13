@@ -23,6 +23,9 @@ def test_flujo_completo_devuelve_borrador():
     assert resultado.hechos_usados[0].cita == "procesa 2 millones de transacciones al mes"
     assert [p.id for p in resultado.puntos_usados] == ["P1", "P2"]
     assert resultado.puntos_usados[0].cita.startswith("lideré la migración")
+    # El Resultado no lleva la descripción escrita por el modelo.
+    assert not hasattr(resultado.hechos_usados[0], "descripcion")
+    assert "descripcion" not in resultado.a_dict()["hechos_usados"][0]
     assert resultado.run_id
 
 

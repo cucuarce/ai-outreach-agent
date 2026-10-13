@@ -135,3 +135,15 @@ def test_idioma_indeterminado_con_idioma_pedido_continua():
     assert len(provider.llamadas) == 1
     assert "agente investigador" in provider.llamadas[0]["system"]
     assert resultado.motivo is Motivo.PROVEEDOR_NO_DISPONIBLE
+
+
+def test_el_redactor_no_recibe_la_razon_de_las_conexiones():
+    _, provider = correr(e.respuestas_flujo_valido())
+    razones = [c["razon"] for c in e.ESTRATEGA["conexiones"]]
+    llamadas_redactor = [ll for ll in provider.llamadas if "agente redactor" in ll["system"]]
+    assert llamadas_redactor
+    for llamada in llamadas_redactor:
+        contenido = llamada["system"] + llamada["user"]
+        assert '"razon"' not in contenido
+        for razon in razones:
+            assert razon not in contenido

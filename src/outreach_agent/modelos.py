@@ -73,6 +73,20 @@ class PuntoPerfil:
 
 
 @dataclass(frozen=True)
+class ElementoUsado:
+    """Dato de la empresa o punto del perfil tal como se informa al usuario: solo lo verificado
+    (cita literal y ancla). La `descripcion` escrita por el modelo queda solo en la traza."""
+
+    id: str
+    cita: str
+    ancla: str
+
+    @classmethod
+    def de(cls, elemento: "Hecho | PuntoPerfil") -> "ElementoUsado":
+        return cls(id=elemento.id, cita=elemento.cita, ancla=elemento.ancla)
+
+
+@dataclass(frozen=True)
 class Conexion:
     hecho_id: str
     punto_id: str
@@ -114,8 +128,8 @@ class Resultado:
     nombre_empresa: str | None = None
     origen_nombre_empresa: str | None = None  # "usuario" | "texto" | None
     borrador: Borrador | None = None
-    hechos_usados: list[Hecho] = field(default_factory=list)
-    puntos_usados: list[PuntoPerfil] = field(default_factory=list)
+    hechos_usados: list[ElementoUsado] = field(default_factory=list)
+    puntos_usados: list[ElementoUsado] = field(default_factory=list)
     motivo: Motivo | None = None
     detalle: str | None = None
     fallos: list[Fallo] = field(default_factory=list)

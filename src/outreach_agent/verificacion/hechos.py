@@ -10,6 +10,7 @@ from dataclasses import replace
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
 from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
+from outreach_agent.verificacion.patrones import es_instruccion
 from outreach_agent.verificacion.texto import (
     contiene_ancla,
     contiene_literal,
@@ -26,6 +27,8 @@ def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) 
         return "cita_demasiado_larga"
     if not contiene_literal(texto_empresa, hecho.cita):
         return "cita_no_localizable"
+    if es_instruccion(hecho.cita):
+        return "patron_de_instruccion"
     if not contiene_ancla(hecho.cita, hecho.ancla):
         return "ancla_fuera_de_cita"
     if normalizar(hecho.cita) in citas_vistas:
@@ -38,6 +41,8 @@ def causa_de_descarte_nombre(nombre: str, texto_empresa: str) -> str | None:
         return "nombre_demasiado_largo"
     if not contiene_literal(texto_empresa, nombre):
         return "nombre_no_localizable"
+    if es_instruccion(nombre):
+        return "patron_de_instruccion"
     return None
 
 

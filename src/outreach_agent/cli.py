@@ -85,11 +85,11 @@ def _imprimir_borrador(resultado: Resultado) -> None:
     print()
     print("=== Datos de la empresa usados ===")
     for hecho in resultado.hechos_usados:
-        print(f'[{hecho.id}] {hecho.descripcion}  —  "{hecho.cita}"')
+        print(f'[{hecho.id}] "{hecho.cita}"')
     print()
     print("=== Puntos de tu perfil usados ===")
     for punto in resultado.puntos_usados:
-        print(f'[{punto.id}] {punto.descripcion}  —  "{punto.cita}"')
+        print(f'[{punto.id}] "{punto.cita}"')
     print()
     print("Revisá el borrador antes de enviarlo. Este programa no envía nada.")
     _imprimir_registro(resultado, sys.stdout)
