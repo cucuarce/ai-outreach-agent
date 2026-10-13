@@ -136,3 +136,22 @@ def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
 
 def nodo_validar_borrador(estado: EstadoGrafo) -> dict:
     return {"validacion": validar_borrador(estado)}
+
+
+def resumidor(max_reintentos: int):
+    """Arma el `resumir` de validar_borrador; necesita `max_reintentos` para informar el
+    próximo paso (fin, reintento o inválido)."""
+
+    def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+        validacion = actualizacion["validacion"]
+        fallos = [{"criterio": f.criterio, "detalle": f.detalle} for f in validacion.fallos]
+        if validacion.ok:
+            proximo = "fin"
+            decision = "ok → fin"
+        else:
+            proximo = "reintento" if estado["intento"] < 1 + max_reintentos else "inválido"
+            criterios = ", ".join(f["criterio"] for f in fallos)
+            decision = f"falla: {criterios} → {proximo}"
+        return decision, {"ok": validacion.ok, "fallos": fallos, "proximo_paso": proximo}
+
+    return resumir

@@ -254,3 +254,8 @@ INVESTIGADOR_IA = {
     ],
     "instrucciones_detectadas": [],
 }
+
+
+def respuestas_flujo_valido_dicts() -> list[dict]:
+    """Igual que respuestas_flujo_valido, sin serializar."""
+    return [INVESTIGADOR, ESTRATEGA, REDACTOR]

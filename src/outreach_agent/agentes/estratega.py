@@ -57,3 +57,23 @@ def estratega(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dic
         ],
     )
     return {"estrategia": estrategia}
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza: ángulo e ids elegidos (con descripciones y razones del modelo)."""
+    e = actualizacion["estrategia"]
+    decision = (
+        f"ángulo: {e.angulo}; hechos {', '.join(e.hechos_elegidos) or '(ninguno)'}; "
+        f"puntos {', '.join(p.id for p in e.puntos_perfil) or '(ninguno)'}"
+    )
+    return decision, {
+        "angulo": e.angulo,
+        "hechos_elegidos": e.hechos_elegidos,
+        "puntos_perfil": [
+            {"id": p.id, "descripcion": p.descripcion, "cita": p.cita, "ancla": p.ancla}
+            for p in e.puntos_perfil
+        ],
+        "conexiones": [
+            {"hecho_id": c.hecho_id, "punto_id": c.punto_id, "razon": c.razon} for c in e.conexiones
+        ],
+    }

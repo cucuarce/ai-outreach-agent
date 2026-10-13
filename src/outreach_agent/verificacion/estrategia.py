@@ -52,3 +52,22 @@ def verificar_estrategia(estado: EstadoGrafo) -> dict:
     elif not verificada.conexiones:
         actualizacion.update(cortar(estado, Motivo.SIN_CONEXION_PERFIL))
     return actualizacion
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza: puntos y conexiones válidas; corte si no queda ninguno."""
+    estrategia = actualizacion["estrategia"]
+    decision = (
+        f"{len(estrategia.puntos_perfil)} puntos del perfil válidos, "
+        f"{len(estrategia.conexiones)} conexiones válidas"
+    )
+    detalle = {
+        "hechos_elegidos": estrategia.hechos_elegidos,
+        "puntos_validos": [p.id for p in estrategia.puntos_perfil],
+        "puntos_descartados": actualizacion["puntos_descartados"],
+        "conexiones": [f"{c.hecho_id}→{c.punto_id}" for c in estrategia.conexiones],
+    }
+    if "resultado" in actualizacion:
+        decision += f"; corte: {actualizacion['resultado'].motivo.value}"
+        detalle["detalle"] = actualizacion["resultado"].detalle
+    return decision, detalle

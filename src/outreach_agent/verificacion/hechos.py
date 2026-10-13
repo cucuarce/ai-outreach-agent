@@ -82,3 +82,24 @@ def verificar_hechos(estado: EstadoGrafo) -> dict:
             cortar({**estado, **actualizacion}, Motivo.HECHOS_INSUFICIENTES, detalle)
         )
     return actualizacion
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza: válidos y descartados por causa, nombre de empresa y corte."""
+    validos = [h.id for h in actualizacion["hechos"]]
+    descartados = actualizacion["hechos_descartados"]
+    decision = f"{len(validos)} válidos, {len(descartados)} descartados"
+    if descartados:
+        causas: dict[str, int] = {}
+        for d in descartados:
+            causas[d["causa"]] = causas.get(d["causa"], 0) + 1
+        decision += " (" + ", ".join(f"{c}: {n}" for c, n in causas.items()) + ")"
+    detalle: dict = {"validos": validos, "descartados": descartados}
+    if "nombre_empresa" in actualizacion:
+        detalle["nombre_empresa"] = f"{actualizacion['nombre_empresa']} (verificado en el texto)"
+    elif "nombre_empresa_descartado" in actualizacion:
+        detalle["nombre_empresa_descartado"] = actualizacion["nombre_empresa_descartado"]
+    if "resultado" in actualizacion:
+        decision += f"; corte: {actualizacion['resultado'].motivo.value}"
+        detalle["detalle"] = actualizacion["resultado"].detalle
+    return decision, detalle

@@ -18,3 +18,10 @@ def bloquear_red(monkeypatch):
     monkeypatch.setattr(socket.socket, "connect", _red_bloqueada)
     monkeypatch.setattr(socket.socket, "connect_ex", _red_bloqueada)
     monkeypatch.setattr(socket, "create_connection", _red_bloqueada)
+
+
+@pytest.fixture(autouse=True)
+def directorio_de_trabajo_temporal(tmp_path, monkeypatch):
+    """Cada test corre en una carpeta temporal: los registros (`runs/` por defecto) no se
+    escriben en el repositorio."""
+    monkeypatch.chdir(tmp_path)

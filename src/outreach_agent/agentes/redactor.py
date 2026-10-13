@@ -29,6 +29,8 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
     hechos_elegidos = [h for h in hechos_disponibles(estado) if h.id in elegidos]
     validacion = estado.get("validacion")
     fallos = validacion.fallos if validacion and not validacion.ok else []
+    # En un reintento, el redactor recibe el borrador anterior para corregir solo lo que falló.
+    anterior = estado["borrador"].texto if fallos and "borrador" in estado else None
 
     idioma = estado.get("idioma_objetivo")
     system, user = mensajes_redactor(
@@ -38,6 +40,7 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
         ejemplos_relleno(idioma),
         fallos,
         estado.get("nombre_empresa"),
+        anterior,
     )
     datos = llamar_json(
         provider,
@@ -53,3 +56,15 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
         puntos_usados=list(datos["puntos_usados"]),
     )
     return {"borrador": borrador, "intento": estado.get("intento", 0) + 1}
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza: intento y cantidad de palabras."""
+    borrador = actualizacion["borrador"]
+    palabras = len(borrador.texto.split())
+    return f"intento {actualizacion['intento']}: {palabras} palabras", {
+        "palabras": palabras,
+        "hechos_usados": borrador.hechos_usados,
+        "puntos_usados": borrador.puntos_usados,
+        "texto": borrador.texto,
+    }

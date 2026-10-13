@@ -52,3 +52,25 @@ def test_sin_reintentos_hay_un_solo_intento():
     assert resultado.estado is Estado.INVALIDO
     assert [f.criterio for f in resultado.fallos] == ["longitud"]
     assert len(llamadas_al_redactor(provider)) == 1
+
+
+def test_el_reintento_recibe_el_borrador_anterior_y_la_orden_de_mantener_el_resto():
+    _, provider = correr([LARGO, e.REDACTOR])
+    primero, segundo = llamadas_al_redactor(provider)
+
+    assert LARGO["texto"] in segundo["user"]
+    assert "Corregí solo los criterios fallidos y mantené el resto del borrador." in segundo["user"]
+    assert "Longitud obligatoria: entre 80 y 150 palabras." in segundo["user"]
+    assert "El borrador anterior tenía 170 palabras." in segundo["user"]
+    # El primer intento no tiene borrador anterior ni feedback.
+    assert "Borrador anterior" not in primero["user"]
+    assert "Corregí solo" not in primero["user"]
+
+
+def test_sin_fallo_de_longitud_no_se_agrega_la_linea_de_longitud():
+    _, provider = correr([CON_RELLENO, e.REDACTOR])
+    segundo = llamadas_al_redactor(provider)[1]
+
+    assert CON_RELLENO["texto"] in segundo["user"]
+    assert "relleno:" in segundo["user"]
+    assert "Longitud obligatoria" not in segundo["user"]

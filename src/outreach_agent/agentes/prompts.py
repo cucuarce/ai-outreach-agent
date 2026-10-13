@@ -166,6 +166,7 @@ def mensajes_redactor(
     ejemplos_relleno: list[str],
     fallos: list[Fallo],
     nombre_empresa: str | None = None,
+    borrador_anterior: str | None = None,
     *,
     min_palabras: int = 80,
     max_palabras: int = 150,
@@ -200,6 +201,28 @@ def mensajes_redactor(
         lista = "\n".join(f'- "{frase}"' for frase in ejemplos_relleno)
         partes.append(f"Ejemplos de frases de relleno que no debés usar:\n{lista}")
     if fallos:
-        lista = "\n".join(f"- {f.criterio}: {f.detalle}" for f in fallos)
-        partes.append(f"El intento anterior no cumplió estos criterios; corregilos:\n{lista}")
+        partes.append(_feedback_reintento(fallos, borrador_anterior, min_palabras, max_palabras))
     return _SYSTEM_REDACTOR, "\n\n".join(partes)
+
+
+INSTRUCCION_REINTENTO = "Corregí solo los criterios fallidos y mantené el resto del borrador."
+
+
+def _feedback_reintento(
+    fallos: list[Fallo], borrador_anterior: str | None, min_palabras: int, max_palabras: int
+) -> str:
+    """Feedback de un reintento: los criterios fallidos, el borrador anterior completo y la
+    orden de no tocar lo demás (research R2). Sin el borrador anterior, el modelo reescribía
+    todo y rompía lo que ya estaba bien."""
+    lista = "\n".join(f"- {f.criterio}: {f.detalle}" for f in fallos)
+    partes = ["El intento anterior no cumplió estos criterios:\n" + lista]
+    if any(f.criterio == "longitud" for f in fallos) and borrador_anterior is not None:
+        palabras = len(borrador_anterior.split())
+        partes.append(
+            f"Longitud obligatoria: entre {min_palabras} y {max_palabras} palabras. "
+            f"El borrador anterior tenía {palabras} palabras."
+        )
+    if borrador_anterior is not None:
+        partes.append(f"Borrador anterior:\n{borrador_anterior}")
+    partes.append(INSTRUCCION_REINTENTO)
+    return "\n\n".join(partes)

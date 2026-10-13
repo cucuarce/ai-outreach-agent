@@ -1,31 +1,45 @@
 """Grafo LangGraph del flujo de outreach (plan.md § Diseño, research R1 y R2).
 
-    START → preparar_entrada ─(sin idioma)→ END
+    START → preparar_entrada ─(sin idioma o entradas vacías)→ END
                 ↓
-            investigador → verificar_hechos → estratega → verificar_estrategia
-                → redactor → validar_borrador ─(ok)→ finalizar → END
-                     ↑             │
-                     └─(falla y quedan reintentos)
-                                   └─(falla sin reintentos)→ finalizar → END
+            investigador → verificar_hechos ─(< 2 hechos)→ finalizar
+                ↓
+            estratega → verificar_estrategia ─(sin puntos o sin conexiones)→ finalizar
+                ↓
+            redactor → validar_borrador ─(ok)→ finalizar → END
+                ↑             │
+                └─(falla y quedan reintentos)
+                              └─(falla sin reintentos)→ finalizar → END
 
 Los tres agentes (investigador, estratega, redactor) llaman al LLM; el resto de los nodos son
 deterministas. Las decisiones de ruteo dependen solo de campos ya verificados del estado.
+
+Cada nodo se envuelve con `trazas.trazado` al construir el grafo: cada transición queda en la
+traza JSONL de la ejecución (principio V) y, al terminar, en el registro legible `.md`.
 """
+
+import time
+from dataclasses import replace
 
 from langgraph.graph import END, START, StateGraph
 
+from outreach_agent.agentes import estratega as mod_estratega
+from outreach_agent.agentes import investigador as mod_investigador
+from outreach_agent.agentes import redactor as mod_redactor
 from outreach_agent.agentes.base import RespuestaInvalidaLLM
-from outreach_agent.agentes.estratega import estratega, hechos_disponibles
-from outreach_agent.agentes.investigador import investigador
-from outreach_agent.agentes.redactor import redactor
+from outreach_agent.agentes.estratega import hechos_disponibles
 from outreach_agent.config import Config
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import ElementoUsado, Entrada, Estado, Motivo, Resultado
 from outreach_agent.proveedores.base import LLMProvider, ProviderError
-from outreach_agent.verificacion.borrador import nodo_validar_borrador
-from outreach_agent.verificacion.entrada import nuevo_run_id, preparar_entrada
-from outreach_agent.verificacion.estrategia import verificar_estrategia
-from outreach_agent.verificacion.hechos import verificar_hechos
+from outreach_agent.trazas import Traza, nuevo_run_id, trazado
+from outreach_agent.verificacion import borrador as mod_borrador
+from outreach_agent.verificacion import entrada as mod_entrada
+from outreach_agent.verificacion import estrategia as mod_estrategia
+from outreach_agent.verificacion import hechos as mod_hechos
+
+AGENTE = "agente"
+DETERMINISTA = "determinista"
 
 
 def finalizar(estado: EstadoGrafo) -> dict:
@@ -70,6 +84,13 @@ def finalizar(estado: EstadoGrafo) -> dict:
     return {"resultado": resultado}
 
 
+def resumir_finalizar(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    resultado = actualizacion.get("resultado") or estado["resultado"]
+    motivo = resultado.motivo.value if resultado.motivo else None
+    decision = f"resultado: {resultado.estado.value}" + (f" ({motivo})" if motivo else "")
+    return decision, {"estado": resultado.estado.value, "motivo": motivo}
+
+
 def ruta_despues_de_preparar(estado: EstadoGrafo) -> str:
     return END if "resultado" in estado else "investigador"
 
@@ -95,19 +116,59 @@ def ruta_despues_de_validar(max_reintentos: int):
     return ruta
 
 
-def construir_grafo(provider: LLMProvider, config: Config):
-    """Compila el grafo. Los agentes reciben el proveedor y la configuración por clausura, así
-    el estado solo contiene datos."""
-    grafo = StateGraph(EstadoGrafo)
+def _intento_redactor(estado: EstadoGrafo) -> int:
+    return estado.get("intento", 0) + 1  # el intento que está por empezar
 
-    grafo.add_node("preparar_entrada", preparar_entrada)
-    grafo.add_node("investigador", lambda estado: investigador(estado, provider, config))
-    grafo.add_node("verificar_hechos", verificar_hechos)
-    grafo.add_node("estratega", lambda estado: estratega(estado, provider, config))
-    grafo.add_node("verificar_estrategia", verificar_estrategia)
-    grafo.add_node("redactor", lambda estado: redactor(estado, provider, config))
-    grafo.add_node("validar_borrador", nodo_validar_borrador)
-    grafo.add_node("finalizar", finalizar)
+
+def _intento_validacion(estado: EstadoGrafo) -> int | None:
+    return estado.get("intento")  # el intento que se está validando
+
+
+def construir_grafo(provider: LLMProvider, config: Config, traza: Traza):
+    """Compila el grafo. Los agentes reciben el proveedor y la configuración por clausura, así
+    el estado solo contiene datos. Cada nodo se envuelve con `trazado` para la traza de esta
+    ejecución."""
+    # nombre: (tipo de nodo, función del nodo, resumir para la traza, número de intento)
+    nodos = {
+        "preparar_entrada": (
+            DETERMINISTA, mod_entrada.preparar_entrada, mod_entrada.resumir, None
+        ),
+        "investigador": (
+            AGENTE,
+            lambda estado: mod_investigador.investigador(estado, provider, config),
+            mod_investigador.resumir,
+            None,
+        ),
+        "verificar_hechos": (
+            DETERMINISTA, mod_hechos.verificar_hechos, mod_hechos.resumir, None
+        ),
+        "estratega": (
+            AGENTE,
+            lambda estado: mod_estratega.estratega(estado, provider, config),
+            mod_estratega.resumir,
+            None,
+        ),
+        "verificar_estrategia": (
+            DETERMINISTA, mod_estrategia.verificar_estrategia, mod_estrategia.resumir, None
+        ),
+        "redactor": (
+            AGENTE,
+            lambda estado: mod_redactor.redactor(estado, provider, config),
+            mod_redactor.resumir,
+            _intento_redactor,
+        ),
+        "validar_borrador": (
+            DETERMINISTA,
+            mod_borrador.nodo_validar_borrador,
+            mod_borrador.resumidor(config.max_reintentos),
+            _intento_validacion,
+        ),
+        "finalizar": (DETERMINISTA, finalizar, resumir_finalizar, None),
+    }
+
+    grafo = StateGraph(EstadoGrafo)
+    for nombre, (tipo, funcion, resumir, intento_de) in nodos.items():
+        grafo.add_node(nombre, trazado(traza, nombre, tipo, resumir, intento_de)(funcion))
 
     grafo.add_edge(START, "preparar_entrada")
     grafo.add_conditional_edges(
@@ -132,12 +193,13 @@ def construir_grafo(provider: LLMProvider, config: Config):
     return grafo.compile()
 
 
-def ejecutar(entrada: Entrada, provider: LLMProvider, config: Config) -> Resultado:
-    """Corre el grafo completo y siempre devuelve un Resultado, también ante errores del
-    proveedor o respuestas inválidas del LLM."""
-    run_id = nuevo_run_id()
+def _correr_grafo(
+    entrada: Entrada, provider: LLMProvider, config: Config, traza: Traza
+) -> Resultado:
+    run_id = traza.run_id
     try:
-        final = construir_grafo(provider, config).invoke({"entrada": entrada, "run_id": run_id})
+        grafo = construir_grafo(provider, config, traza)
+        return grafo.invoke({"entrada": entrada, "run_id": run_id})["resultado"]
     except ProviderError as error:
         return Resultado(
             estado=Estado.ERROR, run_id=run_id, motivo=Motivo(error.motivo), detalle=str(error)
@@ -149,4 +211,41 @@ def ejecutar(entrada: Entrada, provider: LLMProvider, config: Config) -> Resulta
             motivo=Motivo.RESPUESTA_INVALIDA_LLM,
             detalle=f"El modelo no devolvió una respuesta válida: {error}",
         )
-    return final["resultado"]
+
+
+def ejecutar(entrada: Entrada, provider: LLMProvider, config: Config) -> Resultado:
+    """Corre el grafo completo y siempre devuelve un Resultado, también ante errores del
+    proveedor o respuestas inválidas del LLM. Siempre deja la traza y el registro legible."""
+    traza = Traza(config.dir_registros, nuevo_run_id())
+    inicio = time.perf_counter()
+    traza.emitir(
+        "ejecucion_inicio",
+        decision="inicio de la ejecución",
+        detalle={
+            "proveedor": provider.nombre,
+            "modelo": config.modelo,
+            "idioma_solicitado": entrada.idioma_solicitado,
+            "nombre_empresa_solicitado": entrada.nombre_empresa_solicitado,
+            "caracteres_empresa": len(entrada.texto_empresa),
+            "caracteres_perfil": len(entrada.perfil),
+            "max_reintentos": config.max_reintentos,
+        },
+    )
+
+    resultado = _correr_grafo(entrada, provider, config, traza)
+    resultado = replace(resultado, rutas_registro=traza.rutas())
+
+    traza.emitir(
+        "ejecucion_fin",
+        decision=f"estado final: {resultado.estado.value}",
+        detalle={
+            "estado": resultado.estado.value,
+            "motivo": resultado.motivo.value if resultado.motivo else None,
+            "detalle": resultado.detalle,
+            "fallos": [{"criterio": f.criterio, "detalle": f.detalle} for f in resultado.fallos],
+            "borrador": resultado.borrador.texto if resultado.borrador else None,
+        },
+        duracion_ms=round((time.perf_counter() - inicio) * 1000),
+    )
+    traza.escribir_md()
+    return resultado

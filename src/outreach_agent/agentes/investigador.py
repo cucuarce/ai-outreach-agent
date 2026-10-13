@@ -43,3 +43,18 @@ def investigador(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> 
         "hechos_candidatos": hechos,
         "instrucciones_detectadas": datos.get("instrucciones_detectadas", []),
     }
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza. Las descripciones escritas por el modelo quedan solo acá."""
+    hechos = actualizacion["hechos_candidatos"]
+    instrucciones = actualizacion["instrucciones_detectadas"]
+    decision = f"{len(hechos)} hechos candidatos, {len(instrucciones)} instrucciones detectadas"
+    return decision, {
+        "nombre_empresa_candidato": actualizacion.get("nombre_empresa_candidato"),
+        "hechos": [
+            {"id": h.id, "descripcion": h.descripcion, "cita": h.cita, "ancla": h.ancla}
+            for h in hechos
+        ],
+        "instrucciones_detectadas": instrucciones,
+    }

@@ -8,17 +8,12 @@ sanea el texto de la empresa para el investigador (research R3).
 
 import re
 import secrets
-from datetime import datetime
 
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Motivo
+from outreach_agent.trazas import nuevo_run_id
 from outreach_agent.verificacion.cortes import cortar
 from outreach_agent.verificacion.idioma import detectar_idioma
-
-
-def nuevo_run_id() -> str:
-    """Formato AAAAMMDD-HHMMSS-<6 hex>."""
-    return f"{datetime.now():%Y%m%d-%H%M%S}-{secrets.token_hex(3)}"
 
 
 _DELIMITADOR = re.compile(r"<{3,}|>{3,}")
@@ -61,3 +56,25 @@ def preparar_entrada(estado: EstadoGrafo) -> dict:
         contexto = {**estado, **actualizacion}
         return {**actualizacion, **cortar(contexto, Motivo.IDIOMA_INDETERMINADO)}
     return actualizacion
+
+
+def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
+    """Decisión para la traza: idioma objetivo y cómo se obtuvo, o motivo de corte."""
+    entrada = estado["entrada"]
+    detalle = {
+        "caracteres_empresa": len(entrada.texto_empresa),
+        "caracteres_perfil": len(entrada.perfil),
+    }
+    if "resultado" in actualizacion:
+        resultado = actualizacion["resultado"]
+        detalle["detalle"] = resultado.detalle
+        return f"corte: {resultado.motivo.value}", detalle
+    origen = "solicitado" if entrada.idioma_solicitado else "detectado"
+    detalle.update(
+        idioma_objetivo=actualizacion["idioma_objetivo"],
+        origen_idioma=origen,
+        idioma_empresa=actualizacion.get("idioma_empresa"),
+    )
+    if actualizacion.get("origen_nombre_empresa") == "usuario":
+        detalle["nombre_empresa"] = f"{actualizacion['nombre_empresa']} (indicado por el usuario)"
+    return f"idioma {actualizacion['idioma_objetivo']} ({origen})", detalle

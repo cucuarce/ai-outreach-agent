@@ -186,3 +186,52 @@ def test_insuficiente_sale_con_3_y_explica_en_stderr(tmp_path, monkeypatch, caps
     assert "Pegá el texto" in salida.err  # sugerencia de cómo corregir la entrada
     assert "=== Borrador" not in salida.out
     assert salida.out == ""
+
+
+# --- Registros (T052) ---
+
+
+def test_exito_imprime_las_rutas_del_registro_y_los_archivos_existen(
+    archivos, proveedor_falso, capsys, tmp_path
+):
+    from pathlib import Path
+
+    empresa, perfil = archivos
+    registros = tmp_path / "mis-registros"
+    assert generar("--empresa", empresa, "--perfil", perfil, "--registros", registros) == 0
+    salida = capsys.readouterr().out
+
+    linea = next(l for l in salida.splitlines() if l.startswith("Registro: "))
+    md = Path(linea.split("Registro: ")[1].split(" (traza: ")[0])
+    jsonl = Path(linea.split("(traza: ")[1].rstrip(")"))
+    assert md.exists() and jsonl.exists()
+    assert md.parent == registros and jsonl.parent == registros
+
+
+def test_insuficiente_tambien_imprime_el_registro(tmp_path, monkeypatch, capsys):
+    empresa = tmp_path / "vacia.txt"
+    perfil = tmp_path / "perfil.txt"
+    empresa.write_text("  ", encoding="utf-8")
+    perfil.write_text(escenarios.PERFIL, encoding="utf-8")
+    monkeypatch.setattr(cli, "crear_proveedor", lambda config: FakeProvider([]))
+
+    registros = tmp_path / "regs"
+    assert generar("--empresa", empresa, "--perfil", perfil, "--registros", registros) == 3
+    err = capsys.readouterr().err
+    assert "Registro: " in err and ".md" in err and ".jsonl" in err
+    assert len(list(registros.glob("*.md"))) == 1
+
+
+def test_error_de_uso_no_crea_registros(archivos, proveedor_falso, tmp_path):
+    _, perfil = archivos
+    registros = tmp_path / "no-debe-existir"
+    assert generar("--perfil", perfil, "--registros", registros) == 2
+    assert not registros.exists()
+
+
+def test_salida_json_incluye_las_rutas(archivos, proveedor_falso, capsys, tmp_path):
+    empresa, perfil = archivos
+    generar("--empresa", empresa, "--perfil", perfil, "--json", "--registros", tmp_path / "r")
+    datos = json.loads(capsys.readouterr().out)
+    assert datos["rutas_registro"]["md"].endswith(".md")
+    assert datos["rutas_registro"]["jsonl"].endswith(".jsonl")
