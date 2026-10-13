@@ -55,6 +55,14 @@ feedback estructurado (criterio + detalle, por ejemplo "142 → 163 palabras; m�
 defecto `max_reintentos = 2` (3 intentos de redacción como máximo), configurable. Si se agotan,
 el resultado es `invalido` con los criterios del último intento.
 
+En cada reintento el redactor recibe, además de los criterios fallidos, **el borrador anterior
+completo** y la orden "Corregí solo los criterios fallidos y mantené el resto del borrador"; si
+falló `longitud`, también el rango obligatorio y cuántas palabras tenía el borrador anterior. Se
+agregó porque, en una prueba con Ollama real, cada reintento sin el borrador anterior reescribía
+todo y rompía lo que estaba bien (78 → 43 palabras). Es una mitigación, no una garantía: su
+efecto se mide en la evaluación comparando la tasa de aprobación en el primer intento con la
+tasa de aprobación con reintentos.
+
 **Rationale**: todos los criterios medibles de la spec se verifican sin LLM, así que el pipeline
 nunca entrega un borrador que viole una regla comprobable. El reintento con feedback concreto
 aprovecha que la mayoría de los fallos (longitud, una frase de relleno) son fáciles de corregir.
