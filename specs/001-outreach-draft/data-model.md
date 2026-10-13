@@ -93,8 +93,8 @@ Producido por el redactor.
 | `nombre_empresa` | str \| None | Nombre de la empresa usado en el borrador, o `None` si no se conoce. |
 | `origen_nombre_empresa` | str \| None | `"usuario"` (flag) o `"texto"` (extraído y verificado); `None` si no hay nombre. |
 | `borrador` | Borrador \| None | Solo si `estado = borrador`. |
-| `hechos_usados` | list[Hecho] | Datos de empresa usados, con su cita (FR-008). |
-| `puntos_usados` | list[PuntoPerfil] | Puntos de perfil usados, con su cita (FR-008). |
+| `hechos_usados` | list[ElementoUsado] | Datos de empresa usados: `id`, `cita` literal verificada y `ancla` (FR-008). Sin `descripcion`. |
+| `puntos_usados` | list[ElementoUsado] | Puntos de perfil usados: `id`, `cita` literal verificada y `ancla` (FR-008). Sin `descripcion`. |
 | `motivo` | str \| None | Código de motivo si no hay borrador (ver tabla). |
 | `detalle` | str \| None | Explicación legible (por ejemplo "se encontraron 1 de 2 datos concretos"). |
 | `fallos` | list[Fallo] | Criterios incumplidos del último intento si `estado = invalido` (FR-011). |
@@ -131,7 +131,12 @@ Producido por el redactor.
 
 **Invariante de FR-012**: `texto_empresa` crudo solo se incluye en el prompt del investigador.
 Estratega y redactor reciben de cada hecho verificado solo `id`, `cita` y `ancla`; nunca
-`entrada.texto_empresa` ni la `descripcion` de los hechos.
+`entrada.texto_empresa` ni la `descripcion` de los hechos. El redactor tampoco recibe la `razon`
+de las conexiones, solo sus ids (research R3).
+
+**Invariante de salida**: al usuario (CLI y `Resultado`) solo llegan citas literales verificadas
+y anclas. Las `descripcion` de hechos y puntos del perfil, escritas por el modelo, quedan solo en
+la traza.
 
 ## Transiciones de estado de una ejecución
 

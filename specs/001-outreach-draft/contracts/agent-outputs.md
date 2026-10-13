@@ -51,8 +51,9 @@ conectan con ellos. No redacta el mensaje.
 
 **Recibe (`user`)**: la estrategia verificada, los hechos elegidos, el idioma objetivo, los
 límites de longitud y, en reintentos, la lista de fallos del intento anterior
-(`[{criterio, detalle}]`). De los hechos recibe solo `id`, `cita` y `ancla`. Nunca el texto crudo
-de la empresa ni la `descripcion` de los hechos.
+(`[{criterio, detalle}]`). De los hechos y puntos del perfil recibe solo `id`, `cita` y `ancla`, y
+de las conexiones solo `hecho_id` y `punto_id`. Nunca el texto crudo de la empresa, la
+`descripcion` de los hechos ni la `razon` de las conexiones (research R3).
 
 Además recibe el nombre de la empresa verificado (o indicado por el usuario) con la orden de
 dirigir el mensaje a esa empresa. Si no hay nombre, recibe la orden explícita de no nombrar

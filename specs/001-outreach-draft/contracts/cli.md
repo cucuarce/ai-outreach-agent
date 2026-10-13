@@ -29,11 +29,13 @@ Empresa: Campo Claro (tomado del texto)   ← o "(indicado por vos)", o "no iden
 <texto del borrador>
 
 === Datos de la empresa usados ===
-[H1] <descripcion>  —  "<cita>"
-[H3] <descripcion>  —  "<cita>"
+[H1] "<cita literal verificada>"
+[H3] "<cita literal verificada>"
 
 === Puntos de tu perfil usados ===
-[P1] <descripcion>  —  "<cita>"
+[P1] "<cita literal verificada>"
+
+(Las descripciones escritas por el modelo no se muestran; quedan solo en la traza.)
 
 Revisá el borrador antes de enviarlo. Este programa no envía nada.
 Registro: runs/20261008-153012-a1b2c3.md (traza: runs/20261008-153012-a1b2c3.jsonl)

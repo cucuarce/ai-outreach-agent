@@ -99,8 +99,12 @@ estructura del grafo limita qué puede lograr una instrucción aunque el modelo 
    verificado. **No reciben la `descripcion`**: es texto libre escrito por el investigador, que
    sí leyó el contenido no confiable y no se puede verificar contra el texto original, así que
    sería un canal para que una instrucción saltee la verificación de citas. La `descripcion` se
-   usa solo en la traza y en la salida que lee el usuario. Una instrucción larga incrustada nunca
-   llega entera a los agentes que escriben.
+   usa solo en la traza; al usuario se le muestran las citas verificadas. Una instrucción larga
+   incrustada nunca llega entera a los agentes que escriben.
+   Por el mismo motivo, **el redactor no recibe la `razon` de las conexiones**, solo sus ids, el
+   ángulo, las citas y las anclas. La `razon` es texto libre escrito por un modelo y, en las
+   pruebas con Ollama real, fue el canal por el que se colaron afirmaciones inventadas sobre la
+   empresa ("Lote360 requiere modelos de predicción de rinde").
 2. **Citas literales verificadas** (`verificar_hechos`): cada hecho debe traer una `cita` que
    aparezca literalmente en el texto de la empresa (tras normalizar espacios). Los hechos sin
    cita localizable se descartan. Esto impide que una instrucción haga "inventar" hechos.
@@ -387,6 +391,10 @@ Ninguna validación lo detectó porque "Granix" sí aparece en las entradas.
 **Rationale**: convierte "no dirigirse a la empresa equivocada" en una comprobación determinista
 cuando el nombre se conoce, y reduce el riesgo cuando no se conoce. Exigir que el nombre
 aparezca literal en el texto impide que el investigador lo invente.
+
+**Mitigación estructural**: el redactor no recibe la `razon` de las conexiones (research R3),
+que es texto libre del estratega y fue el canal de la afirmación inventada sobre Lote360 en la
+prueba con Ollama real. El usuario ve solo citas verificadas, no las descripciones del modelo.
 
 **Limitación (afirmaciones inventadas)**: las afirmaciones inventadas que reutilizan datos de
 las entradas (por ejemplo, "similar a la mejora de Lote360", donde "Lote360" y las cifras sí están
