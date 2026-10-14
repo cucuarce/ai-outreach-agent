@@ -444,6 +444,31 @@ palabras; el filtro los descartó por `ancla_demasiado_larga` y la ejecución te
 `hechos_insuficientes` (código 3). Se descartaron por la longitud de las anclas, no por la
 vaguedad del contenido. Se mide en la evaluación.
 
+**Observación (invención que pasa la validación)**: corrida real de `ejemplos/empresa_es.txt`
+(qwen2.5:7b, 2026-10-14, 463 s, 1 intento, 0 fallos). El borrador pasó todos los criterios pero
+contiene dos afirmaciones sin respaldo: (a) "modelos de regresión para predicción de demanda,
+como la que llevó a cabo Lote360 en 2025" atribuye a Lote360 un trabajo que el texto no menciona
+(Lote360 estima el rinde con imágenes de Sentinel-2); (b) "desafío de escalabilidad que enfrenta
+su equipo" no figura en ninguna cita. Origen probable: el ángulo "Tecnología y escalabilidad",
+que sí llega al redactor, y la conexión H2→P2, que le pide relacionar la cita de Lote360 con el
+punto del perfil sobre "modelos de regresión para predicción de demanda". La razón de esa
+conexión ("requiere un sistema robusto y escalable") no llega al redactor (research R3), pero
+muestra que la relación ya venía armada desde el estratega. La regla del redactor que prohíbe
+comparar o equiparar logros del perfil con datos de la empresa no lo evitó. Las anclas "2025" y
+"1,2" validan presencia, no relación. 2 corridas reales con la misma clase de invención; la
+primera fue anterior a la regla del redactor, así que la regla fallando es n=1. Se mide en la
+evaluación.
+
+**Decisión pendiente**: el ángulo del estratega llega al redactor como texto libre, el mismo canal
+que R3 cierra para la razón. Evaluar después de T058 si debe quitarse o reducirse a un conjunto
+fijo, midiendo antes y después. No se modifica hasta tener el baseline.
+
+**Limitación (falso negativo por longitud de ancla)**: en la misma corrida,
+`ancla_demasiado_larga` descartó H3 (oferta de puesto: "Estamos buscando una persona para el
+equipo de datos…"), el dato más relevante para un mensaje de contacto. El filtro que corta el
+relleno de `empresa_vaga` también descarta datos legítimos cuando el investigador elige un ancla
+larga. Se mide en la evaluación.
+
 **Alternatives considered**:
 - Pedir siempre el nombre al usuario (flag obligatorio): agrega fricción; el texto de la empresa
   casi siempre lo trae.
