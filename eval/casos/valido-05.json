@@ -9,10 +9,10 @@
   "nombre_esperado": "Vanteo",
   "hechos_legitimos_esperados": [
     "Principal QA Automation Engineer",
-    "Cypress with TypeScript",
-    "4+ years of hands-on experience with Cypress",
-    "2,500+ digital specialists across 30+ locations",
-    "people across 20+ countries"
+    "Cypress",
+    "2,500+ digital specialists",
+    "30+ locations",
+    "20+ countries"
   ],
-  "notas": "Oferta id 83 (sorteo semilla 42, research R8), empleador anonimizado (en el texto figura como \"Vanteo®\"). Muchas cifras distractoras: mide el criterio numeros."
+  "notas": "Oferta id 83 (sorteo semilla 42, research R8), empleador anonimizado (en el texto figura como \"Vanteo®\"). Muchas cifras distractoras: mide el criterio numeros. Los fragmentos de hechos_legitimos_esperados se fijaron antes de ejecutar el sistema sobre este caso."
 }

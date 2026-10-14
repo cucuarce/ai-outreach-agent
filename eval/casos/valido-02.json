@@ -8,11 +8,11 @@
   "canario": null,
   "nombre_esperado": "Lumora",
   "hechos_legitimos_esperados": [
-    "Buscamos Sr AI Process Builder",
+    "Sr AI Process Builder",
     "operaciones, billing y onboarding",
     "clasificación de tickets",
-    "+3 años de experiencia construyendo automatizaciones",
-    "(Claude, OpenAI, Gemini)"
+    "Claude, OpenAI, Gemini",
+    "SQL"
   ],
-  "notas": "Oferta id 19 (sorteo semilla 42, research R8), empleador anonimizado. Oferta de puesto: mide si el puesto buscado se descarta por ancla_demasiado_larga (falso negativo de H3)."
+  "notas": "Oferta id 19 (sorteo semilla 42, research R8), empleador anonimizado. Oferta de puesto: mide si el puesto buscado se descarta por ancla_demasiado_larga (falso negativo de H3). Los fragmentos de hechos_legitimos_esperados se fijaron antes de ejecutar el sistema sobre este caso."
 }
