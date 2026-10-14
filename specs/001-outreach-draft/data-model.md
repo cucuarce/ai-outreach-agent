@@ -29,7 +29,8 @@ Producido por el investigador, filtrado por `verificar_hechos`.
 | `ancla` | str | Elemento que no se traduce (nombre propio, cifra o término técnico) que MUST aparecer en `cita` y luego en el borrador (research R5). |
 
 **Causas de descarte** (registradas en la traza): `cita_no_localizable`, `ancla_fuera_de_cita`,
-`patron_de_instruccion`, `cita_demasiado_larga`, `duplicado`.
+`patron_de_instruccion`, `cita_demasiado_larga`, `ancla_demasiado_larga` (más de 6 palabras;
+research R5), `duplicado`.
 
 ## PuntoPerfil
 
@@ -97,7 +98,7 @@ Producido por el redactor.
 | `puntos_usados` | list[ElementoUsado] | Puntos de perfil usados: `id`, `cita` literal verificada y `ancla` (FR-008). Sin `descripcion`. |
 | `motivo` | str \| None | Código de motivo si no hay borrador (ver tabla). |
 | `detalle` | str \| None | Explicación legible (por ejemplo "se encontraron 1 de 2 datos concretos"). |
-| `fallos` | list[Fallo] | Criterios incumplidos del último intento si `estado = invalido` (FR-011). |
+| `fallos` | list[Fallo] | Criterios incumplidos del último intento si `estado = invalido` (FR-011), también cuando se corta por borrador repetido (research R2). |
 | `rutas_registro` | {jsonl, md} | Rutas de la traza. |
 
 | `motivo` | Estado | Origen |
@@ -108,7 +109,7 @@ Producido por el redactor.
 | `hechos_insuficientes` | insuficiente | verificar_hechos |
 | `perfil_sin_puntos` | insuficiente | verificar_estrategia |
 | `sin_conexion_perfil` | insuficiente | verificar_estrategia |
-| `validacion_fallida` | invalido | validar_borrador |
+| `validacion_fallida` | invalido | finalizar (reintentos agotados) o validar_borrador (borrador repetido; research R2) |
 | `respuesta_invalida_llm` | error | cualquier agente (JSON inválido tras 1 reintento) |
 | `proveedor_no_disponible` | error | proveedor |
 | `contexto_excedido` | error | proveedor (Ollama recortó el prompt; research R4) |
@@ -126,8 +127,9 @@ Producido por el redactor.
 | `hechos` (verificados), `hechos_descartados` | verificar_hechos | estratega, redactor, validar_borrador |
 | `estrategia` | estratega → verificar_estrategia | redactor |
 | `borrador`, `intento` | redactor | validar_borrador |
+| `texto_borrador_anterior` | redactor (en un reintento, el texto del intento anterior) | validar_borrador (borrador repetido) |
 | `validacion` | validar_borrador | redactor (feedback), ruteo |
-| `resultado` | nodo terminal | CLI |
+| `resultado` | nodo que corta (preparar_entrada, verificar_hechos, verificar_estrategia, validar_borrador) o finalizar | ruteo, CLI |
 
 **Invariante de FR-012**: `texto_empresa` crudo solo se incluye en el prompt del investigador.
 Estratega y redactor reciben de cada hecho verificado solo `id`, `cita` y `ancla`; nunca

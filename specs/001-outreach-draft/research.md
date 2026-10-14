@@ -55,6 +55,17 @@ feedback estructurado (criterio + detalle, por ejemplo "142 → 163 palabras; m�
 defecto `max_reintentos = 2` (3 intentos de redacción como máximo), configurable. Si se agotan,
 el resultado es `invalido` con los criterios del último intento.
 
+**Borrador repetido**: si un reintento devuelve un borrador que falla y es igual al del intento
+anterior tras normalizar (minúsculas, sin tildes, sin puntuación, espacios colapsados),
+`validar_borrador` deja en el estado un resultado `invalido` (`validacion_fallida`) con el
+detalle "el modelo repitió el mismo borrador" y los fallos vigentes; el ruteo ve ese
+`resultado` y va a `finalizar` sin gastar los reintentos restantes. El redactor guarda el texto
+del intento anterior en `texto_borrador_anterior`, así la decisión de ruteo sigue leyendo solo el
+estado. Se agregó porque, en una prueba con Ollama real (`ejemplos/empresa_vaga.txt`, run
+`20261013-193953-b3035e`), los tres intentos devolvieron exactamente el mismo texto: con
+temperatura baja y el mismo feedback el modelo no cambia la respuesta, y cada reintento costaba
+varios minutos sin posibilidad de mejora.
+
 En cada reintento el redactor recibe, además de los criterios fallidos, **el borrador anterior
 completo** y la orden "Corregí solo los criterios fallidos y mantené el resto del borrador"; si
 falló `longitud`, también el rango obligatorio y cuántas palabras tenía el borrador anterior. Se
@@ -240,6 +251,17 @@ hectáreas" → "1,2"). Una cifra pegada a letras forma parte de un nombre propi
 Las frases comunes (anclas que no son nombres propios, cifras ni términos técnicos, como
 "pipelines de imágenes satelitales") no se pueden validar como intraducibles de forma
 determinista; su efecto se mide en la evaluación.
+
+**Anclas demasiado largas (heurística)**: `verificar_hechos` descarta con causa
+`ancla_demasiado_larga` los datos cuya ancla tiene más de 6 palabras (`len(ancla.split())`, después
+de reducir las cifras). El umbral es una heurística, no una regla exacta: un nombre propio o un
+término técnico rara vez supera 6 palabras ("Instituto Nacional de Tecnología Agropecuaria" tiene
+5), mientras que una oración promocional sí. En la prueba con Ollama real sobre
+`ejemplos/empresa_vaga.txt`, el investigador devolvió como anclas oraciones enteras de 9 y 12
+palabras ("Somos una empresa innovadora y apasionada por la excelencia"); se aceptaban como datos
+concretos, el flujo seguía hasta el redactor y terminaba en `invalido` en vez de
+`insuficiente/hechos_insuficientes`. Si la evaluación muestra nombres legítimos más largos, se
+ajusta el umbral.
 
 **Rationale**: convierte "menciona al menos dos datos concretos" y "conecta explícitamente con un
 punto del perfil" en comprobaciones deterministas, localizables en las entradas (SC-002) e
