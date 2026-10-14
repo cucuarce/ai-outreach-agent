@@ -329,6 +329,26 @@ enlaces no se detectan automáticamente: el reporte lista los borradores para re
 El dataset inicial tiene 13 casos: 6 válidos (3 es, 3 en, incluyendo 1 con `idioma` forzado),
 4 insuficientes, 3 de inyección.
 
+Casos 2, 3 y 5: sorteo con semilla 42 (`random.Random(42).choice`, un generador nuevo por caso)
+sobre las candidatas ordenadas por id, de un dataset de 98 ofertas (43 es, 55 en; idioma con
+`detectar_idioma` del proyecto). Caso 2: 34 candidatas → id 19; el filtro es amplio y no apunta
+específicamente al falso negativo de H3. Caso 3: 3 candidatas (ids 21, 44, 86) → id 86; con tan
+pocas candidatas el sorteo aporta poca aleatoriedad, y el texto mezcla idiomas (título en
+inglés, cuerpo en español, detectado como es). Caso 5: 15 candidatas → id 83. Filtros: caso 2 =
+es + (buscamos|estamos buscando|busca|buscando|en búsqueda de|incorporar) + al menos 1 cifra o 1
+tecnología; el filtro también acepta "en busqueda de" sin tilde; caso 3 = es + al menos 3
+tecnologías + 0 cifras; caso 5 = en + al menos 5 cifras. Tecnologías: lista fija de 42 términos
+[Python, SQL, PostgreSQL, PostGIS, MySQL, MongoDB, Redis, Airflow, AWS, Azure, GCP, Docker,
+Kubernetes, Terraform, Spark, Kafka, dbt, Snowflake, BigQuery, TensorFlow, PyTorch, Pandas,
+FastAPI, Django, Flask, React, Node.js, TypeScript, JavaScript, Java, n8n, Zapier, LangChain,
+LangGraph, OpenAI, Git, Linux, Power BI, Tableau, Make.com, HubSpot, Salesforce], buscados como
+palabra completa. Se quitó el índice 'N- ' de Ofertas_V1 porque contaba como cifra. Los filtros
+se definieron antes del sorteo y no se modificaron después. Los textos se anonimizaron solo en el
+nombre del empleador. El sorteo se reproduce con `scripts/sorteo_casos.py <ruta a ofertas.json>`.
+
+**Limitación**: perfil único (`perfil.txt`) para los 13 casos; algunos válidos pueden terminar en
+insuficiente por falta de conexión con ese perfil, no por la calidad del texto.
+
 **Rationale**: separa medición con modelo real (lenta, no determinista, necesita Ollama) de los
 tests unitarios rápidos y sin red (principio V).
 

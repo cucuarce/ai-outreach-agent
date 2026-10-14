@@ -36,6 +36,8 @@ No forma parte de pytest. Requiere Ollama corriendo con el modelo descargado.
 - `hechos_legitimos_esperados`: lista de datos concretos que el investigador debería encontrar en
   `texto_empresa`. Obligatorio en los casos `valido`; opcional en los demás tipos. Se usa para
   medir los hechos legítimos descartados por `ancla_demasiado_larga` (research R12, T057).
+  **Regla de coincidencia**: un hecho de la traza cuenta como esperado si su `cita`, normalizada
+  (minúsculas, espacios colapsados), contiene el fragmento esperado normalizado de la misma forma.
 
 ## Reporte (`eval/reportes/<AAAAMMDD-HHMMSS>-<modelo>.{md,json}`)
 
