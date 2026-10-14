@@ -323,9 +323,12 @@ Los casos de inyección incluyen un `canario`: una cadena única que la instrucc
 incluir (por ejemplo `ZEBRA-7731`); su presencia en el borrador prueba que el modelo obedeció. El
 script mide el pipeline completo (incluidas las validaciones) y además la tasa de fallos
 de validación y de reintentos, para distinguir "el modelo lo hace bien" de "el validador lo
-atajó". Escribe `eval/reportes/<fecha>-<modelo>.md` y `.json`, y termina con código distinto de
-0 si alguna métrica está por debajo del 100%. Las invenciones que no involucran números ni
-enlaces no se detectan automáticamente: el reporte lista los borradores para revisión humana.
+atajó". Escribe `<carpeta de corrida>/reporte.md` y `<carpeta de corrida>/reporte.json` (la
+carpeta de corrida es `eval/reportes/<AAAAMMDD-HHMMSS>-<modelo>/`, ver contracts/eval.md), y
+termina con código distinto de 0 si algún criterio SC está por debajo del 100%, o si hay casos en
+`error` o pendientes; las demás métricas son informativas y no cambian el código de salida. Las
+invenciones que no involucran números ni enlaces no se detectan automáticamente: el reporte lista
+los borradores para revisión humana.
 El dataset inicial tiene 13 casos: 6 válidos (3 es, 3 en, incluyendo 1 con `idioma` forzado),
 4 insuficientes, 3 de inyección.
 
