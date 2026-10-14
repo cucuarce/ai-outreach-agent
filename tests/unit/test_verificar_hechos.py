@@ -53,6 +53,42 @@ def test_duplicado():
     assert resultado["hechos_descartados"] == [{"id": "H2", "causa": "duplicado"}]
 
 
+# --- Anclas demasiado largas (research R5) ---
+
+
+def test_anclas_de_la_respuesta_real_para_empresa_vaga_se_descartan():
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(escenarios.TEXTO_EMPRESA_VAGA, escenarios.PERFIL),
+        "hechos_candidatos": escenarios.hechos(escenarios.INVESTIGADOR_VAGA),
+    }
+    resultado = verificar_hechos(estado)
+    assert resultado["hechos"] == []
+    assert resultado["hechos_descartados"] == [
+        {"id": "H1", "causa": "ancla_demasiado_larga"},
+        {"id": "H2", "causa": "ancla_demasiado_larga"},
+    ]
+
+
+def test_ancla_nombre_de_cinco_palabras_pasa():
+    texto = "Trabajamos con el Instituto Nacional de Tecnología Agropecuaria en Pergamino."
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(texto, escenarios.PERFIL),
+        "hechos_candidatos": [
+            Hecho(
+                "H1",
+                "d",
+                "Trabajamos con el Instituto Nacional de Tecnología Agropecuaria",
+                "Instituto Nacional de Tecnología Agropecuaria",
+            )
+        ],
+    }
+    resultado = verificar_hechos(estado)
+    assert [h.ancla for h in resultado["hechos"]] == ["Instituto Nacional de Tecnología Agropecuaria"]
+    assert resultado["hechos_descartados"] == []
+
+
 # --- Nombre de la empresa (T033d, research R12) ---
 
 

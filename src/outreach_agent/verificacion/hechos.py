@@ -12,6 +12,7 @@ from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
 from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
 from outreach_agent.verificacion.patrones import es_instruccion
 from outreach_agent.verificacion.texto import (
+    contar_palabras,
     contiene_ancla,
     contiene_literal,
     normalizar,
@@ -20,6 +21,9 @@ from outreach_agent.verificacion.texto import (
 
 MAX_NOMBRE_EMPRESA = 80
 MIN_HECHOS = 2  # umbral de "datos concretos suficientes" (FR-009)
+# Heurística (research R5): un ancla es un nombre propio, una cifra o un término técnico; una
+# frase más larga es una paráfrasis del texto promocional, no un dato concreto.
+MAX_PALABRAS_ANCLA = 6
 
 
 def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) -> str | None:
@@ -29,6 +33,8 @@ def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) 
         return "cita_no_localizable"
     if es_instruccion(hecho.cita):
         return "patron_de_instruccion"
+    if contar_palabras(hecho.ancla) > MAX_PALABRAS_ANCLA:
+        return "ancla_demasiado_larga"
     if not contiene_ancla(hecho.cita, hecho.ancla):
         return "ancla_fuera_de_cita"
     if normalizar(hecho.cita) in citas_vistas:

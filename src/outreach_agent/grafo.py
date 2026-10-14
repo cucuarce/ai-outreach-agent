@@ -9,7 +9,7 @@
             redactor → validar_borrador ─(ok)→ finalizar → END
                 ↑             │
                 └─(falla y quedan reintentos)
-                              └─(falla sin reintentos)→ finalizar → END
+                              └─(falla sin reintentos o borrador repetido)→ finalizar → END
 
 Los tres agentes (investigador, estratega, redactor) llaman al LLM; el resto de los nodos son
 deterministas. Las decisiones de ruteo dependen solo de campos ya verificados del estado.
@@ -37,6 +37,7 @@ from outreach_agent.verificacion import borrador as mod_borrador
 from outreach_agent.verificacion import entrada as mod_entrada
 from outreach_agent.verificacion import estrategia as mod_estrategia
 from outreach_agent.verificacion import hechos as mod_hechos
+from outreach_agent.verificacion.cortes import invalidar
 
 AGENTE = "agente"
 DETERMINISTA = "determinista"
@@ -54,16 +55,8 @@ def finalizar(estado: EstadoGrafo) -> dict:
     validacion = estado.get("validacion")
     if validacion is not None and not validacion.ok:
         intentos = estado.get("intento", 0)
-        resultado = Resultado(
-            estado=Estado.INVALIDO,
-            run_id=estado["run_id"],
-            idioma=estado.get("idioma_objetivo"),
-            motivo=Motivo.VALIDACION_FALLIDA,
-            detalle=f"No se logró un borrador válido en {intentos} intento(s) de redacción.",
-            fallos=validacion.fallos,
-            **empresa,
-        )
-        return {"resultado": resultado}
+        detalle = f"No se logró un borrador válido en {intentos} intento(s) de redacción."
+        return invalidar(estado, validacion.fallos, detalle)
 
     borrador = estado["borrador"]
     usados_h = set(borrador.hechos_usados)
@@ -107,7 +100,8 @@ def ruta_despues_de_verificar_estrategia(estado: EstadoGrafo) -> str:
 
 def ruta_despues_de_validar(max_reintentos: int):
     def ruta(estado: EstadoGrafo) -> str:
-        if estado["validacion"].ok:
+        # validar_borrador deja un resultado si el redactor repitió el borrador anterior.
+        if "resultado" in estado or estado["validacion"].ok:
             return "finalizar"
         if estado["intento"] < 1 + max_reintentos:
             return "redactor"

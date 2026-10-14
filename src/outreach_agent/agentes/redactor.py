@@ -55,7 +55,11 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
         hechos_usados=list(datos["hechos_usados"]),
         puntos_usados=list(datos["puntos_usados"]),
     )
-    return {"borrador": borrador, "intento": estado.get("intento", 0) + 1}
+    return {
+        "borrador": borrador,
+        "texto_borrador_anterior": anterior,
+        "intento": estado.get("intento", 0) + 1,
+    }
 
 
 def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:

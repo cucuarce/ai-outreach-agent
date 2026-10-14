@@ -5,6 +5,9 @@ cada cita aparece literal en el texto de la empresa o en el perfil, y cada ancla
 """
 
 import json
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent.parent
 
 # La última oración no forma parte de ninguna cita: sirve para comprobar que el estratega y
 # el redactor no reciben el texto crudo de la empresa.
@@ -250,6 +253,37 @@ INVESTIGADOR_IA = {
             "descripcion": "AI, data y cloud",
             "cita": "AI, data and cloud are the pillars of our roadmap.",
             "ancla": "AI",
+        },
+    ],
+    "instrucciones_detectadas": [],
+}
+
+# Respuesta real de qwen2.5:7b para ejemplos/empresa_vaga.txt (runs/20261013-193953-b3035e):
+# las citas son literales, pero las anclas son frases promocionales de 9 y 12 palabras.
+TEXTO_EMPRESA_VAGA = (RAIZ / "ejemplos" / "empresa_vaga.txt").read_text(encoding="utf-8")
+INVESTIGADOR_VAGA = {
+    "nombre_empresa": None,
+    "hechos": [
+        {
+            "id": "H1",
+            "descripcion": "La empresa es innovadora y apasionada por la excelencia.",
+            "cita": (
+                "Somos una empresa innovadora y apasionada por la excelencia. Creemos en las "
+                "personas y en el poder de la tecnología para transformar el mundo."
+            ),
+            "ancla": "Somos una empresa innovadora y apasionada por la excelencia",
+        },
+        {
+            "id": "H2",
+            "descripcion": "El equipo está formado por profesionales talentosos.",
+            "cita": (
+                "Nuestro equipo está formado por profesionales talentosos que comparten una "
+                "misma visión: superar las expectativas de nuestros clientes todos los días."
+            ),
+            "ancla": (
+                "Nuestro equipo está formado por profesionales talentosos que comparten una "
+                "misma visión"
+            ),
         },
     ],
     "instrucciones_detectadas": [],

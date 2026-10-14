@@ -1,7 +1,7 @@
 import pytest
 
-from outreach_agent.modelos import Borrador, Entrada, Hecho
-from outreach_agent.verificacion.borrador import validar_borrador
+from outreach_agent.modelos import Borrador, Entrada, Estado, Hecho, Motivo
+from outreach_agent.verificacion.borrador import nodo_validar_borrador, validar_borrador
 from tests import escenarios
 
 TEXTO = escenarios.TEXTO_BORRADOR  # 102 palabras, válido
@@ -177,3 +177,51 @@ def test_enlace_del_perfil_se_acepta():
         entrada=Entrada(escenarios.TEXTO_EMPRESA, perfil),
     )
     assert resultado.ok
+
+
+# --- Borrador repetido (research R2) ---
+
+LARGO = TEXTO + " Además" * 68  # 170 palabras: falla longitud
+
+
+def nodo(texto, anterior):
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
+        "idioma_objetivo": "es",
+        "hechos": escenarios.hechos(),
+        "estrategia": escenarios.estrategia(),
+        "borrador": Borrador(texto, ["H1", "H2"], ["P1", "P2"]),
+        "texto_borrador_anterior": anterior,
+        "intento": 2,
+    }
+    return nodo_validar_borrador(estado)
+
+
+def test_borrador_repetido_que_falla_corta_como_invalido():
+    actualizacion = nodo(LARGO, LARGO)
+    resultado = actualizacion["resultado"]
+    assert resultado.estado is Estado.INVALIDO
+    assert resultado.motivo is Motivo.VALIDACION_FALLIDA
+    assert resultado.detalle == "el modelo repitió el mismo borrador"
+    assert [f.criterio for f in resultado.fallos] == ["longitud"]
+    assert resultado.fallos == actualizacion["validacion"].fallos
+
+
+def test_la_comparacion_ignora_mayusculas_tildes_puntuacion_y_espacios():
+    anterior = LARGO.upper().replace(".", "").replace(" ", "  \n")
+    assert "resultado" in nodo(LARGO, anterior)
+
+
+def test_borrador_distinto_no_corta():
+    assert "resultado" not in nodo(LARGO, LARGO + " También")
+
+
+def test_primer_intento_sin_anterior_no_corta():
+    assert "resultado" not in nodo(LARGO, None)
+
+
+def test_borrador_repetido_valido_no_corta():
+    actualizacion = nodo(TEXTO, TEXTO)
+    assert actualizacion["validacion"].ok
+    assert "resultado" not in actualizacion

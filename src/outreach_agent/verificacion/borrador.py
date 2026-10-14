@@ -1,11 +1,13 @@
 """Validación determinista del borrador (research R2 y R5).
 
 Cada criterio es independiente y se devuelven todos los fallos, para que el redactor pueda
-corregirlos juntos en el reintento.
+corregirlos juntos en el reintento. Si un reintento devuelve el mismo borrador que el intento
+anterior, la ejecución se corta como `invalido` sin gastar los reintentos restantes (R2).
 """
 
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Fallo, ResultadoValidacion
+from outreach_agent.verificacion.cortes import invalidar
 from outreach_agent.verificacion.idioma import detectar_idioma
 from outreach_agent.verificacion.relleno import encontrar_relleno
 from outreach_agent.verificacion.texto import (
@@ -14,12 +16,14 @@ from outreach_agent.verificacion.texto import (
     contiene_palabra,
     extraer_numeros,
     extraer_urls_emails,
+    normalizar,
 )
 
 MIN_PALABRAS = 80
 MAX_PALABRAS = 150
 MIN_HECHOS = 2
 MIN_PUNTOS = 1
+DETALLE_REPETIDO = "el modelo repitió el mismo borrador"
 
 
 def _longitud(texto: str) -> Fallo | None:
@@ -134,8 +138,19 @@ def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
     return ResultadoValidacion(ok=not fallos, fallos=fallos)
 
 
+def es_repeticion(estado: EstadoGrafo) -> bool:
+    """El borrador es igual al del intento anterior, tras normalizar (minúsculas, sin tildes, sin
+    puntuación y con espacios colapsados)."""
+    anterior = estado.get("texto_borrador_anterior")
+    return anterior is not None and normalizar(anterior) == normalizar(estado["borrador"].texto)
+
+
 def nodo_validar_borrador(estado: EstadoGrafo) -> dict:
-    return {"validacion": validar_borrador(estado)}
+    validacion = validar_borrador(estado)
+    actualizacion: dict = {"validacion": validacion}
+    if not validacion.ok and es_repeticion(estado):
+        actualizacion.update(invalidar(estado, validacion.fallos, DETALLE_REPETIDO))
+    return actualizacion
 
 
 def resumidor(max_reintentos: int):
@@ -148,6 +163,10 @@ def resumidor(max_reintentos: int):
         if validacion.ok:
             proximo = "fin"
             decision = "ok → fin"
+        elif "resultado" in actualizacion:
+            proximo = "inválido (borrador repetido)"
+            criterios = ", ".join(f["criterio"] for f in fallos)
+            decision = f"falla: {criterios}; {DETALLE_REPETIDO} → inválido"
         else:
             proximo = "reintento" if estado["intento"] < 1 + max_reintentos else "inválido"
             criterios = ", ".join(f["criterio"] for f in fallos)

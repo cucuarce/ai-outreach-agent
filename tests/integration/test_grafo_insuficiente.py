@@ -76,6 +76,17 @@ def test_menos_de_dos_datos_corta_antes_del_estratega():
     assert roles(provider) == ["investigador"]
 
 
+def test_respuesta_real_para_empresa_vaga_corta_antes_del_estratega():
+    # Las anclas de 9 y 12 palabras se descartan por ancla_demasiado_larga (research R5).
+    resultado, provider = correr([e.INVESTIGADOR_VAGA], texto=e.TEXTO_EMPRESA_VAGA)
+
+    assert resultado.estado is Estado.INSUFICIENTE
+    assert resultado.motivo is Motivo.HECHOS_INSUFICIENTES
+    assert "0 de 2" in resultado.detalle
+    assert resultado.borrador is None
+    assert roles(provider) == ["investigador"]
+
+
 def test_perfil_sin_puntos_concretos():
     estrategia = copy.deepcopy(e.ESTRATEGA)
     estrategia["puntos_perfil"] = [

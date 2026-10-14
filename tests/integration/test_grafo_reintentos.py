@@ -10,6 +10,7 @@ from tests import escenarios as e
 from tests.fakes import FakeProvider
 
 LARGO = dict(e.REDACTOR, texto=e.TEXTO_BORRADOR + " Además" * 68)  # 170 palabras
+LARGO_B = dict(e.REDACTOR, texto=e.TEXTO_BORRADOR + " Asimismo" * 68)  # 170 palabras, distinto de LARGO
 CON_RELLENO = dict(e.REDACTOR, texto=e.TEXTO_BORRADOR + " Quedo a la espera de su respuesta.")
 
 
@@ -37,7 +38,7 @@ def test_falla_y_luego_valido_da_borrador_en_el_segundo_intento():
 
 
 def test_tres_fallos_con_dos_reintentos_da_invalido_con_los_fallos_del_ultimo():
-    resultado, provider = correr([LARGO, LARGO, CON_RELLENO], max_reintentos=2)
+    resultado, provider = correr([LARGO, LARGO_B, CON_RELLENO], max_reintentos=2)
 
     assert resultado.estado is Estado.INVALIDO
     assert resultado.motivo is Motivo.VALIDACION_FALLIDA
@@ -74,3 +75,15 @@ def test_sin_fallo_de_longitud_no_se_agrega_la_linea_de_longitud():
     assert CON_RELLENO["texto"] in segundo["user"]
     assert "relleno:" in segundo["user"]
     assert "Longitud obligatoria" not in segundo["user"]
+
+
+def test_borrador_repetido_corta_sin_gastar_los_reintentos_restantes():
+    repetido = dict(LARGO, texto=LARGO["texto"].upper())  # igual tras normalizar
+    resultado, provider = correr([LARGO, repetido, e.REDACTOR], max_reintentos=2)
+
+    assert resultado.estado is Estado.INVALIDO
+    assert resultado.motivo is Motivo.VALIDACION_FALLIDA
+    assert resultado.detalle == "el modelo repitió el mismo borrador"
+    assert [f.criterio for f in resultado.fallos] == ["longitud"]
+    assert resultado.borrador is None
+    assert len(llamadas_al_redactor(provider)) == 2  # no se llega al tercer intento

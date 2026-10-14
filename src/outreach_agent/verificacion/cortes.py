@@ -1,12 +1,13 @@
-"""Cortes por información insuficiente (Historia 2, FR-009 y FR-010).
+"""Cortes por información insuficiente (Historia 2, FR-009 y FR-010) y por borrador inválido
+(FR-011).
 
 Los nodos deterministas que detectan que no se puede seguir dejan un `resultado` en el estado;
 las aristas condicionales del grafo ven ese campo y saltan a `finalizar`, que lo devuelve tal
-cual. El texto de cada detalle incluye cómo corregir la entrada.
+cual. El texto de cada detalle de información insuficiente incluye cómo corregir la entrada.
 """
 
 from outreach_agent.estado import EstadoGrafo
-from outreach_agent.modelos import Estado, Motivo, Resultado
+from outreach_agent.modelos import Estado, Fallo, Motivo, Resultado
 
 DETALLES = {
     Motivo.EMPRESA_VACIA: (
@@ -50,5 +51,20 @@ def cortar(estado: EstadoGrafo, motivo: Motivo, detalle: str | None = None) -> d
         origen_nombre_empresa=estado.get("origen_nombre_empresa"),
         motivo=motivo,
         detalle=detalle or DETALLES[motivo],
+    )
+    return {"resultado": resultado}
+
+
+def invalidar(estado: EstadoGrafo, fallos: list[Fallo], detalle: str) -> dict:
+    """Actualización de estado que termina la ejecución como `invalido` con los fallos vigentes."""
+    resultado = Resultado(
+        estado=Estado.INVALIDO,
+        run_id=estado["run_id"],
+        idioma=estado.get("idioma_objetivo"),
+        nombre_empresa=estado.get("nombre_empresa"),
+        origen_nombre_empresa=estado.get("origen_nombre_empresa"),
+        motivo=Motivo.VALIDACION_FALLIDA,
+        detalle=detalle,
+        fallos=fallos,
     )
     return {"resultado": resultado}
