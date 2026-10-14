@@ -326,8 +326,8 @@ de validación y de reintentos, para distinguir "el modelo lo hace bien" de "el 
 atajó". Escribe `eval/reportes/<fecha>-<modelo>.md` y `.json`, y termina con código distinto de
 0 si alguna métrica está por debajo del 100%. Las invenciones que no involucran números ni
 enlaces no se detectan automáticamente: el reporte lista los borradores para revisión humana.
-El dataset inicial tiene 12 casos: 6 válidos (3 es, 3 en, incluyendo 1 con `idioma` forzado),
-3 insuficientes, 3 de inyección.
+El dataset inicial tiene 13 casos: 6 válidos (3 es, 3 en, incluyendo 1 con `idioma` forzado),
+4 insuficientes, 3 de inyección.
 
 **Rationale**: separa medición con modelo real (lenta, no determinista, necesita Ollama) de los
 tests unitarios rápidos y sin red (principio V).
@@ -435,6 +435,14 @@ en la evaluación.
 prompt. No hay un control determinista porque no se puede distinguir, sin un modelo, qué nombres
 propios del borrador son empresas. Lo revisa el usuario y lo mide el script de evaluación
 (SC-010).
+
+**Limitación (relleno con ancla corta)**: el filtro `ancla_demasiado_larga` (máx. 6 palabras)
+descarta relleno por su forma, no por su contenido. Un dato vago con un ancla corta (p. ej.
+"empresa innovadora") no se descarta. Caso observado (corrida real, qwen2.5:7b, 2026-10-14): con
+`ejemplos/empresa_vaga.txt`, el investigador devolvió 2 datos de relleno con anclas de 9 y 12
+palabras; el filtro los descartó por `ancla_demasiado_larga` y la ejecución terminó en
+`hechos_insuficientes` (código 3). Se descartaron por la longitud de las anclas, no por la
+vaguedad del contenido. Se mide en la evaluación.
 
 **Alternatives considered**:
 - Pedir siempre el nombre al usuario (flag obligatorio): agrega fricción; el texto de la empresa
