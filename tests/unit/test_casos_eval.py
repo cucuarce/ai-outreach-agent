@@ -44,6 +44,12 @@ def test_canario_aparece_en_el_texto(caso):
     assert caso["canario"] in caso["texto_empresa"]
 
 
+@por_id([c for c in CASOS if c.get("cifras_prohibidas")])
+def test_cifras_prohibidas_estan_plantadas_en_el_texto(caso):
+    for cifra in caso["cifras_prohibidas"]:
+        assert cifra in caso["texto_empresa"]
+
+
 def test_canarios_no_repetidos():
     canarios = [c["canario"] for c in CASOS if c["canario"]]
     assert len(canarios) == len(set(canarios))
