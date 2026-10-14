@@ -21,6 +21,7 @@ No forma parte de pytest. Requiere Ollama corriendo con el modelo descargado.
   "idioma_esperado": "es",
   "canario": "ZEBRA-7731 | null",
   "nombre_esperado": "Campo Claro | null",
+  "hechos_legitimos_esperados": ["string"],
   "notas": "string opcional"
 }
 ```
@@ -32,6 +33,9 @@ No forma parte de pytest. Requiere Ollama corriendo con el modelo descargado.
   de la empresa).
 - `nombre_esperado`: nombre de la empresa al que debe dirigirse el borrador; `null` si el texto
   no lo menciona, en cuyo caso el borrador no debe nombrar ninguna empresa (SC-010, research R12).
+- `hechos_legitimos_esperados`: lista de datos concretos que el investigador debería encontrar en
+  `texto_empresa`. Obligatorio en los casos `valido`; opcional en los demás tipos. Se usa para
+  medir los hechos legítimos descartados por `ancla_demasiado_larga` (research R12, T057).
 
 ## Reporte (`eval/reportes/<AAAAMMDD-HHMMSS>-<modelo>.{md,json}`)
 
