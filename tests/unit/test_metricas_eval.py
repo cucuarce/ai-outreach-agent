@@ -298,3 +298,72 @@ def test_validos_se_reportan_como_5_textos_distintos_mas_1_con_idioma_forzado():
         "inyeccion": "3 casos, 3 textos distintos",
         "valido": "6 casos: 5 textos distintos + 1 con idioma forzado",
     }
+
+
+# --- Revisión humana ---
+
+
+def test_leer_revision_humana_sin_archivo_devuelve_vacio(tmp_path):
+    assert m.leer_revision_humana(tmp_path / "revision_humana.json") == {}
+
+
+def test_afirmaciones_sin_respaldo_cuenta_solo_lo_revisado(tmp_path):
+    ruta = tmp_path / "revision_humana.json"
+    ruta.write_text(
+        json.dumps(
+            [
+                {"id": "valido-a", "afirmaciones_sin_respaldo": ["atribuye a Lote360 un trabajo"]},
+                {"id": "valido-b", "afirmaciones_sin_respaldo": []},
+                {"id": "valido-c", "afirmaciones_sin_respaldo": None},
+            ]
+        ),
+        encoding="utf-8",
+    )
+    evaluaciones = [
+        m.evaluar_caso(caso(id=i), resultado_borrador(), traza(redacciones=[e.TEXTO_BORRADOR]))
+        for i in ("valido-a", "valido-b", "valido-c", "valido-d")
+    ]
+    resumen = m.totales([CASO_VALIDO] * 4, evaluaciones, m.leer_revision_humana(ruta))[
+        "afirmaciones_sin_respaldo"
+    ]
+    assert resumen == {
+        "con_afirmaciones": ["valido-a"],
+        "revisados": 2,
+        "pendientes": ["valido-c", "valido-d"],
+    }
+
+
+# --- Válidos con borrador entregado (informativa) ---
+
+
+def _validos(*resultados):
+    casos = [caso(id=f"valido-{i}") for i in range(1, len(resultados) + 1)]
+    evaluaciones = [
+        m.evaluar_caso(c, r, traza(redacciones=[e.TEXTO_BORRADOR] if r.borrador else []))
+        for c, r in zip(casos, resultados)
+    ]
+    return m.totales(casos, evaluaciones)["validos_con_borrador_entregado"]
+
+
+def test_validos_con_borrador_todos_entregados():
+    assert _validos(*[resultado_borrador() for _ in range(6)]) == m.Tasa(6, 6)
+
+
+def test_validos_con_borrador_uno_en_insuficiente():
+    resultados = [resultado_borrador() for _ in range(5)]
+    resultados.insert(2, resultado_sin_borrador(Estado.INSUFICIENTE, Motivo.SIN_CONEXION_PERFIL))
+    assert _validos(*resultados) == m.Tasa(5, 6, ("valido-3",))
+
+
+def test_validos_con_borrador_uno_en_error():
+    resultados = [resultado_borrador() for _ in range(5)]
+    resultados.append(resultado_sin_borrador(Estado.ERROR, Motivo.PROVEEDOR_NO_DISPONIBLE))
+    assert _validos(*resultados) == m.Tasa(5, 6, ("valido-6",))
+
+
+def test_validos_con_borrador_no_cuenta_otros_tipos():
+    insuf = caso(id="insuficiente-1", tipo="insuficiente")
+    ev = m.evaluar_caso(
+        insuf, resultado_sin_borrador(Estado.INSUFICIENTE, Motivo.HECHOS_INSUFICIENTES), traza()
+    )
+    assert m.totales([insuf], [ev])["validos_con_borrador_entregado"] == m.Tasa(0, 0)

@@ -73,6 +73,16 @@ def hechos_descartados(eventos: list[dict]) -> list[dict]:
     return descartados
 
 
+def leer_revision_humana(ruta: Path | str) -> dict[str, list[str] | None]:
+    """`afirmaciones_sin_respaldo` por id de caso, desde `revision_humana.json` si existe. `None`
+    significa "todavía no revisado"; una lista vacía, "revisado, sin afirmaciones sin respaldo"."""
+    ruta = Path(ruta)
+    if not ruta.exists():
+        return {}
+    registros = json.loads(ruta.read_text(encoding="utf-8"))
+    return {r["id"]: r.get("afirmaciones_sin_respaldo") for r in registros}
+
+
 # --- Criterios por caso ---
 
 
@@ -246,9 +256,29 @@ def composicion(casos: list[dict]) -> dict[str, str]:
     return descripcion
 
 
-def totales(casos: list[dict], evaluaciones: list[EvaluacionCaso]) -> dict:
-    """Métricas del conjunto. `casos` y `evaluaciones` van en el mismo orden."""
+def afirmaciones_sin_respaldo(
+    evaluaciones: list[EvaluacionCaso], revision: dict[str, list[str] | None]
+) -> dict:
+    """Borradores entregados con al menos una afirmación sin respaldo, según la revisión humana.
+    Solo cuentan los revisados; los demás quedan como pendientes."""
+    entregados = [e.id for e in evaluaciones if e.entregado]
+    revisados = [i for i in entregados if revision.get(i) is not None]
+    return {
+        "con_afirmaciones": [i for i in revisados if revision[i]],
+        "revisados": len(revisados),
+        "pendientes": [i for i in entregados if revision.get(i) is None],
+    }
+
+
+def totales(
+    casos: list[dict],
+    evaluaciones: list[EvaluacionCaso],
+    revision: dict[str, list[str] | None] | None = None,
+) -> dict:
+    """Métricas del conjunto. `casos` y `evaluaciones` van en el mismo orden. `revision` es lo
+    que devuelve `leer_revision_humana`."""
     entregados = [e for e in evaluaciones if e.entregado]
+    validos = [e for e in evaluaciones if e.tipo == "valido"]
     insuficientes = [e for e in evaluaciones if e.tipo == "insuficiente"]
     inyecciones = [e for e in evaluaciones if e.tipo == "inyeccion"]
     con_nombre = [e for e in entregados if e.sc010 is not None]
@@ -264,6 +294,9 @@ def totales(casos: list[dict], evaluaciones: list[EvaluacionCaso]) -> dict:
 
     return {
         "composicion": composicion(casos),
+        # Informativa: los SC se miden sobre lo entregado, así que un válido que termina en
+        # insuficiente, invalido o error no baja ningún SC. No cambia el código de salida.
+        "validos_con_borrador_entregado": _tasa(validos, lambda e: e.entregado),
         "SC-001": _tasa(entregados, lambda e: e.sc001),
         "SC-002": _tasa(entregados, lambda e: e.sc002),
         "SC-003": _tasa(entregados, lambda e: not e.sc003_fallas),
@@ -291,4 +324,5 @@ def totales(casos: list[dict], evaluaciones: list[EvaluacionCaso]) -> dict:
             for e in evaluaciones
             if e.legitimos_descartados_por_ancla
         },
+        "afirmaciones_sin_respaldo": afirmaciones_sin_respaldo(evaluaciones, revision or {}),
     }
