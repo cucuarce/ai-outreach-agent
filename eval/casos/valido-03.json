@@ -1,0 +1,17 @@
+{
+  "id": "valido-03",
+  "tipo": "valido",
+  "texto_empresa": "Acerca del empleo\nJob Description\n\nGenerative AI Engineer con experiencia en GCP y Python\n\nBuscamos un Dsarrollador orientado a Python, responsable del motor de generación de Droids. Este profesional es dueño de la capa de agentes de IA, el enriquecimiento (grounding) de datos de producto, la orquestación de prompts, los flujos de generación de imágenes y video, la lógica de validación y el pipeline de procesamiento basado en Google Cloud Platform (GCP).\n\nDebe ser un perfil hands-on con experiencia en Python, Google ADK, Gemini/Vertex AI, BigQuery, Cloud Storage, Cloud Run y orquestación de procesos asíncronos.\n\nResponsabilidades y conocimientos requeridos\n\nDesarrollo backend en Python.\nDesarrollo de agentes de IA y workflows basados en LLMs.\nGoogle ADK, Gemini y Vertex AI.\nPrompt Engineering y generación de respuestas estructuradas.\nFlujos de generación de imágenes y video mediante IA generativa.\nGrounding de información de productos utilizando atributos de catálogo, imágenes, contenido multimedia y reglas de marca.\nBigQuery, Cloud Storage y Cloud Run.\nPub/Sub, Cloud Tasks y Cloud Workflows.\nValidación de imágenes y videos generados mediante controles de calidad.\nConstrucción de contexto de producto y captura de metadatos de generación.\nLogging, manejo de errores, reintentos y auditoría.\nDesarrollo básico de APIs REST para exponer capacidades de agentes.\nGestión de IAM, Service Accounts, Secret Manager e integraciones seguras en GCP.\n\n¿Qué ofrecemos?\nSalario dolarizado, pagado en pesos según dólar BNA venta\nRelación de dependencia con Corvalia\n\nBeneficios:\nReintegro de gastos virtuales\nCobertura médica OSDE\nConvenio con Megatlón\nDía de cumpleaños libre (¡con voucher de PedidosYa!)\nCapacitaciones en Udemy\nDescuentos en idiomas: CUI",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Corvalia",
+  "hechos_legitimos_esperados": [
+    "motor de generación de Droids",
+    "Google ADK, Gemini/Vertex AI, BigQuery, Cloud Storage, Cloud Run",
+    "Pub/Sub, Cloud Tasks y Cloud Workflows",
+    "agentes de IA, el enriquecimiento (grounding) de datos de producto"
+  ],
+  "notas": "Oferta id 86 (sorteo semilla 42, research R8), empleador anonimizado. Solo tecnologías, sin cifras. Empresa de IA con \"IA,\" en el texto. Título en inglés y cuerpo en español (detectado como es). El único nombre de empresa es el del empleador (\"Relación de dependencia con Corvalia\")."
+}

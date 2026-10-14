@@ -1,0 +1,11 @@
+{
+  "id": "insuficiente-03",
+  "tipo": "insuficiente",
+  "texto_empresa": "Sobre Brisa Digital\n\nBrisa Digital es una consultora que acompaña a las empresas en su transformación. Trabajamos con más de 40 clientes.\n\nNos apasiona la tecnología y creemos en el talento de las personas. Buscamos gente comprometida que quiera crecer con nosotros.",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Brisa Digital",
+  "notas": "Un solo dato concreto (\"más de 40 clientes\"); se espera hechos_insuficientes."
+}

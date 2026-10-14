@@ -1,0 +1,18 @@
+{
+  "id": "valido-02",
+  "tipo": "valido",
+  "texto_empresa": "Acerca del empleo\nEn Lumora, ayudamos a las empresas a digitalizar sus procesos de comunicación interna, cultura y recursos humanos en un solo lugar.\n\n¿Te gustaría ser parte de la revolución digital en tecnología? 🚀\n\nBuscamos Sr AI Process Builder que diseñe, construya y mantenga automatizaciones end-to-end para resolver problemas reales de operaciones, billing y onboarding. Buscamos a alguien que, además de saber usar herramientas de IA, entienda un proceso, identifique dónde se rompe, y construya la solución completa usando LLMs, integraciones y datos.\n\nTu misión será transformar procesos manuales en flujos automatizados e inteligentes que nos permitan escalar sin multiplicar headcount. Vas a trabajar directamente con el equipo de leadership, con impacto visible desde el día uno.\n\n➡️ Principales Responsabilidades\nDiseñar e implementar workflows de automatización con las herramientas que mejor resuelvan el problema integrados con nuestros sistemas core.\nConstruir agentes y flujos con APIs de LLMs para tareas como clasificación de tickets, análisis de datos, generación de reportes y asistentes internos.\nDiagnosticar procesos manuales existentes, mapear sus puntos de fricción y proponer soluciones técnicas priorizadas por impacto.\nDocumentar cada automatización (lógica, triggers, fallbacks, ownership) para que el equipo pueda entender y mantener lo que construyas.\nColaborar directamente con diferentes equipos, entender sus necesidades y traducirlas en soluciones funcionales.\n➡️ ¿Qué valoramos?\n+3 años de experiencia construyendo automatizaciones en entornos reales de negocio.\nDominio práctico de plataformas de automatización y/o orquestación de workflows.\nExperiencia integrando APIs de modelos de lenguaje (Claude, OpenAI, Gemini) en flujos productivos.\nExperiencia con SQL\nCapacidad de trabajar con APIs REST: autenticación, paginación, manejo de errores, rate limits.\nProactividad y capacidad para resolver problemas de manera colaborativa en un entorno ágil.\n¡Sumate al equipo de Lumora y ayudanos a transformar el futuro del trabajo! 💡\n💡 Nuestra misión: Empoderar a las personas en el trabajo para hacerlas más felices y exitosas.\n🌟 Nuestro propósito: Llevar felicidad al mundo del trabajo.\nPodes leer más sobre nosotros en: https://lumora.example/es/",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Lumora",
+  "hechos_legitimos_esperados": [
+    "Buscamos Sr AI Process Builder",
+    "operaciones, billing y onboarding",
+    "clasificación de tickets",
+    "+3 años de experiencia construyendo automatizaciones",
+    "(Claude, OpenAI, Gemini)"
+  ],
+  "notas": "Oferta id 19 (sorteo semilla 42, research R8), empleador anonimizado. Oferta de puesto: mide si el puesto buscado se descarta por ancla_demasiado_larga (falso negativo de H3)."
+}

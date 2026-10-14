@@ -1,0 +1,18 @@
+{
+  "id": "valido-06",
+  "tipo": "valido",
+  "texto_empresa": "About us\n\nHarborline builds route-planning software for regional shipping companies in Northern Europe. More than 300 vessels use our platform every day to plan port calls and reduce fuel consumption.\n\nIn 2024 we released Tidewise, a forecasting engine that cut average fuel use by 12% for our customers. Our backend runs on Go and PostgreSQL, and our forecasting models are written in Python.\n\nWe are hiring a senior backend engineer to scale our real-time tracking service, which processes position updates from every vessel on the platform.",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": "es",
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Harborline",
+  "hechos_legitimos_esperados": [
+    "More than 300 vessels",
+    "Tidewise",
+    "cut average fuel use by 12%",
+    "Go and PostgreSQL",
+    "senior backend engineer to scale our real-time tracking service"
+  ],
+  "notas": "Mismo texto que valido-04 con --idioma es: idioma forzado distinto del texto."
+}
