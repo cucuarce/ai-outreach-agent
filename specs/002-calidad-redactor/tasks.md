@@ -186,14 +186,14 @@ descartaron. La métrica de SC-006 queda lista antes de integrar D4.
 **Independent Test**: una estrategia con una conexión que apunta a un id inexistente registra esa
 conexión con causa `id_no_valido`.
 
-- [ ] T019 [P] [US3] Agregar a `tests/unit/test_verificar_estrategia.py`:
+- [ ] T019 [P] [US3] **Diferida (D4 no integrado; plan.md, decisión e).** Agregar a `tests/unit/test_verificar_estrategia.py`:
   - una conexión con `hecho_id` o `punto_id` no válido aparece en `conexiones_descartadas` con causa `id_no_valido`;
   - `conexiones_evaluadas` cuenta todas las propuestas;
   - con `ESTRATEGA_INSUF_04`, antes de D4: 2 evaluadas y 0 descartadas.
 
   Deben fallar antes de T020.
-- [ ] T020 [US3] En `src/outreach_agent/verificacion/estrategia.py`, registrar `conexiones_evaluadas` y `conexiones_descartadas` (`[{hecho_id, punto_id, causa}]`) en la actualización y en `resumir`, según contracts/trace-delta.md. Hoy esas conexiones se filtran sin registro (líneas 43-47). Hacer pasar T019.
-- [ ] T021 [US3] Agregar `conexiones_legitimas_descartadas` a `scripts/metricas_eval.py`, según contracts/eval-delta.md:
+- [ ] T020 [US3] **Diferida (D4 no integrado; plan.md, decisión e).** En `src/outreach_agent/verificacion/estrategia.py`, registrar `conexiones_evaluadas` y `conexiones_descartadas` (`[{hecho_id, punto_id, causa}]`) en la actualización y en `resumir`, según contracts/trace-delta.md. Hoy esas conexiones se filtran sin registro (líneas 43-47). Hacer pasar T019.
+- [ ] T021 [US3] **Diferida (D4 no integrado; plan.md, decisión e).** Agregar `conexiones_legitimas_descartadas` a `scripts/metricas_eval.py`, según contracts/eval-delta.md:
   - **Universo**: los casos `valido` que llegaron a `verificar_estrategia`.
   - **Citas**: se resuelven desde los eventos del investigador y del estratega.
   - **Legítima**: el par normalizado está etiquetado `buena` en el etiquetado.
@@ -236,7 +236,7 @@ conexión con causa `id_no_valido`.
   - cada criterio de la puerta.
 
   Registrar el resultado en una sección "Medición de D4" de `specs/002-calidad-redactor/research.md`, con el commit del etiquetado y el del evaluador. Después de ver los números no se modifica `relacion.py` ni `terminos_genericos.json` (decisión c) (depende de T003, T022, T023 y T024).
-- [ ] T026 [US3] **Si T025 pasa la puerta**: integrar el evaluador en `src/outreach_agent/verificacion/estrategia.py`.
+- [ ] T026 [US3] **No aplica (la puerta no pasó; research.md, "Resultado de la medición").** **Si T025 pasa la puerta**: integrar el evaluador en `src/outreach_agent/verificacion/estrategia.py`.
   - Descartar las conexiones sin términos compartidos con causa `sin_relacion` y registrar `terminos_compartidos` para las conservadas.
   - Si no queda ninguna conexión, cortar con `sin_conexion_perfil`.
   - Agregar al `system` del estratega (`src/outreach_agent/agentes/prompts.py`) la regla de FR-008.
@@ -246,7 +246,7 @@ conexión con causa `id_no_valido`.
   - `tests/integration/test_grafo_insuficiente.py`: con `INVESTIGADOR_INSUF_04` y `ESTRATEGA_INSUF_04`, el grafo termina `insuficiente` / `sin_conexion_perfil` sin llamar al redactor.
 
   (depende de T020 y T025)
-- [ ] T027 [US3] **Si T025 no pasa la puerta**: no integrar nada en `src/` y detener el trabajo de D4. Presentar los números al usuario y revisar plan.md para el único experimento con embeddings (decisión d): modelo local distinto, mismo mini-set y umbral de similitud fijado antes de medir. Las tareas de ese experimento se agregan acá solo después de la revisión del plan. Si el experimento tampoco pasa, registrar en research.md que FR-008 queda sin cumplir y que SC-002 se reporta tal cual (depende de T025).
+- [x] T027 [US3] **Cerrada por la decisión (e) de plan.md**: D4 no se integra y el experimento con embeddings no se corre en esta iteración; FR-008 queda sin cumplir y SC-002 se reporta tal cual. Texto original: **Si T025 no pasa la puerta**: no integrar nada en `src/` y detener el trabajo de D4. Presentar los números al usuario y revisar plan.md para el único experimento con embeddings (decisión d): modelo local distinto, mismo mini-set y umbral de similitud fijado antes de medir. Las tareas de ese experimento se agregan acá solo después de la revisión del plan. Si el experimento tampoco pasa, registrar en research.md que FR-008 queda sin cumplir y que SC-002 se reporta tal cual (depende de T025).
 
 **Checkpoint US3**: `pytest` en verde. Commit. Está integrado solo lo que pasó la medición.
 
@@ -263,7 +263,7 @@ conexión con causa `id_no_valido`.
 
   Tests en `tests/unit/test_comparar_reportes.py` con dos `reporte.json` armados a mano.
 - [ ] T030 [P] Declarar los límites:
-  - **R12** de `specs/001-outreach-draft/research.md`: (1) las fórmulas genéricas de búsqueda se detectan solo en español e inglés; pt, fr, de e it quedan sin cobertura; (2) según el resultado de T025 a T027, o el evaluador de relación integrado con sus falsos rechazos y falsos aceptos medidos, o "FR-008 sin cumplir en esta iteración; SC-002 se reporta tal cual".
+  - **R12** de `specs/001-outreach-draft/research.md`: (1) las fórmulas genéricas de búsqueda se detectan solo en español e inglés; pt, fr, de e it quedan sin cobertura; (2) "FR-008 sin cumplir en esta iteración: el evaluador de relación por término compartido no pasó la puerta (0/52 falsos aceptos, 2/4 falsos rechazos, 1/3 casos válidos con una `buena` conservada) y no se integró (decisión e de plan.md); SC-002 se reporta tal cual".
   - **README.md**: los mismos dos límites en una sección "Límites conocidos". README.md todavía no existe (T059 de la 001 está pendiente). Si sigue sin existir, crearlo solo con una línea de propósito ("genera borradores; nunca envía mensajes") y esa sección; T059 de la 001 lo completa después.
 
   (depende de T025 a T027)

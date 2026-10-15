@@ -242,4 +242,22 @@ mini-set antes de esta nota. Con eso se ajusta (a):
   que termine en `sin_conexion_perfil`.
 - En consecuencia, el máximo alcanzable en desarrollo pasa de 4 a 3 de 6 válidos con borrador.
   Esto corrige la Assumption de spec.md ("El máximo alcanzable en desarrollo es 4 de 6
-  válidos"), que no se reescribe.
+  válidos"), que no se reescribe. **Corregido por la decisión (e)**: como D4 no se integra,
+  valido-02 no corta por relación y el techo vuelve a 4/6.
+
+**(e) D4 no se integra (2026-10-15)**, después de la medición (research.md, "Resultado de la
+medición": 0/52 falsos aceptos, 2/4 falsos rechazos, 1/3 casos válidos con una `buena`
+conservada):
+- El evaluador por término compartido no se integra en `src/`.
+- El experimento con embeddings de la decisión (d) **no se corre en esta iteración**:
+  - **falta de potencia**: con 4 `buena` el criterio de falsos rechazos se decide por un solo
+    par, y ningún resultado sobre ese tamaño de muestra distinguiría un evaluador bueno de uno
+    malo;
+  - **costo de oportunidad**: D1 y D3 atacan las causas de 0/6 válidos con borrador y siguen sin
+    implementar.
+- **FR-008 queda sin cumplir** en esta iteración y SC-002 se reporta tal cual.
+- El techo de SC-003 vuelve a 4/6 (valido-03 y 05 fuera de alcance).
+- **Idea futura** (no en esta iteración): usar la ausencia de términos compartidos como **aviso
+  para revisión humana** en el borrador entregado, en lugar de bloqueo. Con 0/52 falsos aceptos
+  en el mini-set, una conexión con términos compartidos casi nunca es `mala`; la ausencia no
+  prueba que no haya relación, pero sí marca qué borradores revisar primero.

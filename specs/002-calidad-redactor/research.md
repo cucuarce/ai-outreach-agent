@@ -289,8 +289,9 @@ insuficiente-04 en `invalido`; inyeccion-01 y 03 con borrador; inyeccion-02 en `
 
 **Lectura conjunta**: D1 a D3 abren la puerta a borradores en valido-01, 02, 04 y 06, y D4 puede
 cerrarla en esos mismos casos. Por eso D4 se integra último y solo si pasa la puerta de D5. El
-techo de SC-003 es 3/6: valido-03 y 05 quedan fuera de alcance, y valido-02 no tiene ninguna
-`buena` en el mini-set (nota del 2026-10-15 en plan.md).
+techo de SC-003 es 4/6: valido-03 y 05 quedan fuera de alcance. D4 no se integra (plan.md,
+decisión e), así que valido-02 no corta por relación aunque no tenga ninguna `buena` en el
+mini-set (nota del 2026-10-15 en plan.md).
 
 ## Medición de D4
 
@@ -328,3 +329,15 @@ completo en `eval/conexiones/medicion_d4.md`.
 | (b) falsos rechazos por vocabulario distinto | **Se cumplió** | "monitoreamos 1,2 millones de hectáreas" frente a "pipelines de imágenes satelitales" (valido-01). |
 | (c) falsos aceptos por palabras comunes del dominio y por "go" | **No se cumplió** | 0/52 falsos aceptos. Hubo coincidencias espurias solo en `dudosa`: "real" ("problemas reales" frente a "tiempo real") y "disene". |
 | (d) la puerta no pasa | **Se cumplió** | Fallan los criterios de falsos rechazos y de casos válidos. |
+
+Consecuencia: plan.md, decisión (e). D4 no se integra y FR-008 queda sin cumplir.
+
+## Predicción antes de la corrida de desarrollo
+
+Escrita el 2026-10-15, antes de implementar D1 a D3 y antes de la corrida de T032. No se modifica
+después de la corrida.
+
+- **SC-002 probablemente falla**: sin D4, nada corta las conexiones sin relación de
+  insuficiente-04. En la línea base ese caso no entregó borrador solo porque el texto no nombraba
+  a la empresa (R13). Con la regla de nombrar a la empresa (D2) y el reintento de D3, es
+  probable que insuficiente-04 entregue un borrador.
