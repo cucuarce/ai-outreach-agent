@@ -377,3 +377,12 @@ después de la corrida.
   insuficiente-04. En la línea base ese caso no entregó borrador solo porque el texto no nombraba
   a la empresa (R13). Con la regla de nombrar a la empresa (D2) y el reintento de D3, es
   probable que insuficiente-04 entregue un borrador.
+
+**Predicciones de US1** (D2 y D3), escritas el 2026-10-15 después de implementar T005 a T018
+(commits e9457d7 a 6ff4b83) y antes de ejecutar la corrida de T032:
+
+- **valido-01 y valido-02: se espera borrador entregado** (probable).
+- **valido-04 y valido-06: dependen del prompt de D1, no de US1** (incierto).
+- **Tasa de repeticiones: baja, pero no cero** (probable).
+- **Tiempo de la corrida: más largo que R13**, porque ya no hay corte por repetición y los casos
+  que antes cortaban en el intento 2 pueden llegar al intento 3.
