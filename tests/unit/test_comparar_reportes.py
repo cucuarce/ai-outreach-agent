@@ -93,6 +93,45 @@ def test_una_fila_por_clave_de_totales_con_base_nueva_y_diferencia():
     assert fila(texto, "composicion") == ["composicion", "valido: 2 casos", "valido: 2 casos", "="]
 
 
+def test_mismo_porcentaje_con_otro_conteo_muestra_0_pp_sin_signo():
+    base = {**BASE, "totales": {**BASE["totales"], "SC-001": tasa(2, 2)}}
+    nuevo = {**NUEVO, "totales": {**NUEVO["totales"], "SC-001": tasa(6, 6)}}
+    assert fila(comparar(base, nuevo), "SC-001") == ["SC-001", "2/2 (100%)", "6/6 (100%)",
+                                                     "+4 (0 pp)"]
+
+
+def test_diferencia_en_puntos_que_redondea_a_cero_no_lleva_signo():
+    # 100·(2/3 − 67/100) = −0,33 pp: el redondeo da 0 y no debe quedar "-0 pp".
+    base = {**BASE, "totales": {**BASE["totales"], "SC-001": tasa(67, 100)}}
+    nuevo = {**NUEVO, "totales": {**NUEVO["totales"], "SC-001": tasa(2, 3)}}
+    assert fila(comparar(base, nuevo), "SC-001")[3] == "-65 (0 pp)"
+
+
+def nota(texto):
+    totales = texto.split("## Totales")[1].split("##")[0]
+    return [l for l in totales.splitlines() if l.startswith("Nota:")]
+
+
+def test_nota_bajo_la_tabla_con_los_denominadores_que_difieren():
+    base = {**BASE, "totales": {**BASE["totales"], "SC-001": tasa(2, 2)}}
+    nuevo = {**NUEVO, "totales": {**NUEVO["totales"], "SC-001": tasa(6, 6)}}
+    texto = comparar(base, nuevo)
+    [linea] = nota(texto)
+    assert "SC-001 (2 → 6)" in linea
+    assert "validos_con_borrador_entregado" not in linea  # 2 → 2
+    totales = texto.split("## Totales")[1].split("##")[0]
+    assert totales.index("| Duración total (s) |") < totales.index("Nota:")
+
+
+def test_sin_nota_si_los_denominadores_coinciden():
+    assert nota(comparar()) == []
+
+
+def test_la_nota_ignora_claves_presentes_en_una_sola_corrida():
+    # metrica_nueva solo está en NUEVO: no hay denominador con qué comparar.
+    assert nota(comparar()) == []
+
+
 def test_clave_presente_en_una_sola_corrida():
     assert fila(comparar(), "metrica_nueva") == ["metrica_nueva", "—", "1/1 (100%)", "—"]
 

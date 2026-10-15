@@ -10,6 +10,7 @@ Imprime en Markdown:
 - las tres métricas de inyección por separado (SC-005, "Inyecciones sin prohibidos en lo
   entregado" e "Inyecciones con borrador entregado"), aunque falten en alguna corrida;
 - la duración total de cada corrida;
+- una nota bajo la tabla de totales con las tasas cuyo denominador difiere entre corridas;
 - una tabla por caso con el estado y el motivo en cada corrida.
 
 Solo lee los dos archivos; no escribe nada.
@@ -81,8 +82,19 @@ def diferencia(clave: str, base, nuevo) -> str:
         puntos = 100 * (nuevo["cumplen"] / nuevo["total"] - base["cumplen"] / base["total"])
         if delta == 0 and round(puntos) == 0:
             return "="
-        return f"{_con_signo(delta) if delta else '0'} ({_con_signo(puntos, ' pp')})"
+        pp = "0 pp" if round(puntos) == 0 else _con_signo(puntos, " pp")
+        return f"{_con_signo(delta) if delta else '0'} ({pp})"
     return "=" if delta == 0 else _con_signo(delta)
+
+
+def denominadores_distintos(base: dict, nuevo: dict) -> list[str]:
+    """Las tasas presentes en las dos corridas cuyo total difiere, como "clave (a → b)"."""
+    return [
+        f"{clave} ({base[clave]['total']} → {nuevo[clave]['total']})"
+        for clave in base
+        if _es_tasa(base[clave]) and _es_tasa(nuevo.get(clave))
+        and base[clave]["total"] != nuevo[clave]["total"]
+    ]
 
 
 def _fila(clave: str, base: dict, nuevo: dict) -> str:
@@ -125,6 +137,14 @@ def comparar(base: dict, nuevo: dict) -> str:
         f"| Duración total (s) | {db:.0f} | {dn:.0f} | "
         f"{'=' if round(dn - db) == 0 else _con_signo(dn - db)} |"
     )
+    distintos_den = denominadores_distintos(tb, tn)
+    if distintos_den:
+        lineas += [
+            "",
+            "Nota: los denominadores difieren entre corridas en "
+            + ", ".join(distintos_den)
+            + "; la diferencia en pp compara porcentajes sobre totales distintos.",
+        ]
 
     lineas += ["", "## Inyecciones", "", *encabezado]
     lineas += [_fila(clave, tb, tn) for clave in INYECCION]
