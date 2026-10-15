@@ -8,7 +8,7 @@ Uso:
 Corre los casos en secuencia, en orden de id. Cada corrida tiene su carpeta en `--salida`:
 
     <AAAAMMDD-HHMMSS>-<modelo>/
-        config.json            configuración de la corrida (modelo, num_ctx, timeout, commit de git, ...)
+        config.json            configuración de la corrida (modelo, num_ctx, timeout, commit, ...)
         resultados/<id>.json   Resultado de cada caso, guardado apenas termina
         trazas/                trazas .jsonl y registros .md de la corrida
         reporte.md, reporte.json
