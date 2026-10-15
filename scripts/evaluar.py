@@ -8,7 +8,7 @@ Uso:
 Corre los casos en secuencia, en orden de id. Cada corrida tiene su carpeta en `--salida`:
 
     <AAAAMMDD-HHMMSS>-<modelo>/
-        config.json            configuración de la corrida (modelo, num_ctx, timeout, ...)
+        config.json            configuración de la corrida (modelo, num_ctx, timeout, commit de git, ...)
         resultados/<id>.json   Resultado de cada caso, guardado apenas termina
         trazas/                trazas .jsonl y registros .md de la corrida
         reporte.md, reporte.json
@@ -27,6 +27,7 @@ pendientes; 1 si no; 2 si Ollama no está disponible.
 import argparse
 import json
 import re
+import subprocess
 import sys
 import time
 import urllib.error
@@ -60,6 +61,25 @@ CODIGO_OK, CODIGO_METRICAS, CODIGO_SIN_OLLAMA = 0, 1, 2
 
 FabricaProveedor = Callable[[Config], LLMProvider]
 Disponible = Callable[[Config], bool]
+EstadoGit = Callable[[], tuple[str | None, bool | None]]
+RAIZ_REPO = Path(__file__).resolve().parent.parent
+
+
+def consultar_git(directorio: Path = RAIZ_REPO) -> tuple[str | None, bool | None]:
+    """El commit actual y si hay cambios sin commit (spec 002, research D7). (None, None) si git
+    no está disponible o `directorio` no es un repositorio."""
+    try:
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=directorio, capture_output=True, text=True,
+            check=True, timeout=30,
+        ).stdout.strip()
+        cambios = subprocess.run(
+            ["git", "status", "--porcelain"], cwd=directorio, capture_output=True, text=True,
+            check=True, timeout=30,
+        ).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return None, None
+    return commit or None, bool(cambios)
 
 
 # --- Proveedor real (se reemplaza en los tests) ---
@@ -110,7 +130,9 @@ def _escribir_json(ruta: Path, datos) -> None:
     ruta.write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def config_a_dict(config: Config, fecha: str) -> dict:
+def config_a_dict(
+    config: Config, fecha: str, git: tuple[str | None, bool | None] = (None, None)
+) -> dict:
     return {
         "fecha": fecha,
         "modelo": config.modelo,
@@ -119,6 +141,8 @@ def config_a_dict(config: Config, fecha: str) -> dict:
         "timeout_s": config.timeout_s,
         "temperatura_redactor": config.temperatura_redactor,
         "max_reintentos": config.max_reintentos,
+        "git_commit": git[0],
+        "git_cambios_sin_commit": git[1],
     }
 
 
@@ -289,7 +313,10 @@ def reporte_md(reporte: dict, casos: list[dict], resultados: dict[str, dict]) ->
         f"- Modelo: {c['modelo']} · num_ctx: {c['num_ctx']} · timeout: {c['timeout_s']:g} s · "
         f"temperatura del redactor: {c['temperatura_redactor']:g} · "
         f"max_reintentos: {c['max_reintentos']}",
+        f"- Commit: {c.get('git_commit') or 'desconocido'}",
     ]
+    if c.get("git_cambios_sin_commit"):
+        lineas.append("- **Atención: la corrida se hizo con cambios sin commit.**")
     lineas += [f"- Casos {tipo}: {desc}" for tipo, desc in t["composicion"].items()]
     if reporte["errores"]:
         lineas.append(f"- Errores: {', '.join(reporte['errores'])}")
@@ -387,6 +414,7 @@ def main(
     disponible: Disponible = ollama_disponible,
     ahora: Callable[[], datetime] = datetime.now,
     log=print,
+    estado_git: EstadoGit = consultar_git,
 ) -> int:
     args = construir_parser().parse_args(argv)
     casos = cargar_casos(Path(args.casos))
@@ -414,7 +442,9 @@ def main(
         config = replace(config, dir_registros=corrida / "trazas")
         _escribir_json(
             corrida / "config.json",
-            config_a_dict(config, fecha.astimezone().isoformat(timespec="seconds")),
+            config_a_dict(
+                config, fecha.astimezone().isoformat(timespec="seconds"), estado_git()
+            ),
         )
 
     correr(casos, corrida, config, crear_proveedor(config), log)

@@ -42,8 +42,12 @@ def escribir_casos(carpeta: Path, *casos: dict) -> Path:
     return carpeta
 
 
-def correr(tmp_path, casos_dir, respuestas, *flags, disponible=True, fecha=FECHA):
-    """Corre evaluar.main con un FakeProvider; devuelve (código, carpeta, proveedor, configs)."""
+GIT = ("0123456789abcdef0123456789abcdef01234567", False)
+
+
+def correr(tmp_path, casos_dir, respuestas, *flags, disponible=True, fecha=FECHA, git=GIT):
+    """Corre evaluar.main con un FakeProvider y un estado de git fijo; devuelve (código, carpeta,
+    proveedor, configs)."""
     provider = FakeProvider(respuestas)
     configs = []
 
@@ -58,6 +62,7 @@ def correr(tmp_path, casos_dir, respuestas, *flags, disponible=True, fecha=FECHA
         disponible=lambda config: disponible,
         ahora=lambda: fecha,
         log=lambda *a: None,
+        estado_git=lambda: git,
     )
     corridas = sorted(salida.glob("*")) if salida.exists() else []
     return codigo, (corridas[-1] if corridas else None), provider, configs
@@ -270,3 +275,72 @@ def test_resultado_ida_y_vuelta_por_json(tmp_path):
 
 def test_nombre_de_corrida_sin_caracteres_invalidos_en_windows():
     assert evaluar.nombre_corrida(FECHA, "qwen2.5:7b") == "20261015-093000-qwen2.5-7b"
+
+
+# --- Commit de git en config.json (spec 002, research D7, T028) ---
+
+
+def test_config_registra_el_commit_y_si_hay_cambios_sin_commit(tmp_path):
+    casos_dir = escribir_casos(tmp_path / "casos", INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, [], git=("abc1234", True))
+    config = leer(corrida / "config.json")
+    assert config["git_commit"] == "abc1234"
+    assert config["git_cambios_sin_commit"] is True
+
+
+def test_sin_git_los_dos_campos_son_null(tmp_path):
+    casos_dir = escribir_casos(tmp_path / "casos", INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, [], git=(None, None))
+    config = leer(corrida / "config.json")
+    assert config["git_commit"] is None
+    assert config["git_cambios_sin_commit"] is None
+    assert "Commit: desconocido" in (corrida / "reporte.md").read_text(encoding="utf-8")
+
+
+def test_reanudar_conserva_el_estado_de_git_original(tmp_path):
+    casos_dir = escribir_casos(tmp_path / "casos", VALIDO, INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, FLUJO_VALIDO, git=("abc1234", False))
+    (corrida / "resultados" / "a-valido.json").unlink()
+
+    evaluar.main(
+        ["--casos", str(casos_dir), "--reanudar", str(corrida)],
+        crear_proveedor=lambda c: FakeProvider(list(FLUJO_VALIDO)),
+        disponible=lambda c: True,
+        log=lambda *a: None,
+        estado_git=lambda: ("fffffff", True),
+    )
+    config = leer(corrida / "config.json")
+    assert (config["git_commit"], config["git_cambios_sin_commit"]) == ("abc1234", False)
+    assert "fffffff" not in (corrida / "reporte.md").read_text(encoding="utf-8")
+
+
+def test_el_encabezado_del_reporte_muestra_el_commit(tmp_path):
+    casos_dir = escribir_casos(tmp_path / "casos", INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, [], git=("abc1234", False))
+    md = (corrida / "reporte.md").read_text(encoding="utf-8")
+    encabezado = md.split("## Totales")[0]
+    assert "Commit: abc1234" in encabezado
+    assert "cambios sin commit" not in encabezado
+
+
+def test_el_reporte_advierte_si_hay_cambios_sin_commit(tmp_path):
+    casos_dir = escribir_casos(tmp_path / "casos", INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, [], git=("abc1234", True))
+    encabezado = (corrida / "reporte.md").read_text(encoding="utf-8").split("## Totales")[0]
+    assert "Commit: abc1234" in encabezado
+    assert "Atención: la corrida se hizo con cambios sin commit." in encabezado
+
+
+def test_reporte_de_una_corrida_anterior_sin_campos_de_git(tmp_path):
+    # La línea base R13 no tiene git_commit en config.json: el reporte se sigue armando.
+    casos_dir = escribir_casos(tmp_path / "casos", INSUFICIENTE)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, [])
+    config = leer(corrida / "config.json")
+    del config["git_commit"], config["git_cambios_sin_commit"]
+    (corrida / "config.json").write_text(json.dumps(config), encoding="utf-8")
+    evaluar.armar_reporte(corrida, evaluar.cargar_casos(casos_dir))
+    assert "Commit: desconocido" in (corrida / "reporte.md").read_text(encoding="utf-8")
+
+
+def test_consultar_git_fuera_de_un_repositorio_devuelve_null(tmp_path):
+    assert evaluar.consultar_git(tmp_path) == (None, None)
