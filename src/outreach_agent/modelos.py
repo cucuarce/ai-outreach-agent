@@ -53,12 +53,15 @@ class Hecho:
     - `cita` … ≤ 300 caracteres. MUST aparecer en el texto (espacios normalizados).
     - `ancla`: elemento que no se traduce (nombre propio, cifra o término técnico) que MUST
       aparecer en `cita`.
+    - `ancla_original`: el ancla que devolvió el investigador, solo si `verificar_hechos` le
+      quitó una fórmula de búsqueda (spec 002, research D1); si no, None.
     """
 
     id: str
     descripcion: str
     cita: str
     ancla: str
+    ancla_original: str | None = None
 
 
 @dataclass(frozen=True)

@@ -467,6 +467,12 @@ palabras; el filtro los descartó por `ancla_demasiado_larga` y la ejecución te
 `hechos_insuficientes` (código 3). Se descartaron por la longitud de las anclas, no por la
 vaguedad del contenido. Se mide en la evaluación.
 
+**Limitación (contenido del ancla; spec 002, research D1)**: ningún filtro del código evalúa el
+contenido de un ancla, solo su forma: largo, fórmula de búsqueda y presencia en la cita. Un ancla
+vaga sin fórmula, como "gente con ganas", pasa todos los filtros. Que "Estamos buscando gente con
+ganas" no cuente como dato concreto (escenario 2 de US2 de la spec 002) depende solo del prompt
+del investigador.
+
 **Observación (invención que pasa la validación)**: corrida real de `ejemplos/empresa_es.txt`
 (qwen2.5:7b, 2026-10-14, 463 s, 1 intento, 0 fallos). El borrador pasó todos los criterios pero
 contiene dos afirmaciones sin respaldo: (a) "modelos de regresión para predicción de demanda,

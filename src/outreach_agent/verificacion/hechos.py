@@ -10,6 +10,8 @@ from dataclasses import replace
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
 from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
+from outreach_agent.verificacion.formulas import es_formula_busqueda, quitar_formula
+from outreach_agent.verificacion.idioma import es_stopword
 from outreach_agent.verificacion.patrones import es_instruccion
 from outreach_agent.verificacion.texto import (
     contar_palabras,
@@ -35,11 +37,31 @@ def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) 
         return "patron_de_instruccion"
     if contar_palabras(hecho.ancla) > MAX_PALABRAS_ANCLA:
         return "ancla_demasiado_larga"
+    if es_formula_busqueda(hecho.ancla):
+        return "ancla_formula_busqueda"
     if not contiene_ancla(hecho.cita, hecho.ancla):
         return "ancla_fuera_de_cita"
     if normalizar(hecho.cita) in citas_vistas:
         return "duplicado"
     return None
+
+
+def reducir_ancla_formula(hecho: Hecho) -> Hecho:
+    """Si el ancla contiene una fórmula de búsqueda ("Buscamos Sr AI Process Builder"), la quita
+    junto con los conectores que la siguen y usa el resto como ancla, siempre que no esté vacío,
+    tenga al menos un término que no sea stopword y aparezca en la cita. Si no se cumple, el
+    hecho queda igual y `causa_de_descarte` lo descarta con `ancla_formula_busqueda` (research
+    D1). El ancla anterior queda en `ancla_original` para la traza."""
+    if contar_palabras(hecho.ancla) > MAX_PALABRAS_ANCLA:
+        return hecho  # se descarta por larga, antes que por fórmula (data-model.md)
+    resto = quitar_formula(hecho.ancla)
+    if not resto:
+        return hecho
+    if all(es_stopword(palabra) for palabra in normalizar(resto).split()):
+        return hecho
+    if not contiene_ancla(hecho.cita, resto):
+        return hecho
+    return replace(hecho, ancla=resto, ancla_original=hecho.ancla)
 
 
 def causa_de_descarte_nombre(nombre: str, texto_empresa: str) -> str | None:
@@ -70,7 +92,7 @@ def verificar_hechos(estado: EstadoGrafo) -> dict:
     descartados: list[dict] = []
     citas_vistas: set[str] = set()
     for hecho in estado.get("hechos_candidatos", []):
-        hecho = replace(hecho, ancla=reducir_ancla(hecho.ancla))
+        hecho = reducir_ancla_formula(replace(hecho, ancla=reducir_ancla(hecho.ancla)))
         causa = causa_de_descarte(hecho, texto_empresa, citas_vistas)
         if causa:
             descartados.append({"id": hecho.id, "causa": causa})
@@ -101,6 +123,13 @@ def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
             causas[d["causa"]] = causas.get(d["causa"], 0) + 1
         decision += " (" + ", ".join(f"{c}: {n}" for c, n in causas.items()) + ")"
     detalle: dict = {"validos": validos, "descartados": descartados}
+    reducidas = [
+        {"id": h.id, "ancla": h.ancla, "ancla_original": h.ancla_original}
+        for h in actualizacion["hechos"]
+        if h.ancla_original is not None
+    ]
+    if reducidas:
+        detalle["anclas_sin_formula"] = reducidas
     if "nombre_empresa" in actualizacion:
         detalle["nombre_empresa"] = f"{actualizacion['nombre_empresa']} (verificado en el texto)"
     elif "nombre_empresa_descartado" in actualizacion:

@@ -6,6 +6,9 @@ Solo se describen los campos nuevos o modificados respecto de
 ## verificar_hechos
 
 - `descartados[].causa` admite el valor nuevo `ancla_formula_busqueda`.
+- `anclas_sin_formula` (solo si hubo alguna): `[{"id": "H1", "ancla": "Sr AI Process Builder",
+  "ancla_original": "Buscamos Sr AI Process Builder"}]`, los hechos válidos a cuya ancla se le
+  quitó una fórmula de búsqueda (research D1).
 
 ## verificar_estrategia
 

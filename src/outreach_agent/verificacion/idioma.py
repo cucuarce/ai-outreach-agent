@@ -23,6 +23,11 @@ def _stopwords() -> dict[str, frozenset[str]]:
     return {idioma: frozenset(palabras) for idioma, palabras in datos.items()}
 
 
+def es_stopword(palabra: str) -> bool:
+    """La palabra, normalizada, es stopword de alguno de los idiomas soportados."""
+    return any(normalizar(palabra) in palabras for palabras in _stopwords().values())
+
+
 def proporciones(texto: str) -> dict[str, float]:
     """Proporción de tokens del texto que son stopwords de cada idioma."""
     tokens = normalizar(texto).split()

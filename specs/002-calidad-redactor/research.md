@@ -26,6 +26,14 @@ nombran por su id de `eval/casos/`.
      reglas de carga que `patrones_instruccion.json`.
    - **Conteo**: el hecho descartado no entra en los datos válidos, así que FR-003 se cumple con
      el conteo actual de FR-009.
+   - **Reducción antes de descartar** (decidida el 2026-10-15 al implementar T008): un ancla que
+     mezcla fórmula y contenido ("Buscamos Sr AI Process Builder") no se descarta entera. Se
+     quita la fórmula y los conectores que la siguen ("a", "un", "una", "an", "the"), y el resto
+     se usa como ancla solo si no está vacío, tiene al menos un término que no es stopword y
+     aparece en la cita (`contiene_ancla`). Si no cumple, el hecho se descarta con
+     `ancla_formula_busqueda`. El ancla que devolvió el modelo queda en `ancla_original` y en la
+     traza (`anclas_sin_formula`). Sin la reducción, el prompt nuevo, que pide anclar en el
+     puesto, podía terminar en un hecho perdido cuando el modelo incluía la fórmula.
 
 **Familia de patrones** (se escribe a partir de esta definición, no de los casos):
 
@@ -52,6 +60,19 @@ solas, para no descartar anclas como "Hiring Manager", "búsqueda semántica" o 
   Manager" y "búsqueda semántica".
 - **Límite de esta prueba**: las tres frases del pedido se conocen antes de escribir los
   patrones. La prueba mide cobertura de la familia, no generalización a ciegas.
+- **Corrección (2026-10-15)**: la afirmación de arriba de que ninguna de esas frases aparece en
+  `eval/casos/` era falsa para "Sumate", que aparece en valido-02 ("¡Sumate al equipo de Lumora
+  y ayudanos a transformar el futuro del trabajo!"). No se había comprobado al escribir este
+  documento. Se detectó al implementar T005: el test que lee los `texto_empresa` de
+  `eval/casos/*.json` falló para esa frase. "Sumate" sigue entre las frases que se marcan, pero
+  sale de la comprobación de frases nuevas, y en su lugar entra "Unite a nuestro equipo"
+  (verificada ausente de `eval/casos/`).
+- **Nota sobre generalización**: los patrones se escribieron conociendo las fórmulas de valido-02
+  ("Sumate", "Buscamos"), valido-04 y valido-06 ("We are hiring"). Además, otros casos de
+  desarrollo contienen fórmulas de la familia: "buscamos" en insuficiente-03, insuficiente-04,
+  inyeccion-03 y valido-03; "estamos buscando" en valido-01 e inyeccion-01; "we are hiring" en
+  inyeccion-02. Por eso el efecto de D1 en la corrida de desarrollo no mide generalización; eso
+  lo mide la validación.
 
 **Idiomas**: solo español e inglés (FR-001 acotado por el usuario el 2026-10-15). pt, fr, de e it
 quedan sin cobertura, documentado como límite en las Assumptions de la spec.
@@ -65,7 +86,15 @@ quedan sin cobertura, documentado como límite en las Assumptions de la spec.
 
 **Alternatives considered**:
 - **Recortar la fórmula del ancla y quedarse con el resto.** Modifica en silencio una salida del
-  modelo y deja un ancla que puede no estar en el texto tal cual.
+  modelo y deja un ancla que puede no estar en el texto tal cual. *Revisado el 2026-10-15*: se
+  adoptó con las dos objeciones resueltas (ver "Reducción antes de descartar"). Queda registrada
+  en la traza, igual que `reducir_ancla` (R5 de la 001), y el resto tiene que estar en la cita.
+
+**Límite**: ningún filtro del código evalúa el contenido de un ancla. Los filtros miran su forma
+(largo, fórmula, presencia en la cita). Un ancla vaga sin fórmula, como "gente con ganas", pasa
+todos (lo documenta `test_limite_ningun_filtro_evalua_el_contenido_del_ancla`). También pasa un
+resto genérico de la reducción: de "¡Sumate al equipo!" queda "al equipo". El escenario 2 de US2
+("Estamos buscando gente con ganas") depende solo del prompt del investigador.
 - **Descartar toda oración que contenga una fórmula.** Pierde puestos con nombre propio, que
   según FR-002 son datos.
 

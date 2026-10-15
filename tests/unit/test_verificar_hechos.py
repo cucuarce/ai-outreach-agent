@@ -1,6 +1,6 @@
-from outreach_agent.modelos import Entrada, Hecho
-from outreach_agent.verificacion.hechos import verificar_hechos
-from tests import escenarios
+from outreach_agent.modelos import Entrada, Hecho, Motivo
+from outreach_agent.verificacion.hechos import resumir, verificar_hechos
+from tests import escenarios, escenarios_r13
 
 
 def verificar(*candidatos):
@@ -198,3 +198,118 @@ def test_nombre_de_empresa_con_patron_de_instruccion_se_descarta():
     resultado = verificar_hechos(estado)
     assert "nombre_empresa" not in resultado
     assert resultado["nombre_empresa_descartado"]["causa"] == "patron_de_instruccion"
+
+
+# --- Fórmulas genéricas de búsqueda de personal (spec 002, research D1, T007) ---
+
+
+def verificar_en(texto, *candidatos):
+    estado = {
+        "run_id": "prueba",
+        "entrada": Entrada(texto, escenarios.PERFIL),
+        "hechos_candidatos": list(candidatos),
+    }
+    return verificar_hechos(estado)
+
+
+def test_ancla_we_are_hiring_de_la_linea_base_se_descarta():
+    resultado = verificar_en(
+        escenarios_r13.TEXTO_EMPRESA_VALIDO_04,
+        *escenarios.hechos(escenarios_r13.INVESTIGADOR_VALIDO_04),
+    )
+    assert [h.id for h in resultado["hechos"]] == ["H1", "H2", "H3"]
+    assert resultado["hechos_descartados"] == [{"id": "H4", "causa": "ancla_formula_busqueda"}]
+
+
+CITA_HIRING = (
+    "We are hiring a senior backend engineer to scale our real-time tracking service, which "
+    "processes position updates from every vessel on the platform."
+)
+
+
+def test_ancla_larga_con_formula_se_descarta_por_larga():
+    # Orden de causas de data-model.md: ancla_demasiado_larga va antes que la fórmula.
+    hecho = Hecho("H9", "d", CITA_HIRING, "We are hiring a senior backend engineer to scale")
+    resultado = verificar_en(escenarios_r13.TEXTO_EMPRESA_VALIDO_04, hecho)
+    assert resultado["hechos_descartados"] == [{"id": "H9", "causa": "ancla_demasiado_larga"}]
+
+
+def test_cita_con_formula_y_ancla_en_el_puesto_es_valida():
+    hecho = Hecho("H9", "d", CITA_HIRING, "senior backend engineer")
+    resultado = verificar_en(escenarios_r13.TEXTO_EMPRESA_VALIDO_04, hecho)
+    assert [h.id for h in resultado["hechos"]] == ["H9"]
+    assert resultado["hechos_descartados"] == []
+
+
+def test_un_dato_concreto_mas_una_formula_no_alcanza():
+    # FR-003: el hecho descartado no cuenta para el mínimo de 2.
+    texto = "Ferrolux fabrica rieles para trenes de carga desde 2011. ¡Estamos contratando!"
+    resultado = verificar_en(
+        texto,
+        Hecho("H1", "d", "Ferrolux fabrica rieles para trenes de carga desde 2011.", "2011"),
+        Hecho("H2", "d", "¡Estamos contratando!", "Estamos contratando"),
+    )
+    assert resultado["hechos_descartados"] == [{"id": "H2", "causa": "ancla_formula_busqueda"}]
+    assert resultado["resultado"].motivo == Motivo.HECHOS_INSUFICIENTES
+    assert resultado["resultado"].detalle.startswith("Se encontraron 1 de 2")
+
+
+# --- Reducción del ancla con fórmula (spec 002, research D1) ---
+
+TEXTO_VALIDO_02 = escenarios_r13._caso("valido-02")["texto_empresa"]
+CITA_BUSCAMOS = (
+    "Buscamos Sr AI Process Builder que diseñe, construya y mantenga automatizaciones "
+    "end-to-end para resolver problemas reales de operaciones, billing y onboarding."
+)
+
+
+def test_ancla_formula_mas_puesto_se_reduce_al_puesto_y_queda_valida():
+    resultado = verificar_en(TEXTO_VALIDO_02, Hecho("H1", "d", CITA_BUSCAMOS,
+                                                    "Buscamos Sr AI Process Builder"))
+    assert resultado["hechos_descartados"] == []
+    [hecho] = resultado["hechos"]
+    assert hecho.ancla == "Sr AI Process Builder"
+    assert hecho.ancla_original == "Buscamos Sr AI Process Builder"
+    _, detalle = resumir({}, resultado)
+    assert detalle["anclas_sin_formula"] == [
+        {"id": "H1", "ancla": "Sr AI Process Builder",
+         "ancla_original": "Buscamos Sr AI Process Builder"}
+    ]
+
+
+def test_ancla_que_es_solo_formula_sigue_descartada():
+    hecho = Hecho("H4", "d", CITA_HIRING, "We are hiring")
+    resultado = verificar_en(escenarios_r13.TEXTO_EMPRESA_VALIDO_04, hecho)
+    assert resultado["hechos"] == []
+    assert resultado["hechos_descartados"] == [{"id": "H4", "causa": "ancla_formula_busqueda"}]
+
+
+def test_ancla_sin_formula_no_se_reduce_ni_registra_original():
+    resultado = verificar_en(TEXTO_VALIDO_02, Hecho("H1", "d", CITA_BUSCAMOS,
+                                                    "Sr AI Process Builder"))
+    assert resultado["hechos"][0].ancla_original is None
+    assert "anclas_sin_formula" not in resumir({}, resultado)[1]
+
+
+def test_resto_que_no_esta_en_la_cita_se_descarta():
+    # Ancla "Buscamos Data Lead": el resto "Data Lead" no aparece en la cita.
+    resultado = verificar_en(TEXTO_VALIDO_02, Hecho("H1", "d", CITA_BUSCAMOS,
+                                                    "Buscamos Data Lead"))
+    assert resultado["hechos_descartados"] == [{"id": "H1", "causa": "ancla_formula_busqueda"}]
+
+
+def test_resto_solo_de_stopwords_se_descarta():
+    texto = "Estamos buscando para el área. Fundada en 2011."
+    resultado = verificar_en(texto, Hecho("H1", "d", "Estamos buscando para el área.",
+                                          "Estamos buscando para el"))
+    assert resultado["hechos_descartados"] == [{"id": "H1", "causa": "ancla_formula_busqueda"}]
+
+
+def test_limite_ningun_filtro_evalua_el_contenido_del_ancla():
+    # Límite documentado en research D1 y en R12 de la 001: un ancla vaga sin fórmula pasa todos
+    # los filtros. El escenario 2 de US2 ("Estamos buscando gente con ganas") depende solo del
+    # prompt del investigador.
+    cita = "Estamos buscando gente con ganas de aprender."
+    resultado = verificar_en(cita + " Fundada en 2011.", Hecho("H1", "d", cita, "gente con ganas"))
+    assert [h.ancla for h in resultado["hechos"]] == ["gente con ganas"]
+    assert resultado["hechos_descartados"] == []

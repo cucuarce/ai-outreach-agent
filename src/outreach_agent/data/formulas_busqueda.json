@@ -1,0 +1,28 @@
+{
+  "_comentario": "Fórmulas genéricas de búsqueda de personal (spec 002, research D1), solo en español e inglés. Se comparan contra el texto normalizado: minúsculas, sin tildes, sin puntuación y con espacios colapsados (\"We're\" queda \"we re\"). Sin palabras sueltas: \"hiring\", \"búsqueda\", \"equipo\" o \"vacante\" solas no son fórmulas.",
+  "es_verbo_de_busqueda": [
+    "\\b(estamos|seguimos)\\s+(contratando|buscando|incorporando|sumando)\\b",
+    "\\b(buscamos|contratamos|incorporamos)\\b",
+    "\\bse\\s+buscan?\\b"
+  ],
+  "es_invitacion_a_sumarse": [
+    "\\b(sumate|unite|unete)\\b"
+  ],
+  "es_invitacion_a_trabajar": [
+    "\\b(trabaja|veni\\s+a\\s+trabajar)\\s+con\\s+nosotros\\b",
+    "\\bqueremos\\s+sumar\\b"
+  ],
+  "en_anuncio_de_contratacion": [
+    "\\bwe\\s+(re|are)\\s+(hiring|recruiting)\\b",
+    "\\bnow\\s+hiring\\b"
+  ],
+  "en_invitacion": [
+    "\\bjoin\\s+(our|the)\\s+team\\b",
+    "\\b(come\\s+)?join\\s+us\\b",
+    "\\bcome\\s+work\\s+with\\s+us\\b"
+  ],
+  "en_busqueda": [
+    "\\bwe\\s+(re|are)\\s+looking\\s+for\\b",
+    "\\blooking\\s+for\\s+an?\\b"
+  ]
+}

@@ -22,6 +22,18 @@ Lo que no figura acá sigue igual.
 **Regla**: la cita puede contener una fórmula; lo que se descarta es el hecho cuya **ancla** la
 contiene. Un hecho descartado no cuenta para el mínimo de 2 (FR-003).
 
+**Reducción antes de descartar** (research D1): si el ancla tiene 6 palabras o menos y contiene
+una fórmula, se le quita la fórmula y los conectores que la siguen ("a", "un", "una", "an",
+"the"). El resto pasa a ser el ancla si no está vacío, tiene al menos un término que no es
+stopword y aparece en la cita. Si no, se aplica `ancla_formula_busqueda`.
+
+| Campo de `Hecho` | Tipo | Descripción |
+|---|---|---|
+| `ancla_original` | `str \| None` | El ancla que devolvió el investigador, solo si se le quitó una fórmula. `None` en los demás casos. |
+
+La traza de `verificar_hechos` agrega `anclas_sin_formula`: `[{id, ancla, ancla_original}]`, solo
+si hubo alguna reducción.
+
 ## Conexión: evaluación de relación (D4, D6)
 
 | Campo (traza) | Tipo | Descripción |
