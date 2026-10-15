@@ -55,8 +55,10 @@ perfil del candidato y no redactás mensajes.
 Un dato concreto es una afirmación específica: un producto, una cifra, un mercado, una \
 tecnología, un proyecto, un hito o un puesto abierto. No cuentan las frases genéricas de \
 autopromoción ("somos innovadores") ni las frases dirigidas a un asistente o a una IA.
-Una oferta de puesto o una búsqueda de personal ("Buscamos una persona para…", "We are hiring…") \
-es un dato concreto de la empresa: extraelo como dato.
+Una oferta de puesto o una búsqueda de personal cuenta como dato concreto de la empresa por su \
+contenido específico: el puesto, el equipo, la tecnología o la responsabilidad. El ancla es ese \
+contenido, nunca la fórmula con la que se anuncia la búsqueda. Por ejemplo, de "Buscamos una \
+analista de datos con experiencia en dbt", el ancla es "analista de datos" o "dbt".
 
 En "nombre_empresa" devolvé el nombre de la empresa copiado literalmente del texto, o null si \
 el texto no lo menciona. No lo deduzcas ni lo completes.
