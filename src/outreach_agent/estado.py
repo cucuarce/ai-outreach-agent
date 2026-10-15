@@ -30,7 +30,10 @@ class EstadoGrafo(TypedDict, total=False):
     estrategia: Estrategia
     puntos_descartados: list[dict]  # {"id": ..., "causa": ...}
     borrador: Borrador
-    texto_borrador_anterior: str | None  # el del intento anterior, en un reintento
+    # Textos normalizados de todos los intentos, en orden; el redactor agrega el suyo (spec 002,
+    # research D3).
+    textos_borradores: list[str]
+    modo_correccion: str | None  # "conservar" | "reescribir": modo del próximo intento
     intento: int
     validacion: ResultadoValidacion
     resultado: Resultado

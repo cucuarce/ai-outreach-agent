@@ -4,6 +4,7 @@ from outreach_agent.agentes.prompts import (
     mensajes_investigador,
     mensajes_redactor,
 )
+from outreach_agent.modelos import Fallo
 from tests import escenarios
 
 
@@ -67,3 +68,65 @@ def test_sanear_quita_delimitadores_incluso_los_que_se_forman_al_quitar():
     assert sanear("<<<<raro>>>>") == "raro"
     assert "<<<" not in sanear("<<>>><") and ">>>" not in sanear("<<>>><")
     assert sanear("2 < 3 y 5 >> 4") == "2 < 3 y 5 >> 4"
+
+
+# --- Nombre de la empresa y modos de corrección (spec 002, research D2 y D3, T013) ---
+
+ANTERIOR = escenarios.TEXTO_BORRADOR + " Además" * 68  # 170 palabras
+
+
+def reintento(fallos, modo, nombre="Nubeluz"):
+    _, user = mensajes_redactor(
+        escenarios.estrategia(), escenarios.hechos()[:2], "es", [], fallos, nombre, ANTERIOR,
+        modo=modo,
+    )
+    return user
+
+
+def test_system_del_redactor_pide_nombrar_a_la_empresa_indicada():
+    system, _ = redactor("es")
+    regla = "Si se indica la empresa destinataria, nombrala al menos una vez con ese nombre."
+    assert regla in system
+
+
+def test_obligacion_empresa():
+    fallo = Fallo("empresa", 'el borrador no menciona a "Nubeluz"')
+    for modo in ("conservar", "reescribir"):
+        assert "Nombrá a Nubeluz en la primera oración." in reintento([fallo], modo)
+
+
+def test_obligacion_hechos_y_perfil_con_las_anclas_faltantes():
+    hechos = Fallo(
+        "hechos",
+        'se mencionan 0 de 2 requeridos; falta el ancla en el texto: H1 (ancla "2"), '
+        'H2 (ancla "Kubernetes")',
+    )
+    perfil = Fallo("perfil", 'se mencionan 0 de 1 requeridos; falta el ancla en el texto: P1 '
+                             '(ancla "Kubernetes")')
+    for modo in ("conservar", "reescribir"):
+        user = reintento([hechos, perfil], modo)
+        assert 'Incluí literalmente: "2", "Kubernetes".' in user
+        assert user.count("Incluí literalmente:") == 2
+
+
+def test_obligacion_longitud_con_rango_y_largo_anterior_en_los_dos_modos():
+    fallo = Fallo("longitud", "170 palabras; rango 80–150")
+    for modo in ("conservar", "reescribir"):
+        user = reintento([fallo], modo)
+        assert "Longitud obligatoria: entre 80 y 150 palabras." in user
+        assert "El borrador anterior tenía 170 palabras." in user
+
+
+def test_modo_conservar_incluye_el_borrador_anterior():
+    user = reintento([Fallo("longitud", "170 palabras; rango 80–150")], "conservar")
+    assert "Borrador anterior:\n" + ANTERIOR in user
+    assert "Corregí solo los criterios fallidos y mantené el resto del borrador." in user
+    assert "Escribí un borrador nuevo" not in user
+
+
+def test_modo_reescribir_no_incluye_el_borrador_anterior():
+    user = reintento([Fallo("longitud", "170 palabras; rango 80–150")], "reescribir")
+    assert "Borrador anterior" not in user
+    assert ANTERIOR not in user
+    assert "Escribí un borrador nuevo" in user
+    assert "Corregí solo los criterios fallidos" not in user

@@ -1,13 +1,13 @@
 """Validación determinista del borrador (research R2 y R5).
 
 Cada criterio es independiente y se devuelven todos los fallos, para que el redactor pueda
-corregirlos juntos en el reintento. Si un reintento devuelve el mismo borrador que el intento
-anterior, la ejecución se corta como `invalido` sin gastar los reintentos restantes (R2).
+corregirlos juntos en el reintento. Si un intento repite el texto de cualquier intento anterior,
+la ejecución no se corta: el próximo intento va en modo `reescribir` (spec 002, research D3, que
+reemplaza el corte inmediato de R2).
 """
 
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Fallo, ResultadoValidacion
-from outreach_agent.verificacion.cortes import invalidar
 from outreach_agent.verificacion.idioma import detectar_idioma
 from outreach_agent.verificacion.relleno import encontrar_relleno
 from outreach_agent.verificacion.texto import (
@@ -23,7 +23,8 @@ MIN_PALABRAS = 80
 MAX_PALABRAS = 150
 MIN_HECHOS = 2
 MIN_PUNTOS = 1
-DETALLE_REPETIDO = "el modelo repitió el mismo borrador"
+# Símbolos de marca que no forman parte del nombre: "Vanteo®" se cumple con "Vanteo" (research D2).
+SIMBOLOS_MARCA = str.maketrans("", "", "®™©")
 
 
 def _longitud(texto: str) -> Fallo | None:
@@ -73,7 +74,9 @@ def _anclas(texto: str, usados: list[str], disponibles: dict, minimo: int, crite
 def _empresa(texto: str, nombre: str | None) -> Fallo | None:
     """Si se conoce el nombre de la empresa, debe aparecer en el borrador (FR-019). Sin nombre,
     el criterio no aplica: que el borrador no nombre otra empresa depende del prompt (R12)."""
-    if not nombre or contiene_palabra(texto, nombre):
+    if not nombre:
+        return None
+    if contiene_palabra(texto.translate(SIMBOLOS_MARCA), nombre.translate(SIMBOLOS_MARCA)):
         return None
     return Fallo("empresa", f'el borrador no menciona a "{nombre}"')
 
@@ -138,19 +141,26 @@ def validar_borrador(estado: EstadoGrafo) -> ResultadoValidacion:
     return ResultadoValidacion(ok=not fallos, fallos=fallos)
 
 
-def es_repeticion(estado: EstadoGrafo) -> bool:
-    """El borrador es igual al del intento anterior, tras normalizar (minúsculas, sin tildes, sin
-    puntuación y con espacios colapsados)."""
-    anterior = estado.get("texto_borrador_anterior")
-    return anterior is not None and normalizar(anterior) == normalizar(estado["borrador"].texto)
+def intento_repetido(estado: EstadoGrafo) -> int | None:
+    """El número del primer intento anterior cuyo texto es igual al actual tras normalizar
+    (minúsculas, sin tildes, sin puntuación y con espacios colapsados), o None."""
+    actual = normalizar(estado["borrador"].texto)
+    anteriores = estado.get("textos_borradores", [])[: estado["intento"] - 1]
+    for numero, texto in enumerate(anteriores, start=1):
+        if texto == actual:
+            return numero
+    return None
 
 
 def nodo_validar_borrador(estado: EstadoGrafo) -> dict:
     validacion = validar_borrador(estado)
-    actualizacion: dict = {"validacion": validacion}
-    if not validacion.ok and es_repeticion(estado):
-        actualizacion.update(invalidar(estado, validacion.fallos, DETALLE_REPETIDO))
-    return actualizacion
+    repite = intento_repetido(estado)
+    return {
+        "validacion": validacion,
+        "repite_intento": repite,
+        # Después de una repetición, el redactor no ve el borrador anterior (research D3).
+        "modo_correccion": "reescribir" if repite is not None else "conservar",
+    }
 
 
 def resumidor(max_reintentos: int):
@@ -160,17 +170,25 @@ def resumidor(max_reintentos: int):
     def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
         validacion = actualizacion["validacion"]
         fallos = [{"criterio": f.criterio, "detalle": f.detalle} for f in validacion.fallos]
+        repite = actualizacion["repite_intento"]
         if validacion.ok:
             proximo = "fin"
             decision = "ok → fin"
-        elif "resultado" in actualizacion:
-            proximo = "inválido (borrador repetido)"
-            criterios = ", ".join(f["criterio"] for f in fallos)
-            decision = f"falla: {criterios}; {DETALLE_REPETIDO} → inválido"
         else:
-            proximo = "reintento" if estado["intento"] < 1 + max_reintentos else "inválido"
+            if estado["intento"] >= 1 + max_reintentos:
+                proximo = "inválido"
+            elif repite is not None:
+                proximo = "reintento (reescribir)"
+            else:
+                proximo = "reintento"
             criterios = ", ".join(f["criterio"] for f in fallos)
-            decision = f"falla: {criterios} → {proximo}"
-        return decision, {"ok": validacion.ok, "fallos": fallos, "proximo_paso": proximo}
+            repeticion = f"; repite el intento {repite}" if repite is not None else ""
+            decision = f"falla: {criterios}{repeticion} → {proximo}"
+        return decision, {
+            "ok": validacion.ok,
+            "fallos": fallos,
+            "repite_intento": repite,
+            "proximo_paso": proximo,
+        }
 
     return resumir

@@ -2,11 +2,14 @@
 
 import json
 from dataclasses import replace
+from pathlib import Path
 
 from outreach_agent.config import cargar_config
 from outreach_agent.grafo import ejecutar
 from outreach_agent.modelos import Entrada, Estado, Motivo
 from tests import escenarios as e
+from tests import escenarios_r13 as r13
+from tests.escenarios import RAIZ
 from tests.fakes import FakeProvider
 
 LARGO = dict(e.REDACTOR, texto=e.TEXTO_BORRADOR + " Además" * 68)  # 170 palabras
@@ -77,13 +80,85 @@ def test_sin_fallo_de_longitud_no_se_agrega_la_linea_de_longitud():
     assert "Longitud obligatoria" not in segundo["user"]
 
 
-def test_borrador_repetido_corta_sin_gastar_los_reintentos_restantes():
+def test_borrador_repetido_no_corta_y_el_siguiente_intento_reescribe():
+    # Spec 002, research D3 (T011): reemplaza el corte inmediato por repetición de la 001.
     repetido = dict(LARGO, texto=LARGO["texto"].upper())  # igual tras normalizar
     resultado, provider = correr([LARGO, repetido, e.REDACTOR], max_reintentos=2)
 
+    assert resultado.estado is Estado.BORRADOR
+    redactor = llamadas_al_redactor(provider)
+    assert len(redactor) == 3
+    tercero = redactor[2]["user"]
+    assert "Borrador anterior:" not in tercero
+    assert "Escribí un borrador nuevo" in tercero
+    assert "Corregí solo los criterios fallidos" not in tercero
+
+
+def test_tres_intentos_identicos_terminan_invalido_sin_superar_el_limite():
+    # FR-006: la repetición no agrega intentos.
+    resultado, provider = correr([LARGO, LARGO, LARGO], max_reintentos=2)
+
     assert resultado.estado is Estado.INVALIDO
     assert resultado.motivo is Motivo.VALIDACION_FALLIDA
-    assert resultado.detalle == "el modelo repitió el mismo borrador"
     assert [f.criterio for f in resultado.fallos] == ["longitud"]
-    assert resultado.borrador is None
-    assert len(llamadas_al_redactor(provider)) == 2  # no se llega al tercer intento
+    assert len(llamadas_al_redactor(provider)) == 3
+
+
+# --- Respuestas grabadas de valido-01 (spec 002, research D3, T012) ---
+
+CASO_VALIDO_01 = json.loads(
+    (RAIZ / "eval" / "casos" / "valido-01.json").read_text(encoding="utf-8")
+)
+# El intento 1 de la línea base con "Campo Claro" en la primera oración.
+REDACTOR_VALIDO_01_CON_NOMBRE = dict(
+    r13.REDACTOR_VALIDO_01_INTENTO_1,
+    texto=r13.REDACTOR_VALIDO_01_INTENTO_1["texto"].replace(
+        "Soy Ángel, ingeniero", "Soy Ángel y le escribo a Campo Claro como ingeniero", 1
+    ),
+)
+
+
+def correr_con_traza(respuestas, texto, perfil, max_reintentos=2):
+    config = replace(cargar_config(env={}), max_reintentos=max_reintentos)
+    provider = FakeProvider([json.dumps(r) for r in respuestas])
+    resultado = ejecutar(Entrada(texto, perfil), provider, config)
+    lineas = Path(resultado.rutas_registro["jsonl"]).read_text(encoding="utf-8").splitlines()
+    return resultado, provider, [json.loads(linea) for linea in lineas]
+
+
+def detalles(traza, nodo, campo):
+    return [
+        ev["detalle"].get(campo, "ausente")
+        for ev in traza
+        if ev["evento"] == "nodo_fin" and ev["nodo"] == nodo
+    ]
+
+
+def test_valido_01_repite_reescribe_y_entrega_con_el_nombre():
+    assert "Campo Claro" in REDACTOR_VALIDO_01_CON_NOMBRE["texto"]
+    resultado, provider, traza = correr_con_traza(
+        [
+            r13.INVESTIGADOR_VALIDO_01,
+            r13.ESTRATEGA_VALIDO_01,
+            r13.REDACTOR_VALIDO_01_INTENTO_1,
+            r13.REDACTOR_VALIDO_01_INTENTO_2,
+            REDACTOR_VALIDO_01_CON_NOMBRE,
+        ],
+        r13.TEXTO_EMPRESA_VALIDO_01,
+        CASO_VALIDO_01["perfil"],
+    )
+
+    assert resultado.estado is Estado.BORRADOR
+    assert "Campo Claro" in resultado.borrador.texto
+    assert detalles(traza, "redactor", "modo_correccion") == ["inicial", "conservar", "reescribir"]
+    assert detalles(traza, "validar_borrador", "repite_intento") == [None, 1, None]
+    tercero = llamadas_al_redactor(provider)[2]["user"]
+    assert "Nombrá a Campo Claro en la primera oración." in tercero
+    assert "Borrador anterior:" not in tercero
+
+
+def test_repeticion_no_consecutiva_se_detecta():
+    # Intentos A, B y A: el tercero repite el primero.
+    _, _, traza = correr_con_traza([e.INVESTIGADOR, e.ESTRATEGA, LARGO, LARGO_B, LARGO],
+                                   e.TEXTO_EMPRESA, e.PERFIL)
+    assert detalles(traza, "validar_borrador", "repite_intento") == [None, None, 1]

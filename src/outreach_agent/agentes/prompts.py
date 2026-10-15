@@ -6,6 +6,7 @@ reciben el texto crudo de la empresa ni la `descripcion` de los hechos: solo `id
 """
 
 import json
+import re
 
 from outreach_agent.modelos import Estrategia, Fallo, Hecho
 
@@ -121,6 +122,7 @@ recibidos. No agregues nada sobre la empresa que no esté en esas citas.
 - No compares ni equipares logros del perfil con datos de la empresa (por ejemplo, "similar a \
 la mejora de su producto"): contá lo que hizo el candidato y por qué le sirve a la empresa.
 - Usá solo las conexiones de la estrategia; no inventes otras.
+- Si se indica la empresa destinataria, nombrala al menos una vez con ese nombre.
 - Evitá frases genéricas de relleno que podrían ir en un mensaje a cualquier empresa.
 - Respetá el idioma y el rango de palabras indicados.
 - En "hechos_usados" y "puntos_usados" poné los ids que realmente mencionaste.
@@ -170,6 +172,7 @@ def mensajes_redactor(
     nombre_empresa: str | None = None,
     borrador_anterior: str | None = None,
     *,
+    modo: str = "conservar",
     min_palabras: int = 80,
     max_palabras: int = 150,
 ) -> tuple[str, str]:
@@ -203,27 +206,72 @@ def mensajes_redactor(
         lista = "\n".join(f'- "{frase}"' for frase in ejemplos_relleno)
         partes.append(f"Ejemplos de frases de relleno que no debés usar:\n{lista}")
     if fallos:
-        partes.append(_feedback_reintento(fallos, borrador_anterior, min_palabras, max_palabras))
+        partes.append(
+            _feedback_reintento(
+                fallos, borrador_anterior, modo, nombre_empresa, min_palabras, max_palabras
+            )
+        )
     return _SYSTEM_REDACTOR, "\n\n".join(partes)
 
 
 INSTRUCCION_REINTENTO = "Corregí solo los criterios fallidos y mantené el resto del borrador."
+INSTRUCCION_REESCRIBIR = "Escribí un borrador nuevo desde cero que cumpla todas estas obligaciones."
+# Las anclas que faltan vienen en el detalle de los criterios `hechos` y `perfil`
+# (verificacion/borrador.py, `_anclas`): 'falta el ancla en el texto: H1 (ancla "…")'.
+_ANCLA_FALTANTE = re.compile(r'\(ancla "([^"]*)"\)')
+
+
+def _obligaciones(
+    fallos: list[Fallo],
+    borrador_anterior: str | None,
+    nombre_empresa: str | None,
+    min_palabras: int,
+    max_palabras: int,
+) -> list[str]:
+    """Cada criterio fallido como una instrucción de acción (spec 002, research D3). Los
+    demás criterios quedan con su detalle en la lista de fallos."""
+    obligaciones = []
+    for fallo in fallos:
+        if fallo.criterio == "empresa" and nombre_empresa:
+            obligaciones.append(f"Nombrá a {nombre_empresa} en la primera oración.")
+        elif fallo.criterio in ("hechos", "perfil"):
+            anclas = _ANCLA_FALTANTE.findall(fallo.detalle)
+            if anclas:
+                lista = ", ".join(f'"{ancla}"' for ancla in anclas)
+                obligaciones.append(f"Incluí literalmente: {lista}.")
+        elif fallo.criterio == "longitud" and borrador_anterior is not None:
+            palabras = len(borrador_anterior.split())
+            obligaciones.append(
+                f"Longitud obligatoria: entre {min_palabras} y {max_palabras} palabras. "
+                f"El borrador anterior tenía {palabras} palabras."
+            )
+    return obligaciones
 
 
 def _feedback_reintento(
-    fallos: list[Fallo], borrador_anterior: str | None, min_palabras: int, max_palabras: int
+    fallos: list[Fallo],
+    borrador_anterior: str | None,
+    modo: str,
+    nombre_empresa: str | None,
+    min_palabras: int,
+    max_palabras: int,
 ) -> str:
-    """Feedback de un reintento: los criterios fallidos, el borrador anterior completo y la
-    orden de no tocar lo demás (research R2). Sin el borrador anterior, el modelo reescribía
-    todo y rompía lo que ya estaba bien."""
+    """Feedback de un reintento: los criterios fallidos y una obligación concreta por criterio.
+
+    - `conservar`: además, el borrador anterior completo y la orden de no tocar lo demás
+      (research R2 de la 001). Sin el borrador anterior, el modelo reescribía todo y rompía lo
+      que ya estaba bien.
+    - `reescribir`, después de un intento que repitió otro: sin el borrador anterior y con la
+      orden de escribir uno nuevo. Mostrarle el borrador con "mantené el resto" era el estímulo
+      que producía la copia (spec 002, research D3)."""
     lista = "\n".join(f"- {f.criterio}: {f.detalle}" for f in fallos)
     partes = ["El intento anterior no cumplió estos criterios:\n" + lista]
-    if any(f.criterio == "longitud" for f in fallos) and borrador_anterior is not None:
-        palabras = len(borrador_anterior.split())
-        partes.append(
-            f"Longitud obligatoria: entre {min_palabras} y {max_palabras} palabras. "
-            f"El borrador anterior tenía {palabras} palabras."
-        )
+    partes.extend(
+        _obligaciones(fallos, borrador_anterior, nombre_empresa, min_palabras, max_palabras)
+    )
+    if modo == "reescribir":
+        partes.append(INSTRUCCION_REESCRIBIR)
+        return "\n\n".join(partes)
     if borrador_anterior is not None:
         partes.append(f"Borrador anterior:\n{borrador_anterior}")
     partes.append(INSTRUCCION_REINTENTO)

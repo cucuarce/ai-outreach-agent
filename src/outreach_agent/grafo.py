@@ -8,8 +8,8 @@
                 ↓
             redactor → validar_borrador ─(ok)→ finalizar → END
                 ↑             │
-                └─(falla y quedan reintentos)
-                              └─(falla sin reintentos o borrador repetido)→ finalizar → END
+                └─(falla y quedan reintentos; si repitió un intento, en modo reescribir)
+                              └─(falla sin reintentos)→ finalizar → END
 
 Los tres agentes (investigador, estratega, redactor) llaman al LLM; el resto de los nodos son
 deterministas. Las decisiones de ruteo dependen solo de campos ya verificados del estado.
@@ -100,8 +100,9 @@ def ruta_despues_de_verificar_estrategia(estado: EstadoGrafo) -> str:
 
 def ruta_despues_de_validar(max_reintentos: int):
     def ruta(estado: EstadoGrafo) -> str:
-        # validar_borrador deja un resultado si el redactor repitió el borrador anterior.
-        if "resultado" in estado or estado["validacion"].ok:
+        # La repetición ya no corta (spec 002, research D3): solo cuentan la validación y los
+        # intentos que quedan.
+        if estado["validacion"].ok:
             return "finalizar"
         if estado["intento"] < 1 + max_reintentos:
             return "redactor"

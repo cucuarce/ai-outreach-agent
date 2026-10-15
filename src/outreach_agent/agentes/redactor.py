@@ -3,7 +3,8 @@
 Recibe el ángulo, los ids de las conexiones y, de cada hecho y punto del perfil, solo `id`, `cita`
 y `ancla`. Nunca recibe el texto crudo de la empresa, la `descripcion` de los hechos ni la
 `razon` de las conexiones (research R3). En los reintentos recibe los fallos del intento
-anterior.
+anterior y, en modo `conservar`, el borrador anterior; en modo `reescribir` (después de un
+intento repetido) no lo recibe (spec 002, research D3).
 """
 
 from outreach_agent.agentes.base import exigir_lista, exigir_texto, llamar_json
@@ -14,6 +15,7 @@ from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import Borrador
 from outreach_agent.proveedores.base import LLMProvider
 from outreach_agent.verificacion.relleno import ejemplos_relleno
+from outreach_agent.verificacion.texto import normalizar
 
 
 def _validar(datos: dict) -> None:
@@ -29,8 +31,10 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
     hechos_elegidos = [h for h in hechos_disponibles(estado) if h.id in elegidos]
     validacion = estado.get("validacion")
     fallos = validacion.fallos if validacion and not validacion.ok else []
-    # En un reintento, el redactor recibe el borrador anterior para corregir solo lo que falló.
+    # En un reintento, el borrador anterior: en modo `conservar` el redactor lo ve para corregir
+    # solo lo que falló; en modo `reescribir`, solo se usa para informar su largo.
     anterior = estado["borrador"].texto if fallos and "borrador" in estado else None
+    modo = estado.get("modo_correccion") or "conservar"
 
     idioma = estado.get("idioma_objetivo")
     system, user = mensajes_redactor(
@@ -41,6 +45,7 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
         fallos,
         estado.get("nombre_empresa"),
         anterior,
+        modo=modo,
     )
     datos = llamar_json(
         provider,
@@ -57,16 +62,23 @@ def redactor(estado: EstadoGrafo, provider: LLMProvider, config: Config) -> dict
     )
     return {
         "borrador": borrador,
-        "texto_borrador_anterior": anterior,
+        "textos_borradores": [*estado.get("textos_borradores", []), normalizar(borrador.texto)],
         "intento": estado.get("intento", 0) + 1,
     }
 
 
+def modo_del_intento(estado: EstadoGrafo, intento: int) -> str:
+    """`inicial` en el primer intento; después, el modo que dejó validar_borrador."""
+    return "inicial" if intento == 1 else estado.get("modo_correccion") or "conservar"
+
+
 def resumir(estado: EstadoGrafo, actualizacion: dict) -> tuple[str, dict]:
-    """Decisión para la traza: intento y cantidad de palabras."""
+    """Decisión para la traza: intento, modo de corrección y cantidad de palabras."""
     borrador = actualizacion["borrador"]
     palabras = len(borrador.texto.split())
-    return f"intento {actualizacion['intento']}: {palabras} palabras", {
+    modo = modo_del_intento(estado, actualizacion["intento"])
+    return f"intento {actualizacion['intento']} ({modo}): {palabras} palabras", {
+        "modo_correccion": modo,
         "palabras": palabras,
         "hechos_usados": borrador.hechos_usados,
         "puntos_usados": borrador.puntos_usados,

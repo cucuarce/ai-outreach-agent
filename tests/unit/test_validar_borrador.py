@@ -1,7 +1,12 @@
 import pytest
 
 from outreach_agent.modelos import Borrador, Entrada, Estado, Hecho, Motivo
-from outreach_agent.verificacion.borrador import nodo_validar_borrador, validar_borrador
+from outreach_agent.verificacion.borrador import (
+    nodo_validar_borrador,
+    resumidor,
+    validar_borrador,
+)
+from outreach_agent.verificacion.texto import normalizar
 from tests import escenarios
 
 TEXTO = escenarios.TEXTO_BORRADOR  # 102 palabras, válido
@@ -179,49 +184,101 @@ def test_enlace_del_perfil_se_acepta():
     assert resultado.ok
 
 
-# --- Borrador repetido (research R2) ---
+# --- Borrador repetido (research R2 de la 001; spec 002, research D3, T010) ---
 
 LARGO = TEXTO + " Además" * 68  # 170 palabras: falla longitud
+LARGO_B = TEXTO + " Asimismo" * 68  # 170 palabras, distinto de LARGO
 
 
-def nodo(texto, anterior):
-    estado = {
+def estado_nodo(texto, anteriores):
+    """Estado de validar_borrador en el intento len(anteriores) + 1. `textos_borradores` tiene los
+    textos normalizados de todos los intentos, incluido el actual (lo agrega el redactor)."""
+    return {
         "run_id": "prueba",
         "entrada": Entrada(escenarios.TEXTO_EMPRESA, escenarios.PERFIL),
         "idioma_objetivo": "es",
         "hechos": escenarios.hechos(),
         "estrategia": escenarios.estrategia(),
         "borrador": Borrador(texto, ["H1", "H2"], ["P1", "P2"]),
-        "texto_borrador_anterior": anterior,
-        "intento": 2,
+        "textos_borradores": [normalizar(t) for t in [*anteriores, texto]],
+        "intento": len(anteriores) + 1,
     }
-    return nodo_validar_borrador(estado)
 
 
-def test_borrador_repetido_que_falla_corta_como_invalido():
-    actualizacion = nodo(LARGO, LARGO)
-    resultado = actualizacion["resultado"]
-    assert resultado.estado is Estado.INVALIDO
-    assert resultado.motivo is Motivo.VALIDACION_FALLIDA
-    assert resultado.detalle == "el modelo repitió el mismo borrador"
-    assert [f.criterio for f in resultado.fallos] == ["longitud"]
-    assert resultado.fallos == actualizacion["validacion"].fallos
+def nodo(texto, anteriores):
+    return nodo_validar_borrador(estado_nodo(texto, anteriores))
+
+
+def test_borrador_repetido_que_falla_no_corta_y_marca_repeticion():
+    actualizacion = nodo(LARGO, [LARGO])
+    assert "resultado" not in actualizacion
+    assert [f.criterio for f in actualizacion["validacion"].fallos] == ["longitud"]
+    assert actualizacion["repite_intento"] == 1
+    assert actualizacion["modo_correccion"] == "reescribir"
 
 
 def test_la_comparacion_ignora_mayusculas_tildes_puntuacion_y_espacios():
     anterior = LARGO.upper().replace(".", "").replace(" ", "  \n")
-    assert "resultado" in nodo(LARGO, anterior)
+    assert nodo(LARGO, [anterior])["repite_intento"] == 1
 
 
-def test_borrador_distinto_no_corta():
-    assert "resultado" not in nodo(LARGO, LARGO + " También")
+def test_borradores_que_difieren_solo_en_espacios_o_mayusculas_cuentan_como_repetidos():
+    anterior = "  " + LARGO.upper().replace(" ", "   ") + "\n"
+    assert anterior != LARGO
+    actualizacion = nodo(LARGO, [anterior])
+    assert actualizacion["repite_intento"] == 1
+    assert actualizacion["modo_correccion"] == "reescribir"
 
 
-def test_primer_intento_sin_anterior_no_corta():
-    assert "resultado" not in nodo(LARGO, None)
+def test_borrador_distinto_no_repite_y_conserva():
+    actualizacion = nodo(LARGO, [LARGO + " También"])
+    assert "resultado" not in actualizacion
+    assert actualizacion["repite_intento"] is None
+    assert actualizacion["modo_correccion"] == "conservar"
+
+
+def test_primer_intento_no_repite():
+    actualizacion = nodo(LARGO, [])
+    assert "resultado" not in actualizacion
+    assert actualizacion["repite_intento"] is None
+    assert actualizacion["modo_correccion"] == "conservar"
+
+
+def test_repeticion_no_consecutiva_marca_el_intento_repetido():
+    # Intentos A, B y A: el tercero repite el primero.
+    actualizacion = nodo(LARGO, [LARGO, LARGO_B])
+    assert actualizacion["repite_intento"] == 1
+    assert actualizacion["modo_correccion"] == "reescribir"
 
 
 def test_borrador_repetido_valido_no_corta():
-    actualizacion = nodo(TEXTO, TEXTO)
+    actualizacion = nodo(TEXTO, [TEXTO])
     assert actualizacion["validacion"].ok
     assert "resultado" not in actualizacion
+
+
+def test_la_traza_registra_repite_intento_y_el_proximo_paso():
+    resumir = resumidor(max_reintentos=2)
+    estado = estado_nodo(LARGO, [LARGO])
+    _, detalle = resumir(estado, nodo_validar_borrador(estado))
+    assert detalle["repite_intento"] == 1
+    assert detalle["proximo_paso"] == "reintento (reescribir)"
+
+    estado = estado_nodo(LARGO, [LARGO_B])
+    _, detalle = resumir(estado, nodo_validar_borrador(estado))
+    assert detalle["repite_intento"] is None
+    assert detalle["proximo_paso"] == "reintento"
+
+    estado = estado_nodo(LARGO, [LARGO, LARGO])  # intento 3, sin reintentos restantes
+    _, detalle = resumir(estado, nodo_validar_borrador(estado))
+    assert detalle["repite_intento"] == 1
+    assert detalle["proximo_paso"] == "inválido"
+
+
+# --- Criterio empresa con símbolos de marca (spec 002, research D2, T013) ---
+
+
+@pytest.mark.parametrize("simbolo", ["®", "™", "©"])
+def test_empresa_con_simbolo_de_marca_se_cumple_con_el_nombre_sin_simbolo(simbolo):
+    assert "Nubeluz" in TEXTO and simbolo not in TEXTO
+    assert validar(nombre_empresa=f"Nubeluz{simbolo}").ok
