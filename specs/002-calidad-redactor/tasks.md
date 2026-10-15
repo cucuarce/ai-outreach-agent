@@ -226,8 +226,8 @@ conexión con causa `id_no_valido`.
 - [ ] T024 [P] [US3] Crear `scripts/medir_relacion.py` según contracts/miniset-conexiones.md, con los umbrales de plan.md (a) fijos en el código:
   - 0 falsos aceptos en insuficiente-04;
   - falsos aceptos de hasta el 10% de las `mala`;
-  - falsos rechazos de hasta el 25% de las `buena`;
-  - al menos una `buena` conservada por cada caso válido que llega a `verificar_estrategia`.
+  - falsos rechazos de hasta el 25% de las `buena` (con 4 `buena`, como máximo 1 de 4; se reporta con ese tamaño);
+  - al menos una `buena` conservada por cada caso válido que tenga al menos una `buena` en el mini-set; los casos válidos sin ninguna `buena` se listan aparte y no cuentan para este criterio (nota del 2026-10-15 en plan.md).
 
   Cada criterio se reporta con el conteo junto al porcentaje. Las `dudosa` van aparte, con el veredicto del evaluador y fuera de los denominadores (decisión b). Si hay ítems sin etiquetar, sale con código distinto de 0. No escribe el etiquetado. Tests en `tests/unit/test_medir_relacion.py` con un etiquetado chico armado a mano. Commitearlo **antes** de T025.
 - [ ] T025 [US3] Ejecutar `scripts/medir_relacion.py --etiquetado eval/conexiones/etiquetado.json --origen eval/conexiones/origen.json`. Mostrarle al usuario:

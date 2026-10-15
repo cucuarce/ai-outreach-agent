@@ -209,8 +209,9 @@ reporta:
 - 0 falsos aceptos en las conexiones de insuficiente-04.
 - Falsos aceptos: hasta el 10% de las conexiones `mala`.
 - Falsos rechazos: hasta el 25% de las conexiones `buena`.
-- En cada caso válido que llega a `verificar_estrategia`, el evaluador conserva al menos una
-  conexión `buena`.
+- En cada caso válido que llega a `verificar_estrategia` y tiene al menos una `buena` en el
+  mini-set, el evaluador conserva al menos una conexión `buena`; los casos válidos sin ninguna
+  `buena` se listan aparte (nota del 2026-10-15 en plan.md).
 - Cada criterio se reporta con el conteo junto al porcentaje. Las `dudosa` quedan fuera de los
   denominadores y se reportan aparte.
 

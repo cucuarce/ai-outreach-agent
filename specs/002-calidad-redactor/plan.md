@@ -228,3 +228,18 @@ con el mismo mini-set y un umbral de similitud fijado antes de medir. Los criter
 no cambian. Si tampoco pasa, FR-008 queda sin cumplir en esta iteración, no se integra ningún
 evaluador y SC-002 se reporta tal cual. El experimento de embeddings requiere revisar este plan
 antes de implementarlo (interfaz de proveedor, principio IV).
+
+**Nota (2026-10-15), posterior al etiquetado y anterior a cualquier medición**: el etiquetado
+(commit 5a10d08) dio 52 `mala`, 4 `buena` y 29 `dudosa`. Ningún evaluador se ejecutó sobre el
+mini-set antes de esta nota. Con eso se ajusta (a):
+- El cuarto criterio pasa a ser: al menos una `buena` conservada por cada caso válido que tenga
+  al menos una `buena` en el mini-set. Los casos válidos sin ninguna `buena` se listan aparte en
+  el reporte y no cuentan para este criterio.
+- Con 4 `buena`, el umbral de falsos rechazos (hasta el 25%) equivale a como máximo 1 de 4. El
+  resultado se reporta con ese tamaño de muestra.
+- Los otros tres umbrales no cambian.
+- valido-02 no tiene ninguna `buena` entre sus 25 pares del mini-set. Con D4 integrado se espera
+  que termine en `sin_conexion_perfil`.
+- En consecuencia, el máximo alcanzable en desarrollo pasa de 4 a 3 de 6 válidos con borrador.
+  Esto corrige la Assumption de spec.md ("El máximo alcanzable en desarrollo es 4 de 6
+  válidos"), que no se reescribe.

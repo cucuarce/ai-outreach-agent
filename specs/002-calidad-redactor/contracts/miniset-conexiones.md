@@ -38,9 +38,11 @@ El script escribe dos archivos:
 
 ## Etiquetado
 
-- Lo hace el usuario editando `etiqueta` en `para_etiquetar.json`, con `buena`, `mala` o
-  `dudosa`. El resultado se guarda como `eval/conexiones/etiquetado.json`.
-- Antes de cualquier medición se commitea, y ese commit queda como referencia.
+- Lo hace el usuario con `scripts/etiquetar.py`, que muestra solo las dos citas de cada ítem y
+  acepta `buena`, `mala` o `dudosa`. `para_etiquetar.json` no se modifica; el resultado es
+  `eval/conexiones/etiquetado.json`.
+- Antes de cualquier medición se commitea, y ese commit queda como referencia: 5a10d08
+  (52 `mala`, 4 `buena`, 29 `dudosa`).
 - No se modifica después de medir.
 
 ## Medición
@@ -56,7 +58,11 @@ python scripts/medir_relacion.py --etiquetado eval/conexiones/etiquetado.json \
 - las conexiones `dudosa`, aparte y con el veredicto del evaluador, fuera de los umbrales;
 - lista de **falsos aceptos** y de **falsos rechazos**, con las dos citas;
 - resultado por caso de origen;
-- la puerta de research D5, criterio por criterio, con su resultado (pasa / no pasa).
+- la puerta de research D5, criterio por criterio, con su resultado (pasa / no pasa). El criterio
+  por caso exige al menos una `buena` conservada por cada caso válido que tenga al menos una
+  `buena` en el mini-set; los casos válidos sin ninguna `buena` se listan aparte y no cuentan.
+  El criterio de falsos rechazos se reporta con el tamaño de muestra (con 4 `buena`, como máximo
+  1 de 4). Ver la nota del 2026-10-15 en plan.md.
 
 **Comportamiento**:
 - Sale con código distinto de 0 si hay ítems sin etiquetar.
