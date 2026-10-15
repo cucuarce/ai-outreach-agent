@@ -1,0 +1,5 @@
+{
+  "_comentario": "Términos que no sostienen una relación entre dato y punto del perfil (spec 002, research D4, paso 3): unidades de tiempo y palabras de organización. Fijada antes de medir el evaluador sobre el mini-set; después de la medición no se modifica (plan.md, decisión c). Los plurales se cubren con la forma singular simple de relacion.py.",
+  "es": ["año", "semana", "día", "mes", "hora", "minuto", "equipo", "empresa", "experiencia", "sistema", "plataforma"],
+  "en": ["year", "week", "day", "month", "hour", "minute", "team", "company", "experience", "system", "platform"]
+}
