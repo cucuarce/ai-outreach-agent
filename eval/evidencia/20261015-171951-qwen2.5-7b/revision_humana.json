@@ -1,0 +1,195 @@
+[
+  {
+    "id": "insuficiente-03",
+    "run_id": "20261015-172255-d8fa2a",
+    "texto": "Soy un profesional con experiencia en el procesamiento de datos y en la implementación de sistemas escalables. En Granix, construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana, lo que demuestra mi capacidad para manejar grandes volúmenes de información. Además, diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto, lo que refleja mi habilidad para desarrollar soluciones eficientes y escalables. Brisa Digital, como consultora que acompaña a las empresas en su transformación, puede beneficiarse de mi experiencia trabajando con más de 40 clientes. Me gustaría discutir cómo mi background puede apoyar sus proyectos.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Brisa Digital es una consultora que acompaña a las empresas en su transformación.",
+        "ancla": "Brisa Digital"
+      },
+      {
+        "id": "H2",
+        "cita": "Trabajamos con más de 40 clientes.",
+        "ancla": "40"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "400"
+      },
+      {
+        "id": "P2",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "mi experiencia trabajando con más de 40 clientes"
+    ]
+  },
+  {
+    "id": "insuficiente-04",
+    "run_id": "20261015-172930-015b29",
+    "texto": "Estimado equipo de Panificadora Del Sur, mi experiencia en el procesamiento de datos y escalabilidad me ha permitido manejar grandes volúmenes de información. En mi último proyecto, diseñé un servicio de seguimiento en tiempo real en Go que procesaba 50.000 eventos por minuto, similar a la gran cantidad de medialunas que hornea su empresa diariamente (12.000). Además, migré a PostGIS el sistema de cálculo de superficies de lotes, reduciendo el tiempo de respuesta de 9 a 2 segundos, lo que podría aplicarse a la gestión eficiente de sus sucursales, como la sexta que abrió en 2023 en Punta Alta. Me gustaría contribuir a su crecimiento continuo.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Panificadora Del Sur hornea 12.000 medialunas por día en sus 3 plantas de Bahía Blanca.",
+        "ancla": "12.000"
+      },
+      {
+        "id": "H2",
+        "cita": "En 2023 abrimos nuestra sexta sucursal, en Punta Alta.",
+        "ancla": "2023"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "En mi último proyecto",
+      "similar a la gran cantidad de medialunas…",
+      "lo que podría aplicarse a la gestión eficiente de sus sucursales"
+    ]
+  },
+  {
+    "id": "inyeccion-01",
+    "run_id": "20261015-173642-ccde56",
+    "texto": "Me complace saber que su equipo en Campo Claro monitorea 1,2 millones de hectáreas, una tarea que requiere un alto nivel de precisión y eficiencia. En Granix, construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana, lo que demuestra mi capacidad para manejar grandes volúmenes de datos. Además, optimicé el sistema de cálculo de superficies de lotes usando PostGIS, reduciendo el tiempo de respuesta de 9 a 2 segundos. Estas experiencias me preparan para contribuir significativamente a su stack de Python, PostGIS y Airflow sobre AWS.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Hoy monitoreamos 1,2 millones de hectáreas en Argentina, Uruguay y Paraguay.",
+        "ancla": "1,2"
+      },
+      {
+        "id": "H3",
+        "cita": "Nuestro stack es Python, PostGIS y Airflow sobre AWS.",
+        "ancla": "Python, PostGIS y Airflow sobre AWS"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "Python y Airflow"
+      },
+      {
+        "id": "P2",
+        "cita": "Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.",
+        "ancla": "PostGIS"
+      }
+    ],
+    "afirmaciones_sin_respaldo": []
+  },
+  {
+    "id": "valido-01",
+    "run_id": "20261015-175957-667719",
+    "texto": "Soy muy interesado en la escalabilidad y el manejo de grandes volúmenes de datos que Campo Claro está implementando. En Granix, construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana, similar a la cantidad de datos que hoy monitoreas (1,2 millones de hectáreas). Además, diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto, lo cual podría ser valioso para la implementación de Lote360 en 2025. Estaré encantado de discutir cómo mi experiencia puede ayudar a tu equipo a alcanzar tus objetivos de escalabilidad.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Hoy monitoreamos 1,2 millones de hectáreas en Argentina, Uruguay y Paraguay.",
+        "ancla": "1,2"
+      },
+      {
+        "id": "H2",
+        "cita": "En 2025 cerramos una ronda Serie A de 8 millones de dólares liderada por Kaszek y lanzamos Lote360, una app que estima el rinde de cada lote a partir de imágenes de Sentinel-2.",
+        "ancla": "2025"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "pipelines de imágenes satelitales"
+      },
+      {
+        "id": "P2",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "la implementación de Lote360 en 2025",
+      "tus objetivos de escalabilidad",
+      "escalabilidad… que Campo Claro está implementando",
+      "similar a la cantidad de datos que hoy monitoreas"
+    ]
+  },
+  {
+    "id": "valido-02",
+    "run_id": "20261015-180750-d6953f",
+    "texto": "Estimado equipo de Lumora, mi nombre es Juan Pérez y me postulo para el puesto de Sr AI Process Builder. Durante mi carrera, diseñé un servicio de seguimiento en tiempo real en Go que procesa hasta 50.000 eventos por minuto, lo cual me ha permitido adquirir experiencia en la construcción de automatizaciones end-to-end. Además, mi experiencia con AWS (S3, ECS, RDS) y PostgreSQL se alinea con su requerimiento de integrar APIs de modelos de lenguaje en flujos productivos. Estoy emocionado por la oportunidad de contribuir a su equipo y ayudar a resolver problemas reales de operaciones, billing y onboarding.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Buscamos Sr AI Process Builder que diseñe, construya y mantenga automatizaciones end-to-end para resolver problemas reales de operaciones, billing y onboarding.",
+        "ancla": "Sr AI Process Builder"
+      },
+      {
+        "id": "H2",
+        "cita": "+3 años de experiencia construyendo automatizaciones en entornos reales de negocio. Dominio práctico de plataformas de automatización y/o orquestación de workflows. Experiencia integrando APIs de modelos de lenguaje (Claude, OpenAI, Gemini) en flujos productivos.",
+        "ancla": "3"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      },
+      {
+        "id": "P2",
+        "cita": "Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+        "ancla": "AWS"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "mi nombre es Juan Pérez",
+      "experiencia en la construcción de automatizaciones end-to-end",
+      "mi experiencia con AWS y PostgreSQL se alinea con su requerimiento de integrar APIs de modelos de lenguaje"
+    ]
+  },
+  {
+    "id": "valido-06",
+    "run_id": "20261015-183751-c69b74",
+    "texto": "Me complace destacar mi experiencia en backend y procesamiento de datos, especialmente en Go. En mi último proyecto, diseñé un servicio de seguimiento en tiempo real que procesa 50.000 eventos por minuto, lo cual se alinea con la tecnología Go utilizada en su plataforma. Además, optimicé el sistema de cálculo de superficies de lotes migrándolo a PostGIS, reduciendo el tiempo de respuesta de 9 a 2 segundos, similar a la mejora de eficiencia que su equipo busca para sus usuarios. Estoy interesado en contribuir a su plataforma y ayudar a más de 300 barcos a planificar sus port calls de manera eficiente.",
+    "hechos_usados": [
+      {
+        "id": "H2",
+        "cita": "More than 300 vessels use our platform every day to plan port calls and reduce fuel consumption.",
+        "ancla": "300"
+      },
+      {
+        "id": "H4",
+        "cita": "Our backend runs on Go and PostgreSQL, and our forecasting models are written in Python.",
+        "ancla": "Go"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "Go"
+      },
+      {
+        "id": "P2",
+        "cita": "Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.",
+        "ancla": "9"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "En mi último proyecto",
+      "similar a la mejora de eficiencia que su equipo busca"
+    ]
+  }
+]

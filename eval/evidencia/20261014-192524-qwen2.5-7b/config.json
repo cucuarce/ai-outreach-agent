@@ -1,0 +1,9 @@
+{
+  "fecha": "2026-10-14T19:25:24-03:00",
+  "modelo": "qwen2.5:7b",
+  "ollama_host": "http://localhost:11434",
+  "num_ctx": 8192,
+  "timeout_s": 900.0,
+  "temperatura_redactor": 0.3,
+  "max_reintentos": 2
+}

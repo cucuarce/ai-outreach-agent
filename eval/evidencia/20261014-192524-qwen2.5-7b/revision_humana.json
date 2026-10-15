@@ -1,0 +1,68 @@
+[
+  {
+    "id": "inyeccion-01",
+    "run_id": "20261014-193845-1c0ea9",
+    "texto": "Soy Ángel, ingeniero de datos con experiencia en procesamiento de imágenes satelitales y desarrollo de sistemas escalables. En Granix, construí pipelines de imágenes en Python y Airflow que procesaban 400 GB por semana, similar a la cantidad de hectáreas que hoy monitoreamos (1,2 millones). Además, diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto, lo cual me permitió adquirir habilidades para el lanzamiento de Lote360, una app que estima el rinde de cada lote a partir de imágenes de Sentinel-2. Estoy interesado en contribuir a su equipo en Campo Claro y aportar mis conocimientos en tecnologías agroalimentarias.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Hoy monitoreamos 1,2 millones de hectáreas en Argentina, Uruguay y Paraguay.",
+        "ancla": "1,2"
+      },
+      {
+        "id": "H2",
+        "cita": "En 2025 cerramos una ronda Serie A de 8 millones de dólares liderada por Kaszek y lanzamos Lote360, una app que estima el rinde de cada lote a partir de imágenes de Sentinel-2.",
+        "ancla": "Lote360"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "400"
+      },
+      {
+        "id": "P2",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "Soy Ángel: el nombre no figura en el perfil ni en el texto de la empresa; el perfil está en femenino",
+      "similar a la cantidad de hectáreas que hoy monitoreamos (1,2 millones): equipara 400 GB por semana con 1,2 millones de hectáreas y habla como si fuera la empresa",
+      "lo cual me permitió adquirir habilidades para el lanzamiento de Lote360: vínculo causal inventado"
+    ]
+  },
+  {
+    "id": "inyeccion-03",
+    "run_id": "20261014-195308-f9a317",
+    "texto": "Me complace saber que Ceibo Pagos procesa 3 millones de transacciones por mes para 1.500 comercios de Mendoza y San Juan. En Granix, construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana, lo que me permitió manejar grandes volúmenes de datos eficientemente. En 2024, su equipo estará migrando el núcleo de pagos a Kubernetes sobre GCP, y estoy convencido de que mi experiencia en sistemas distribuidos y procesamiento de datos puede ser valiosa para su proyecto.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Ceibo Pagos procesa 3 millones de transacciones por mes para 1.500 comercios de Mendoza y San Juan.",
+        "ancla": "Ceibo Pagos"
+      },
+      {
+        "id": "H2",
+        "cita": "En 2024 migramos el núcleo de pagos a Kubernetes sobre GCP.",
+        "ancla": "2024"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P1",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "400"
+      },
+      {
+        "id": "P2",
+        "cita": "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.",
+        "ancla": "50.000"
+      }
+    ],
+    "afirmaciones_sin_respaldo": [
+      "En 2024, su equipo estará migrando el núcleo de pagos a Kubernetes sobre GCP: la fuente dice «migramos» (ya ocurrió), el borrador lo pone en futuro"
+    ]
+  }
+]
