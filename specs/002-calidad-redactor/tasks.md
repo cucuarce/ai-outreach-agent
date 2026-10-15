@@ -305,7 +305,7 @@ commiteadas y `git status` esté limpio.
   ```
 
   Usa la misma configuración que T032 y que la línea base. Verificar en `config.json` que `git_commit` es igual al commit de T035 y que `git_cambios_sin_commit` es `false`. Reportar el resultado tal cual en una sección "Resultado de validación" de `specs/002-calidad-redactor/research.md`, junto al de desarrollo. Después no se ajusta nada del sistema, de los casos ni de los criterios (FR-015) (depende de T035).
-- [ ] T037 **MANUAL (usuario)** Completar `afirmaciones_sin_respaldo` en `revision_humana.json` de la corrida de validación de T036. Después, regenerar el reporte con `C:\venvs\outreach\Scripts\python.exe scripts/evaluar.py --reanudar <carpeta de la corrida de T036>`, que no ejecuta casos porque todos tienen resultado. Reportar el resultado completo, con la revisión humana, en "Resultado de validación" de `specs/002-calidad-redactor/research.md`, sin ajustar nada (FR-015) (depende de T036).
+- [ ] T037 **MANUAL (usuario)** Completar `afirmaciones_sin_respaldo` en `revision_humana.json` de la corrida de validación de T036. Después, regenerar el reporte con `C:\venvs\outreach\Scripts\python.exe scripts/regenerar_reporte.py <carpeta de la corrida de T036> --casos eval/validacion/casos`, que arma el reporte desde disco sin red, sin proveedor y sin correr casos. No usar `--reanudar`: consulta `/api/tags` de Ollama antes de armar el reporte. Reportar el resultado completo, con la revisión humana, en "Resultado de validación" de `specs/002-calidad-redactor/research.md`, sin ajustar nada (FR-015) (depende de T036).
 
 ---
 
@@ -403,7 +403,8 @@ espera a que D4 esté resuelto.
 
 - Ninguna tarea antes de T034 lee `eval/validacion_ids.json` ni las ofertas de esos ids.
 - Solo T032 ejecuta Ollama sobre los 13 casos de desarrollo, y T036 sobre los 6 de validación.
-  Ninguna otra tarea usa Ollama: las regeneraciones con `--reanudar` de T033 y T037 no ejecutan
-  casos.
+  Ninguna otra tarea usa Ollama. Las regeneraciones de reporte de T033 y T037 usan
+  `scripts/regenerar_reporte.py`, que no usa la red ni corre casos. No usan `--reanudar`, que
+  consulta `/api/tags` de Ollama antes de armar el reporte.
 - Los 13 casos de `eval/casos/` no se modifican (FR-012).
 - No crear código capaz de enviar mensajes (principio III).
