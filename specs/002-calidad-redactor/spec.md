@@ -155,10 +155,10 @@ conexiones sin relación se descartan y que la ejecución termina con el motivo
 
 **Datos concretos (alcance a)**
 
-- **FR-001**: Una fórmula genérica de búsqueda de personal ("We are hiring", "Estamos buscando",
-  "Buscamos una persona", "Join our team" y equivalentes en los idiomas soportados) MUST NOT
-  contarse como dato concreto ni ser lo que el borrador debe reproducir para demostrar que usa
-  un dato.
+- **FR-001**: Una fórmula genérica de búsqueda de personal en español o en inglés ("We are
+  hiring", "Estamos buscando", "Buscamos una persona", "Join our team" y equivalentes en esos dos
+  idiomas) MUST NOT contarse como dato concreto ni ser lo que el borrador debe reproducir para
+  demostrar que usa un dato.
 - **FR-002**: Un puesto abierto sigue siendo un dato concreto cuando el texto lo especifica: un
   nombre de puesto, un equipo, una tecnología o una responsabilidad concreta. En ese caso, lo que
   el borrador debe mencionar es ese contenido específico.
@@ -219,8 +219,8 @@ conexiones sin relación se descartan y que la ejecución termina con el motivo
 - **Dato concreto de la empresa** (precisa la definición de la spec 001): afirmación específica
   del texto de la empresa. Una búsqueda de personal cuenta solo por su contenido específico
   (puesto, equipo, tecnología, responsabilidad), nunca por la fórmula de búsqueda.
-- **Fórmula genérica de búsqueda**: expresión que anuncia que la empresa contrata sin aportar un
-  dato específico ("We are hiring", "Estamos buscando").
+- **Fórmula genérica de búsqueda**: expresión en español o en inglés que anuncia que la empresa
+  contrata sin aportar un dato específico ("We are hiring", "Estamos buscando").
 - **Conexión**: par dato de la empresa / punto del perfil propuesto para el mensaje. Ahora tiene
   un estado (conservada o descartada) y, si se descarta, una causa.
 - **Intento de redacción**: cada borrador producido en una ejecución, con sus fallos, si repitió
@@ -272,3 +272,6 @@ Criterios fijados antes de implementar. Se miden con la misma configuración que
   reglas se decide en el plan.
 - Los casos de validación pueden terminar legítimamente en `insuficiente` si una oferta no tiene
   dos datos concretos. Eso se reporta como resultado, no como fallo del procedimiento.
+- **Límite**: portugués, francés, alemán e italiano, aunque son idiomas soportados (spec 001,
+  FR-018), quedan sin cobertura de fórmulas genéricas de búsqueda. En un texto de empresa en esos
+  idiomas, una fórmula de búsqueda puede seguir contándose como dato concreto.
