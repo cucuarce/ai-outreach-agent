@@ -128,6 +128,7 @@ Producido por el redactor.
 | `estrategia` | estratega → verificar_estrategia | redactor |
 | `borrador`, `intento` | redactor | validar_borrador |
 | `texto_borrador_anterior` | redactor (en un reintento, el texto del intento anterior) | validar_borrador (borrador repetido) |
+| | **Reemplazado (spec 002, research D3)** por `textos_borradores` (los textos normalizados de todos los intentos, que agrega el redactor) y `modo_correccion` (`conservar` \| `reescribir`, que deja validar_borrador). Ver `specs/002-calidad-redactor/data-model.md`. | |
 | `validacion` | validar_borrador | redactor (feedback), ruteo |
 | `resultado` | nodo que corta (preparar_entrada, verificar_hechos, verificar_estrategia, validar_borrador) o finalizar | ruteo, CLI |
 

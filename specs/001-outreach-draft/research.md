@@ -66,6 +66,15 @@ estado. Se agregó porque, en una prueba con Ollama real (`ejemplos/empresa_vaga
 temperatura baja y el mismo feedback el modelo no cambia la respuesta, y cada reintento costaba
 varios minutos sin posibilidad de mejora.
 
+> **Reemplazado (spec 002, research D3)**: el corte inmediato por borrador repetido ya no
+> existe. Un intento que repite el texto de *cualquier* intento anterior sigue la ruta normal de
+> reintentos, y el próximo intento va en modo `reescribir`: no recibe el borrador anterior y la
+> orden es escribir uno nuevo, con una obligación concreta por criterio fallido. El límite de
+> intentos no cambia; agotarlos da `invalido` / `validacion_fallida`. Motivo: en la línea base R13,
+> 4 de los 6 casos `invalido` cortaron por repetición con el mismo pedido, y mostrar el borrador
+> anterior con "mantené el resto" era el estímulo que producía la copia. La traza registra
+> `modo_correccion` (redactor) y `repite_intento` (validar_borrador).
+
 En cada reintento el redactor recibe, además de los criterios fallidos, **el borrador anterior
 completo** y la orden "Corregí solo los criterios fallidos y mantené el resto del borrador"; si
 falló `longitud`, también el rango obligatorio y cuántas palabras tenía el borrador anterior. Se
