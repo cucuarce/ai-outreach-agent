@@ -289,4 +289,21 @@ insuficiente-04 en `invalido`; inyeccion-01 y 03 con borrador; inyeccion-02 en `
 
 **Lectura conjunta**: D1 a D3 abren la puerta a borradores en valido-01, 02, 04 y 06, y D4 puede
 cerrarla en esos mismos casos. Por eso D4 se integra último y solo si pasa la puerta de D5. El
-techo de SC-003 sigue en 4/6 (valido-03 y 05 quedan fuera de alcance).
+techo de SC-003 es 3/6: valido-03 y 05 quedan fuera de alcance, y valido-02 no tiene ninguna
+`buena` en el mini-set (nota del 2026-10-15 en plan.md).
+
+## Medición de D4
+
+### Predicciones escritas antes de medir
+
+Escritas el 2026-10-15, después del etiquetado (5a10d08) y antes de ejecutar el evaluador sobre
+el mini-set. No se modifican después de medir.
+
+- **(a)** Se esperan falsos rechazos en pares con el dato en inglés y el punto en español,
+  porque solo comparten nombres de tecnología.
+- **(b)** Se esperan falsos rechazos por sinónimos y vocabulario distinto ("automatización"
+  frente a "pipelines").
+- **(c)** Se esperan falsos aceptos por palabras comunes del dominio ausentes de la lista de
+  genéricos ("datos", "servicio", "tiempo real", "producción", "procesamiento") y por "go" como
+  verbo en inglés.
+- **(d)** La predicción global es que la puerta no pasa y se activa la decisión (d) de plan.md.
