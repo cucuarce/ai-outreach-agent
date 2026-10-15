@@ -97,21 +97,21 @@ están versionadas, y los tests de US1, US2 y US3 las usan.
 H1 a H3 siguen válidos. Las frases fuera de los casos de desarrollo se marcan y las anclas
 legítimas no.
 
-- [ ] T005 [P] [US2] Escribir `tests/unit/test_formulas_busqueda.py`.
+- [x] T005 [P] [US2] (commit e9457d7) Escribir `tests/unit/test_formulas_busqueda.py`.
   - **Se marcan**: "Estamos contratando", "Join our team", "Sumate", "We're hiring", "Now hiring", "Súmate a nuestro equipo", "Se busca", "Únete al equipo", "Come work with us".
   - **Frases nuevas**: un test lee los `texto_empresa` de `eval/casos/*.json` y verifica que ninguna de esas frases aparece en ellos, comparando con texto normalizado.
   - **No se marcan**: "Principal QA Automation Engineer", "Sr AI Process Builder", "senior backend engineer", "Tidewise", "Lote360", "equipo de datos", "Hiring Manager", "búsqueda semántica".
   - Debe fallar antes de T006.
-- [ ] T006 [US2] Crear `src/outreach_agent/data/formulas_busqueda.json` con la familia de la tabla de research D1, solo en español e inglés y agrupada por forma, sin palabras sueltas. Crear `src/outreach_agent/verificacion/formulas.py` con `es_formula_busqueda(texto) -> bool`, que carga igual que `verificacion/patrones.py` y compara contra el texto normalizado (minúsculas, sin tildes, espacios colapsados). Hacer pasar T005.
-- [ ] T007 [US2] Agregar a `tests/unit/test_verificar_hechos.py`:
+- [x] T006 [US2] (commit e9457d7) Crear `src/outreach_agent/data/formulas_busqueda.json` con la familia de la tabla de research D1, solo en español e inglés y agrupada por forma, sin palabras sueltas. Crear `src/outreach_agent/verificacion/formulas.py` con `es_formula_busqueda(texto) -> bool`, que carga igual que `verificacion/patrones.py` y compara contra el texto normalizado (minúsculas, sin tildes, espacios colapsados). Hacer pasar T005.
+- [x] T007 [US2] (commit e9457d7) Agregar a `tests/unit/test_verificar_hechos.py`:
   - con `INVESTIGADOR_VALIDO_04` y el texto de `eval/casos/valido-04.json`, H4 queda en `descartados` con causa `ancla_formula_busqueda` y H1, H2 y H3 son válidos;
   - un ancla de más de 6 palabras que contiene una fórmula se descarta como `ancla_demasiado_larga` (orden de causas de data-model.md);
   - una cita con "We are hiring a senior backend engineer…" y ancla "senior backend engineer" es válida;
   - un texto con un solo dato concreto más una fórmula corta con `hechos_insuficientes` y el detalle "Se encontraron 1 de 2" (FR-003).
 
   Deben fallar antes de T008.
-- [ ] T008 [US2] En `src/outreach_agent/verificacion/hechos.py`, agregar a `causa_de_descarte` la causa `ancla_formula_busqueda` después de `ancla_demasiado_larga` y antes de `ancla_fuera_de_cita` (orden de data-model.md), usando `es_formula_busqueda` sobre el ancla. Hacer pasar T007 (depende de T006).
-- [ ] T009 [US2] En `src/outreach_agent/agentes/prompts.py`, reemplazar la regla de las líneas 58-59 por la de research D1:
+- [x] T008 [US2] (commit e9457d7) En `src/outreach_agent/verificacion/hechos.py`, agregar a `causa_de_descarte` la causa `ancla_formula_busqueda` después de `ancla_demasiado_larga` y antes de `ancla_fuera_de_cita` (orden de data-model.md), usando `es_formula_busqueda` sobre el ancla. Hacer pasar T007 (depende de T006).
+- [x] T009 [US2] (commit 7e29871) En `src/outreach_agent/agentes/prompts.py`, reemplazar la regla de las líneas 58-59 por la de research D1:
   - una búsqueda de personal cuenta por su contenido específico, y el ancla es ese contenido, nunca la fórmula;
   - ejemplo: de "Buscamos una analista de datos con experiencia en dbt", el ancla es "analista de datos" o "dbt".
 
@@ -131,46 +131,46 @@ borrador anterior, y si nombra a "Campo Claro" se entrega.
 
 ### Tests (primero, deben fallar)
 
-- [ ] T010 [P] [US1] Actualizar el test de la 001 en `tests/unit/test_validar_borrador.py:201`: `test_borrador_repetido_que_falla_corta_como_invalido` pasa a llamarse `test_borrador_repetido_que_falla_no_corta_y_marca_repeticion`. El test verifica que `nodo_validar_borrador`:
+- [x] T010 [P] [US1] (commit 59c58c8) Actualizar el test de la 001 en `tests/unit/test_validar_borrador.py:201`: `test_borrador_repetido_que_falla_corta_como_invalido` pasa a llamarse `test_borrador_repetido_que_falla_no_corta_y_marca_repeticion`. El test verifica que `nodo_validar_borrador`:
   - no agrega `resultado`;
   - deja `repite_intento` con el número del intento repetido;
   - deja el próximo modo en `reescribir`.
 
   Mantener `test_borrador_repetido_valido_no_corta` (línea 224). Adaptar el helper de la línea 195, que usa `texto_borrador_anterior`, a `textos_borradores`.
-- [ ] T011 [P] [US1] Actualizar el test de la 001 en `tests/integration/test_grafo_reintentos.py:80`: `test_borrador_repetido_corta_sin_gastar_los_reintentos_restantes` pasa a llamarse `test_borrador_repetido_no_corta_y_el_siguiente_intento_reescribe`.
+- [x] T011 [P] [US1] (commit 59c58c8) Actualizar el test de la 001 en `tests/integration/test_grafo_reintentos.py:80`: `test_borrador_repetido_corta_sin_gastar_los_reintentos_restantes` pasa a llamarse `test_borrador_repetido_no_corta_y_el_siguiente_intento_reescribe`.
   - Con la secuencia `[LARGO, repetido, válido]`, el resultado es `borrador` en el intento 3.
   - El `user` del tercer llamado al redactor no contiene "Borrador anterior:" y sí la instrucción de escribir un borrador nuevo.
 
   Agregar `test_tres_intentos_identicos_terminan_invalido_sin_superar_el_limite`: termina `invalido` con `validacion_fallida` después de exactamente 3 llamados al redactor (FR-006).
-- [ ] T012 [P] [US1] Agregar a `tests/integration/test_grafo_reintentos.py` un test con `INVESTIGADOR_VALIDO_01`, `ESTRATEGA_VALIDO_01`, `REDACTOR_VALIDO_01_INTENTO_1`, `REDACTOR_VALIDO_01_INTENTO_2` y un tercer borrador que nombra a "Campo Claro". Verifica:
+- [x] T012 [P] [US1] (commit 59c58c8) Agregar a `tests/integration/test_grafo_reintentos.py` un test con `INVESTIGADOR_VALIDO_01`, `ESTRATEGA_VALIDO_01`, `REDACTOR_VALIDO_01_INTENTO_1`, `REDACTOR_VALIDO_01_INTENTO_2` y un tercer borrador que nombra a "Campo Claro". Verifica:
   - el resultado es `borrador`;
   - la traza tiene `modo_correccion` = `inicial`, `conservar` y `reescribir`, y `repite_intento` = `null`, `1` y `null` (contracts/trace-delta.md);
   - el tercer prompt contiene "Nombrá a Campo Claro en la primera oración.".
 
   Otro test cubre la repetición no consecutiva: los intentos A, B y A dan `repite_intento` = `1` en el intento 3.
-- [ ] T013 [P] [US1] Agregar a `tests/unit/test_validar_borrador.py` que el criterio `empresa` con nombre "Vanteo®" se cumple con "Vanteo", y que se ignoran también ™ y ©. Agregar a `tests/unit/test_prompts.py`:
+- [x] T013 [P] [US1] (commit 59c58c8) Agregar a `tests/unit/test_validar_borrador.py` que el criterio `empresa` con nombre "Vanteo®" se cumple con "Vanteo", y que se ignoran también ™ y ©. Agregar a `tests/unit/test_prompts.py`:
   - el `system` del redactor contiene la regla de nombrar a la empresa indicada;
   - las obligaciones por criterio: `empresa` → "Nombrá a {nombre} en la primera oración."; `hechos`/`perfil` → "Incluí literalmente: …" con las anclas faltantes; `longitud` → rango y largo anterior;
   - el modo `reescribir` no incluye el borrador anterior y el modo `conservar` sí.
 
 ### Implementación
 
-- [ ] T014 [US1] En `src/outreach_agent/estado.py`, eliminar `texto_borrador_anterior` y agregar `textos_borradores: list[str]` (los textos normalizados de todos los intentos, en orden) y `modo_correccion: str | None` (`"conservar" | "reescribir"`), como en data-model.md. Actualizar los usos en `src/outreach_agent/agentes/redactor.py` y `src/outreach_agent/verificacion/borrador.py`.
-- [ ] T015 [US1] En `src/outreach_agent/verificacion/borrador.py`:
+- [x] T014 [US1] (commit 59c58c8) En `src/outreach_agent/estado.py`, eliminar `texto_borrador_anterior` y agregar `textos_borradores: list[str]` (los textos normalizados de todos los intentos, en orden) y `modo_correccion: str | None` (`"conservar" | "reescribir"`), como en data-model.md. Actualizar los usos en `src/outreach_agent/agentes/redactor.py` y `src/outreach_agent/verificacion/borrador.py`.
+- [x] T015 [US1] (commit 59c58c8) En `src/outreach_agent/verificacion/borrador.py`:
   - `_empresa` compara el nombre sin ®, ™ ni ©;
   - reemplazar `es_repeticion` por `intento_repetido(estado) -> int | None`, que compara el texto normalizado contra todos los anteriores;
   - `nodo_validar_borrador` deja de llamar a `invalidar` por repetición, guarda `modo_correccion` (`reescribir` si repitió, `conservar` si no) y agrega `repite_intento` al detalle;
   - eliminar `DETALLE_REPETIDO`;
   - en el resumidor, `proximo_paso` toma solo `fin`, `reintento`, `reintento (reescribir)` o `inválido`.
   (depende de T014)
-- [ ] T016 [US1] En `src/outreach_agent/grafo.py`, revisar `ruta_despues_de_validar` y `finalizar`: sin el corte por repetición, la ruta depende solo de `validacion.ok` y del número de intento. Conservar `cortes.invalidar` si `finalizar` lo sigue usando (depende de T015).
-- [ ] T017 [US1] En `src/outreach_agent/agentes/prompts.py`:
+- [x] T016 [US1] (commit 59c58c8) En `src/outreach_agent/grafo.py`, revisar `ruta_despues_de_validar` y `finalizar`: sin el corte por repetición, la ruta depende solo de `validacion.ok` y del número de intento. Conservar `cortes.invalidar` si `finalizar` lo sigue usando (depende de T015).
+- [x] T017 [US1] (commit 59c58c8) En `src/outreach_agent/agentes/prompts.py`:
   - agregar al `system` del redactor la regla de nombrar a la empresa indicada;
   - `_feedback_reintento` recibe el modo y el nombre y genera las obligaciones por criterio de research D3;
   - en modo `reescribir` omite "Borrador anterior:" y reemplaza `INSTRUCCION_REINTENTO` por la orden de escribir un borrador nuevo.
 
   En `src/outreach_agent/agentes/redactor.py`, pasar el modo, agregar el texto normalizado a `textos_borradores` y registrar `modo_correccion` en `resumir` (`inicial` en el primer intento). Hacer pasar T010 a T013 (depende de T014 a T016).
-- [ ] T018 [US1] Documentar el cambio de comportamiento en la 001:
+- [x] T018 [US1] (commit 6ff4b83) Documentar el cambio de comportamiento en la 001:
   - en `specs/001-outreach-draft/research.md` R2, una nota de que el corte inmediato por repetición fue reemplazado por el modo `reescribir` (spec 002, research D3);
   - en `specs/001-outreach-draft/data-model.md`, una nota de que `texto_borrador_anterior` fue reemplazado por `textos_borradores`.
 
