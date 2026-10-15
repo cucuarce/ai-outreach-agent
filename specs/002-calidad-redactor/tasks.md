@@ -262,12 +262,12 @@ conexión con causa `id_no_valido`.
   - advertencia si difieren modelo, `num_ctx`, temperatura o reintentos.
 
   Tests en `tests/unit/test_comparar_reportes.py` con dos `reporte.json` armados a mano.
-- [ ] T030 [P] Declarar los límites:
+- [x] T030 [P] (commits 5e42303 y e0e3ba7) Declarar los límites:
   - **R12** de `specs/001-outreach-draft/research.md`: (1) las fórmulas genéricas de búsqueda se detectan solo en español e inglés; pt, fr, de e it quedan sin cobertura; (2) "FR-008 sin cumplir en esta iteración: el evaluador de relación por término compartido no pasó la puerta (0/52 falsos aceptos, 2/4 falsos rechazos, 1/3 casos válidos con una `buena` conservada) y no se integró (decisión e de plan.md); SC-002 se reporta tal cual".
   - **README.md**: los mismos dos límites en una sección "Límites conocidos". README.md todavía no existe (T059 de la 001 está pendiente). Si sigue sin existir, crearlo solo con una línea de propósito ("genera borradores; nunca envía mensajes") y esa sección; T059 de la 001 lo completa después.
 
   (depende de T025 a T027)
-- [ ] T031 Correr `pytest` completo con `C:\venvs\outreach\Scripts\python.exe` y commitear todo lo integrado. Antes de T032, `git status` debe estar limpio (depende de T001 a T030).
+- [x] T031 (en e0e3ba7: 467 tests pasan, `git status` limpio y `git diff --stat 19c3e0c -- eval/casos` vacío) Correr `pytest` completo con `C:\venvs\outreach\Scripts\python.exe` y commitear todo lo integrado. Antes de T032, `git status` debe estar limpio (depende de T001 a T030).
 - [ ] T032 **Única corrida de desarrollo con Ollama**:
 
   ```text
