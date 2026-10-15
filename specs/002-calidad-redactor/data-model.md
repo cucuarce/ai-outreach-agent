@@ -78,8 +78,11 @@ R2 de la 001).
 **Ítem para etiquetar**: `id` (opaco), `cita_dato`, `cita_punto`, `etiqueta`
 (`""` | `"buena"` | `"mala"` | `"dudosa"`) y `nota` (opcional).
 
-**Origen**, en un archivo aparte: `id`, `caso`, `hecho_id`, `punto_perfil` (índice de la oración
-del perfil) y `propuesta_por_estratega` (bool).
+**Origen**, en un archivo aparte, indexado por `id`:
+- `casos`: lista de `{caso, hecho_id}`, porque la misma cita de dato puede venir de varios casos;
+- `punto_perfil`: índice de la oración del perfil, o `null` si la cita del punto no está en
+  ninguna;
+- `propuesta_por_estratega`: bool.
 
 ## Caso de validación (D7)
 

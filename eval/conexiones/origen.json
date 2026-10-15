@@ -1,0 +1,1092 @@
+{
+  "c-d23cd2c0": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-fcf81e24": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": true
+  },
+  "c-023c1470": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-9fdd5c5a": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-fc6b689c": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-96a73fd8": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-a72fbd99": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-33802972": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-3796e4ff": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-09046643": {
+    "casos": [
+      {
+        "caso": "insuficiente-04",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-96b8539e": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-fae83be5": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": true
+  },
+  "c-a63f2167": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-356d4b98": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-13215bd2": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-8e54c01c": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-624ee0a6": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-4fb47818": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-73b9bc12": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-913c7cec": {
+    "casos": [
+      {
+        "caso": "inyeccion-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-01",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "run:20261014-105553-9ba2f4",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": true
+  },
+  "c-035a595a": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-237947c1": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-e64eddee": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-70aacb3f": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-cb669294": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H1"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-ef163673": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-814e957d": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-b5a35e89": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-2776fbc7": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-5565f7c0": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H2"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-f8c93483": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-8a547555": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-caffcec0": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-909c6eb2": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-791b1c31": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H3"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-705829e7": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-3baa0766": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-3cf80b98": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-e68d3dc7": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-b3f7957c": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-63604667": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H5"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H4"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": true
+  },
+  "c-5d6efad4": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H5"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H4"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": true
+  },
+  "c-282d5633": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H5"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H4"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-916d75e0": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H5"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H4"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-f80019bd": {
+    "casos": [
+      {
+        "caso": "inyeccion-02",
+        "hecho_id": "H5"
+      },
+      {
+        "caso": "valido-04",
+        "hecho_id": "H4"
+      },
+      {
+        "caso": "valido-06",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": true
+  },
+  "c-c0cb6895": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-f4c0ff6a": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": true
+  },
+  "c-8118b097": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-50a53878": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-c58c4150": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-98994f44": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-d404d5f6": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-f40c0c21": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-8ae8a026": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-210a8fa5": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-4fab4dc5": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-f27b9a14": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-6a10e396": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-53b484a9": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-08d74d31": {
+    "casos": [
+      {
+        "caso": "inyeccion-03",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-54526544": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-b4fe8449": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-8e712fc1": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-7604bbc4": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-cdc6f25d": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H1"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-0cb9ecf7": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-05657ed2": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": true
+  },
+  "c-3e530f65": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-d2dce35e": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-e3a99300": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H2"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-22e00a16": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-9e25e794": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-5dac71b9": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-c5750760": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-a0336bd0": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H3"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-d2b8f19e": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-44edd2f4": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-626304a8": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-aabd43f3": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": true
+  },
+  "c-055389a8": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H4"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  },
+  "c-5b47bef8": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H5"
+      }
+    ],
+    "punto_perfil": 0,
+    "propuesta_por_estratega": false
+  },
+  "c-86bf072c": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H5"
+      }
+    ],
+    "punto_perfil": 1,
+    "propuesta_por_estratega": false
+  },
+  "c-9e3a94dd": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H5"
+      }
+    ],
+    "punto_perfil": 2,
+    "propuesta_por_estratega": false
+  },
+  "c-5873e23e": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H5"
+      }
+    ],
+    "punto_perfil": 3,
+    "propuesta_por_estratega": false
+  },
+  "c-450b0938": {
+    "casos": [
+      {
+        "caso": "valido-02",
+        "hecho_id": "H5"
+      }
+    ],
+    "punto_perfil": 4,
+    "propuesta_por_estratega": false
+  }
+}

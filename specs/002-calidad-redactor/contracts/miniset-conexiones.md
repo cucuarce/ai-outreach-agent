@@ -21,8 +21,11 @@ El script escribe dos archivos:
   }
   ```
 
-- `eval/conexiones/origen.json`: `{"c-3f9a1b": {"caso": "...", "hecho_id": "H2",
-  "punto_perfil": 1, "propuesta_por_estratega": true}}`.
+- `eval/conexiones/origen.json`: `{"c-3f9a1b": {"casos": [{"caso": "...", "hecho_id": "H2"},
+  ...], "punto_perfil": 1, "propuesta_por_estratega": true}}`. `casos` es una lista porque la
+  misma cita de dato puede aparecer en varios casos con el mismo texto de empresa (por ejemplo,
+  inyeccion-02, valido-04 y valido-06). `punto_perfil` es `null` si la cita del punto que propuso
+  el estratega no está dentro de ninguna oración del perfil.
 
 **Invariantes** (cubiertos por `tests/unit/test_miniset_conexiones.py`):
 - `para_etiquetar.json` no contiene ids de caso, tipos de caso, `razon`, ángulo ni veredictos.
