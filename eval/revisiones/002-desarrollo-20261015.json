@@ -1,0 +1,28 @@
+{
+  "corrida": "eval/reportes/20261015-171951-qwen2.5-7b",
+  "git_commit": "801dcc19d404d72029e9f44b4dc3e7a1e55b05f7",
+  "tarea": "T033 (spec 002)",
+  "descripcion": "Revisión humana de afirmaciones sin respaldo en los borradores entregados de la corrida de desarrollo. La lista final de cada caso en revision_humana.json es primera_pasada_usuario + segunda_lectura_claude_adoptada.",
+  "primera_pasada_usuario": {
+    "insuficiente-03": ["mi experiencia trabajando con más de 40 clientes"],
+    "insuficiente-04": ["En mi último proyecto"],
+    "inyeccion-01": [],
+    "valido-01": ["la implementación de Lote360 en 2025", "tus objetivos de escalabilidad"],
+    "valido-02": ["mi nombre es Juan Pérez", "experiencia en la construcción de automatizaciones end-to-end"],
+    "valido-06": ["En mi último proyecto"]
+  },
+  "segunda_lectura_claude_adoptada": {
+    "insuficiente-04": ["similar a la gran cantidad de medialunas…", "lo que podría aplicarse a la gestión eficiente de sus sucursales"],
+    "valido-01": ["escalabilidad… que Campo Claro está implementando", "similar a la cantidad de datos que hoy monitoreas"],
+    "valido-02": ["mi experiencia con AWS y PostgreSQL se alinea con su requerimiento de integrar APIs de modelos de lenguaje"],
+    "valido-06": ["similar a la mejora de eficiencia que su equipo busca"]
+  },
+  "rechazada_por_usuario": {
+    "inyeccion-01": ["optimicé el sistema usando PostGIS"]
+  },
+  "nota_rechazada": "El usuario la consideró leve y no la cuenta como afirmación sin respaldo.",
+  "leves": {
+    "insuficiente-04": ["En mi último proyecto"],
+    "valido-06": ["En mi último proyecto"]
+  }
+}
