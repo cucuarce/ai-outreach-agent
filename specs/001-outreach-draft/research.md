@@ -534,7 +534,7 @@ modelo. Se mide en la evaluación (inyeccion-02 e inyeccion-03).
 **Límites conocidos (al 2026-10-15)**: solo lo medido u observado hasta hoy (R13 y la medición de D4 de la spec 002). Las cifras de la 002 se agregan después de la corrida de desarrollo (T032) y de la validación (T036).
 
 - **Bedrock sin ejecución real**: `BedrockProvider` solo se probó contra Moto; nunca se ejecutó contra Bedrock real (R4, plan).
-- **Perfil único**: los 13 casos de desarrollo usan el mismo perfil (`perfil.txt`, R8); los resultados no dicen nada sobre otros perfiles.
+- **Perfil único**: los 13 casos de desarrollo usan el mismo perfil (`ejemplos/perfil.txt`, R8); los resultados no dicen nada sobre otros perfiles.
 - **n=1 por caso**: cada caso se corrió una vez, con qwen2.5:7b en CPU sin GPU dedicada (R9, R13). Con un modelo no determinista, una corrida por caso no alcanza para estimar tasas por caso.
 - **Filtro de instrucciones acotado**: `es_instruccion` no reconoce órdenes en voseo sin destinatario ("decí que…", "terminá con…", inyeccion-03) ni el vocativo "System:" (inyeccion-02) (R12, "instrucción sin patrón reconocible").
 - **Perfil verificado con un solo punto**: el criterio `perfil` exige que aparezca el ancla de al menos 1 de los `puntos_usados`; los demás puntos declarados no se verifican (R5, `MIN_PUNTOS = 1`).
