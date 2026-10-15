@@ -307,3 +307,24 @@ el mini-set. No se modifican después de medir.
   genéricos ("datos", "servicio", "tiempo real", "producción", "procesamiento") y por "go" como
   verbo en inglés.
 - **(d)** La predicción global es que la puerta no pasa y se activa la decisión (d) de plan.md.
+
+### Resultado de la medición
+
+Corrida del 2026-10-15 con el evaluador de 6477d47 sobre el etiquetado de 5a10d08. Reporte
+completo en `eval/conexiones/medicion_d4.md`.
+
+| Criterio de la puerta | Resultado | Umbral | |
+|---|---|---|---|
+| Falsos aceptos en insuficiente-04 | 0/10, 0,0% | 0 | pasa |
+| Falsos aceptos sobre las `mala` | 0/52, 0,0% | hasta 10% | pasa |
+| Falsos rechazos sobre las `buena` | 2/4, 50,0% | hasta 25% (1 de 4) | **no pasa** |
+| Casos válidos con al menos una `buena` conservada (entre los que tienen alguna) | 1/3, 33,3% (sin conservar: valido-04, valido-06; sin `buena`: valido-02) | todos | **no pasa** |
+
+**Veredicto: la puerta no pasa.** Las `dudosa` (fuera de los umbrales) se conservan en 7/29.
+
+| Predicción | Veredicto | Evidencia |
+|---|---|---|
+| (a) falsos rechazos entre dato en inglés y punto en español | **Se cumplió** | "real-time tracking service" frente a "servicio de seguimiento en tiempo real en Go": sin términos compartidos. Es la única `buena` de valido-04 y valido-06 (mismo texto de empresa). |
+| (b) falsos rechazos por vocabulario distinto | **Se cumplió** | "monitoreamos 1,2 millones de hectáreas" frente a "pipelines de imágenes satelitales" (valido-01). |
+| (c) falsos aceptos por palabras comunes del dominio y por "go" | **No se cumplió** | 0/52 falsos aceptos. Hubo coincidencias espurias solo en `dudosa`: "real" ("problemas reales" frente a "tiempo real") y "disene". |
+| (d) la puerta no pasa | **Se cumplió** | Fallan los criterios de falsos rechazos y de casos válidos. |
