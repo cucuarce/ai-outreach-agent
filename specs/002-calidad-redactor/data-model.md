@@ -23,9 +23,10 @@ Lo que no figura acá sigue igual.
 contiene. Un hecho descartado no cuenta para el mínimo de 2 (FR-003).
 
 **Reducción antes de descartar** (research D1): si el ancla tiene 6 palabras o menos y contiene
-una fórmula, se le quita la fórmula y los conectores que la siguen ("a", "un", "una", "an",
-"the"). El resto pasa a ser el ancla si no está vacío, tiene al menos un término que no es
-stopword y aparece en la cita. Si no, se aplica `ancla_formula_busqueda`.
+una fórmula, se le quita la fórmula, los conectores que la siguen ("a", "un", "una", "an",
+"the") y las stopwords iniciales que queden. El resto pasa a ser el ancla si tiene al menos una
+palabra que no es stopword ni está en `restos_vacios` (equipo, empresa, proyecto, compañía, team,
+company, project) y aparece en la cita. Si no, se aplica `ancla_formula_busqueda`.
 
 | Campo de `Hecho` | Tipo | Descripción |
 |---|---|---|

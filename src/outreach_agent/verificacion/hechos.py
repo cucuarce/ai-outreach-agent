@@ -10,7 +10,11 @@ from dataclasses import replace
 from outreach_agent.estado import EstadoGrafo
 from outreach_agent.modelos import MAX_CITA, Hecho, Motivo
 from outreach_agent.verificacion.cortes import cortar, detalle_hechos_insuficientes
-from outreach_agent.verificacion.formulas import es_formula_busqueda, quitar_formula
+from outreach_agent.verificacion.formulas import (
+    es_formula_busqueda,
+    es_resto_vacio,
+    quitar_formula,
+)
 from outreach_agent.verificacion.idioma import es_stopword
 from outreach_agent.verificacion.patrones import es_instruccion
 from outreach_agent.verificacion.texto import (
@@ -48,17 +52,19 @@ def causa_de_descarte(hecho: Hecho, texto_empresa: str, citas_vistas: set[str]) 
 
 def reducir_ancla_formula(hecho: Hecho) -> Hecho:
     """Si el ancla contiene una fórmula de búsqueda ("Buscamos Sr AI Process Builder"), la quita
-    junto con los conectores que la siguen y usa el resto como ancla, siempre que no esté vacío,
-    tenga al menos un término que no sea stopword y aparezca en la cita. Si no se cumple, el
+    junto con los conectores y las stopwords que la siguen ("Sumate al equipo de datos" →
+    "equipo de datos") y usa el resto como ancla, siempre que tenga al menos una palabra que no
+    sea stopword ni resto vacío ("equipo", "team", …) y aparezca en la cita. Si no se cumple, el
     hecho queda igual y `causa_de_descarte` lo descarta con `ancla_formula_busqueda` (research
     D1). El ancla anterior queda en `ancla_original` para la traza."""
     if contar_palabras(hecho.ancla) > MAX_PALABRAS_ANCLA:
         return hecho  # se descarta por larga, antes que por fórmula (data-model.md)
-    resto = quitar_formula(hecho.ancla)
-    if not resto:
-        return hecho
-    if all(es_stopword(palabra) for palabra in normalizar(resto).split()):
-        return hecho
+    palabras = (quitar_formula(hecho.ancla) or "").split()
+    while palabras and es_stopword(palabras[0]):
+        palabras.pop(0)
+    resto = " ".join(palabras)
+    if all(es_stopword(p) or es_resto_vacio(p) for p in normalizar(resto).split()):
+        return hecho  # incluye el resto vacío: all() de una lista vacía es True
     if not contiene_ancla(hecho.cita, resto):
         return hecho
     return replace(hecho, ancla=resto, ancla_original=hecho.ancla)

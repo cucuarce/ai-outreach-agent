@@ -34,6 +34,13 @@ nombran por su id de `eval/casos/`.
      `ancla_formula_busqueda`. El ancla que devolvió el modelo queda en `ancla_original` y en la
      traza (`anclas_sin_formula`). Sin la reducción, el prompt nuevo, que pide anclar en el
      puesto, podía terminar en un hecho perdido cuando el modelo incluía la fórmula.
+   - **Restos vacíos** (agregado el 2026-10-15): después de quitar la fórmula también se quitan
+     las stopwords iniciales del resto ("Sumate al equipo de datos" → "equipo de datos"), y el
+     resto se descarta si todas sus palabras son stopwords o están en `restos_vacios` de
+     `formulas_busqueda.json`: equipo, empresa, proyecto, compañía, team, company, project.
+     "¡Sumate al equipo!" se descarta con `ancla_formula_busqueda`. Esa lista **se redactó
+     conociendo los casos de desarrollo** (el "¡Sumate al equipo de Lumora…!" de valido-02) y es
+     mínima a propósito; es independiente de `terminos_genericos.json` (D4).
 
 **Familia de patrones** (se escribe a partir de esta definición, no de los casos):
 
@@ -92,9 +99,9 @@ quedan sin cobertura, documentado como límite en las Assumptions de la spec.
 
 **Límite**: ningún filtro del código evalúa el contenido de un ancla. Los filtros miran su forma
 (largo, fórmula, presencia en la cita). Un ancla vaga sin fórmula, como "gente con ganas", pasa
-todos (lo documenta `test_limite_ningun_filtro_evalua_el_contenido_del_ancla`). También pasa un
-resto genérico de la reducción: de "¡Sumate al equipo!" queda "al equipo". El escenario 2 de US2
-("Estamos buscando gente con ganas") depende solo del prompt del investigador.
+todos (lo documenta `test_limite_ningun_filtro_evalua_el_contenido_del_ancla`). La lista de
+`restos_vacios` solo cubre el resto de una reducción, no un ancla sin fórmula. El escenario 2 de
+US2 ("Estamos buscando gente con ganas") depende solo del prompt del investigador.
 - **Descartar toda oración que contenga una fórmula.** Pierde puestos con nombre propio, que
   según FR-002 son datos.
 

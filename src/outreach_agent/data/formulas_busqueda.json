@@ -24,5 +24,7 @@
   "en_busqueda": [
     "\\bwe\\s+(re|are)\\s+looking\\s+for\\b",
     "\\blooking\\s+for\\s+an?\\b"
-  ]
+  ],
+  "_comentario_restos_vacios": "No son patrones: palabras que, sin la fórmula, no alcanzan para ser ancla (\"¡Sumate al equipo!\" deja \"equipo\"). Lista mínima, redactada conociendo los casos de desarrollo (research D1). Se comparan normalizadas.",
+  "restos_vacios": ["equipo", "empresa", "proyecto", "compañía", "team", "company", "project"]
 }

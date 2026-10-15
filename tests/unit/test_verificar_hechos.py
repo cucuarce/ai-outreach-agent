@@ -305,6 +305,23 @@ def test_resto_solo_de_stopwords_se_descarta():
     assert resultado["hechos_descartados"] == [{"id": "H1", "causa": "ancla_formula_busqueda"}]
 
 
+def test_resto_que_es_solo_un_termino_vacio_se_descarta():
+    cita = "¡Sumate al equipo!"
+    resultado = verificar_en("Fundada en 2011. " + cita,
+                             Hecho("H1", "d", cita, "¡Sumate al equipo!"))
+    assert resultado["hechos"] == []
+    assert resultado["hechos_descartados"] == [{"id": "H1", "causa": "ancla_formula_busqueda"}]
+
+
+def test_resto_con_contenido_ademas_del_termino_vacio_se_conserva():
+    cita = "Sumate al equipo de datos que mide el rinde de cada lote."
+    resultado = verificar_en("Fundada en 2011. " + cita,
+                             Hecho("H1", "d", cita, "Sumate al equipo de datos"))
+    [hecho] = resultado["hechos"]
+    assert hecho.ancla == "equipo de datos"
+    assert hecho.ancla_original == "Sumate al equipo de datos"
+
+
 def test_limite_ningun_filtro_evalua_el_contenido_del_ancla():
     # Límite documentado en research D1 y en R12 de la 001: un ancla vaga sin fórmula pasa todos
     # los filtros. El escenario 2 de US2 ("Estamos buscando gente con ganas") depende solo del

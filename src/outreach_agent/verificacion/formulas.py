@@ -14,19 +14,36 @@ from importlib import resources
 from outreach_agent.verificacion.texto import normalizar
 
 
+CLAVE_RESTOS_VACIOS = "restos_vacios"
+
+
 @cache
-def _patrones() -> tuple[re.Pattern, ...]:
-    datos = json.loads(
+def _datos() -> dict:
+    return json.loads(
         resources.files("outreach_agent")
         .joinpath("data/formulas_busqueda.json")
         .read_text("utf-8")
     )
+
+
+@cache
+def _patrones() -> tuple[re.Pattern, ...]:
     return tuple(
         re.compile(patron)
-        for clave, patrones in datos.items()
-        if not clave.startswith("_")
+        for clave, patrones in _datos().items()
+        if not clave.startswith("_") and clave != CLAVE_RESTOS_VACIOS
         for patron in patrones
     )
+
+
+@cache
+def _restos_vacios() -> frozenset[str]:
+    return frozenset(normalizar(p) for p in _datos()[CLAVE_RESTOS_VACIOS])
+
+
+def es_resto_vacio(palabra: str) -> bool:
+    """La palabra no alcanza para ser ancla una vez quitada la fórmula ("equipo", "team")."""
+    return normalizar(palabra) in _restos_vacios()
 
 
 def es_formula_busqueda(texto: str) -> bool:
