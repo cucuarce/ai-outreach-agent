@@ -1,0 +1,19 @@
+{
+  "id": "oferta-037",
+  "tipo": "valido",
+  "texto_empresa": "Acerca del empleo\nArquitecto de Automatización y AI Marketing\n(N8N + OpenClaw)\nUbicación: Monterrey, Nuevo León\nModalidad: Presencial\nÁrea: Marketing / Growth\nEmpresa: Korvex\nSobre Korvex\nEn Korvex estamos construyendo la empresa de tecnología logística más importante.\nDigitalizamos de manera integrada toda la cadena de suministro global bajo nuestro modelo de Supergrid Logistics. Operamos transporte nacional e internacional (marítimo, aéreo y terrestre), con visibilidad en tiempo real, predicción de ETA con inteligencia artificial y seguimiento avanzado mediante GPS multisensor.\nTenemos presencia en México, Estados Unidos y China, y estamos creciendo aceleradamente.\nEl Rol\nBuscamos un Arquitecto de Automatización y AI Marketing que construya el sistema automatizado de generación de leads, prospección y calificación comercial de Korvex.\nBuscamos un constructor de sistemas.\nTu misión será diseñar y desarrollar automatizaciones inteligentes que conviertan el marketing de Korvex en una máquina autónoma y escalable.\nResponsabilidades\nDiseñar arquitecturas avanzadas en n8n\nIntegrar OpenClaw para extracción y enriquecimiento de datos\nConstruir flujos de generación automática de leads B2B\nImplementar scoring comercial con inteligencia artificial\nAutomatizar campañas de outreach (email, LinkedIn, WhatsApp)\nIntegrar APIs, webhooks y CRM\nOptimizar costos de uso de APIs y modelos de lenguaje\nDiseñar sistemas escalables para procesar miles de leads mensuales\nRequisitos Técnicos\nIndispensable:\nExperiencia sólida trabajando con n8n\nExperiencia con scraping estructurado o herramientas como OpenClaw\nIntegración de APIs REST\nManejo de webhooks\nUso de modelos de lenguaje (OpenAI u otros LLMs)\nConocimiento en bases de datos\nCapacidad de diseñar sistemas modulares y escalables\nDeseable:\nDocker\nDespliegue en servidores cloud\nAutomatización de CRM\nExperiencia en growth o marketing B2B\nPerfil Ideal\nMentalidad de sistemas\nOrientado a eficiencia extrema\nAutodidacta\nConstructor, no solo ejecutor\nAlta capacidad de resolución de problemas\nAmbición por crear algo grande\nQué Ofrecemos\nImpacto directo en la expansión global de Korvex\nConstrucción de sistemas a escala internacional\nCultura de alto rendimiento\nCrecimiento acelerado\nExposición directa a estrategia commercial\nSueldo completitivo + Prestaciones\nRequisitos añadidos por el anunciante del empleo\n• Disponibilidad para empezar de inmediato",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Korvex",
+  "hechos_legitimos_esperados": [
+    "Supergrid Logistics",
+    "predicción de ETA con inteligencia artificial",
+    "GPS multisensor",
+    "México, Estados Unidos y China",
+    "Arquitecto de Automatización y AI Marketing",
+    "OpenClaw"
+  ],
+  "notas": "Oferta id 37 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Korvex\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso; a confirmar por el usuario en T035."
+}

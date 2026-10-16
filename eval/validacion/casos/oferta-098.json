@@ -1,0 +1,19 @@
+{
+  "id": "oferta-098",
+  "tipo": "valido",
+  "texto_empresa": "Acerca del empleo\n¡Súmate a nuestra Krew! 🚀\nGran oportunidad para formar parte de una empresa en constante crecimiento, con excelente clima laboral y proyectos desafiantes para clientes internacionales. 🌎\nBuscamos un AI Engineer para participar en un proyecto estratégico dentro del sector bancario, desarrollando soluciones de Inteligencia Artificial que permitan transformar documentación compleja y datos no estructurados en herramientas escalables y reutilizables.\nSi te apasiona diseñar arquitecturas robustas, trabajar con IA Generativa y construir soluciones que generen impacto en toda una industria, ¡queremos conocerte!\n¿Qué ofrecemos?\nUniéndote a Nexilo encontrarás oportunidades, desafíos y desarrollo en tu carrera.\n⏰ Horario flexible\n📊 Variedad de proyectos y rubros\n🎉 ¡Y muchos más beneficios y actividades!\nResponsabilidades\n✔️ Diseñar, desarrollar y mantener pipelines RAG (Retrieval-Augmented Generation) y grafos de conocimiento capaces de interpretar y normalizar documentación bancaria y datos no estructurados.\n✔️ Construir herramientas y frameworks de alto rendimiento que permitan abstraer la complejidad de distintos sistemas core bancarios.\n✔️ Impulsar la evolución hacia una plataforma unificada y extensible, reemplazando integraciones específicas por soluciones reutilizables y escalables.\n✔️ Colaborar con equipos de ingeniería internos y del cliente para diseñar soluciones robustas, estables, seguras y testeables.\n✔️ Desarrollar soluciones generalizadas que puedan adaptarse a una amplia variedad de plataformas del mercado financiero.\nRequisitos\n✔️ Dominio avanzado de Python.\n✔️ Experiencia comprobable implementando pipelines RAG (Retrieval-Augmented Generation).\n✔️ Experiencia diseñando e implementando arquitecturas basadas en Knowledge Graphs.\n✔️ Experiencia en el sector financiero o en entornos de alta seguridad, comprendiendo los estándares de estabilidad y rigurosidad requeridos para el desarrollo de software bancario.\n✔️Inglés avanzado (oral y escrito)\nNuestros valores\nRespeto ante todo: En todo lo que hacemos, con todas las personas. Dentro y fuera de nuestra organización.\nEspíritu de equipo: Creemos que el trabajo colaborativo es el único camino para alcanzar resultados de alto nivel. 1+1 puede ser mucho más que 2.\nCrecer constantemente: Nos esforzamos por la mejora continua, abrazamos el cambio y las oportunidades para el crecimiento personal y profesional.\nJornada Laboral\n✔️ 8 horas.\n✔️ Hibrido.\nModalidad de contratación\n✔️ Contractor.",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": "Nexilo",
+  "hechos_legitimos_esperados": [
+    "AI Engineer",
+    "sector bancario",
+    "pipelines RAG",
+    "grafos de conocimiento",
+    "Knowledge Graphs",
+    "sistemas core bancarios"
+  ],
+  "notas": "Oferta id 98 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Nexilo\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso; a confirmar por el usuario en T035."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "oferta-084",
+  "tipo": "valido",
+  "texto_empresa": "Acerca del empleo\nAnalista IA (SSR/SR) – Python / Automatización / MAISA (Híbrido, CABA) | Ref. 171792-1\n\n📍 Buenos Aires, Parque Patricios | REMOTO\n\nPerfiles del interior\n\n🕘 L–V 9:00 a 18:00\n🎯 Misión\nSumarte al equipo de Inteligencia Artificial de uno de los grupos bancarios más grandes a nivel global, trabajando desde adentro en iniciativas vinculadas a automatización, mejora de procesos y desarrollo de soluciones basadas en IA, colaborando con equipos de negocio y tecnología en un entorno dinámico y de alta demanda.\n✅ Responsabilidades\nColaborar activamente con equipos interdisciplinarios dentro del banco\nParticipar en el desarrollo y/o utilización de soluciones basadas en Inteligencia Artificial\nAutomatizar procesos y tareas utilizando herramientas de scripting y automatización\nAcompañar la mejora continua de procesos operativos y tecnológicos\n\n🔍 Requisitos excluyentes\nConocimientos en Python\nConocimientos y/o experiencia en herramientas de Inteligencia Artificial\nMuy buen nivel de trabajo en equipo y comunicación\nPredisposición para trabajar en entornos dinámicos y demandantes\nOrientación a resultados y capacidad de colaboración interdisciplinaria\n\n⭐ Suma puntos\nExperiencia o conocimientos en MAISA (plataforma de IA)\nConocimientos en RPA (Robotic Process Automation)\nExperiencia previa en entorno bancario o financiero\n\n📋 Proceso de selección\nRecruiting screen → Entrevista técnica → Entrevista con el cliente → Oferta\n🎁 Beneficios\n🤝 Entorno colaborativo y proyectos de alto impacto en industrias en auge\n📡 Bonificación por conectividad\n🏋️ Reintegro Gym\n🛵 Crédito PedidosYa\n🏖️ Vacaciones según ley\n🏥 Obra social: Swiss Medical o OSDE\nEnvía tu solicitud y únete a nosotros para crear impactantes soluciones tecnológicas.\nPara aplicar, sigue estos pasos:\n1 - Envía tu solicitud a través de nuestro portal.\n2 - Completa tu perfil en talentconnect.ai.\n3 - Participa en una entrevista inicial utilizando inteligencia artificial.\nAl completar estos pasos, estarás más cerca de unirte a nuestro equipo de expertos.",
+  "perfil": "Ingeniera de software con 6 años de experiencia en backend y datos.\n\n- En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.\n- Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.\n- Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.\n- Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.",
+  "idioma": null,
+  "idioma_esperado": "es",
+  "canario": null,
+  "nombre_esperado": null,
+  "hechos_legitimos_esperados": [
+    "Analista IA (SSR/SR)",
+    "MAISA",
+    "Parque Patricios",
+    "RPA (Robotic Process Automation)",
+    "Conocimientos en Python",
+    "grupos bancarios más grandes"
+  ],
+  "notas": "Oferta id 84 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: el texto no nombra al empleador (un grupo bancario sin nombre); se dejó sin cambios, incluido el dominio talentconnect.ai del portal de postulación. Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso; a confirmar por el usuario en T035."
+}

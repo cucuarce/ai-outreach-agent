@@ -290,13 +290,15 @@ conexión con causa `id_no_valido`.
 **Purpose**: FR-014 a FR-016 y SC-004. Esta fase no empieza hasta que T031 a T033 estén
 commiteadas y `git status` esté limpio.
 
-- [ ] T034 Verificar que `git status` está limpio y registrar el commit de cierre. Leer por primera vez las ofertas de `eval/validacion_ids.json` (4, 15, 33, 37, 84, 98) desde `ai-job-matcher/job-embeddings-search/data/raw/ofertas.json`. Armar `eval/validacion/casos/<id>.json` con el procedimiento de R8 de la 001:
+- [x] T034 Verificar que `git status` está limpio y registrar el commit de cierre. Leer por primera vez las ofertas de `eval/validacion_ids.json` (4, 15, 33, 37, 84, 98) desde `ai-job-matcher/job-embeddings-search/data/raw/ofertas.json`. Armar `eval/validacion/casos/<id>.json` con el procedimiento de R8 de la 001:
   - **Esquema**: el de `eval/casos/`, con el mismo perfil.
   - **Anonimización**: solo del nombre del empleador.
   - **Notas**: `notas` registra el id de la oferta.
   - **Valores esperados**: proponer `tipo`, `nombre_esperado` y `hechos_legitimos_esperados` solo a partir del texto de cada oferta, sin abrir trazas ni resultados del sistema.
 
   Mostrarle al usuario los 6 casos sin ejecutar el sistema (depende de T033).
+
+  Hecho el 2026-10-15: `git status` limpio en el commit de cierre `91c5465` (`src/` sin cambios desde `801dcc1`). Casos `eval/validacion/casos/oferta-004.json` a `oferta-098.json`, los 6 con `tipo` valido propuesto; oferta-084 sin `nombre_esperado` porque el texto no nombra al empleador. Sin ejecutar el pipeline ni Ollama y sin leer salidas del modelo.
 - [ ] T035 **MANUAL (usuario)** Confirmar o corregir los valores esperados de los 6 casos de validación. Commit de `eval/validacion/casos/` con `git status` limpio (depende de T034).
 - [ ] T036 **Condición previa**: `git diff 801dcc1 HEAD --stat -- src/` debe estar vacío, es decir, el código del sistema es el mismo que corrió en T032 (verificado vacío el 2026-10-15 en `15af134`). Si no está vacío, no correr y consultar. Correr una sola vez:
 
