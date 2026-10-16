@@ -475,6 +475,11 @@ PostGIS"), por leve, y no está contada. El detalle está en
 
 En R13 fueron 2 de 2 borradores revisados.
 
+Dato descriptivo, sin umbral: válidos con borrador entregado y sin ninguna afirmación sin
+respaldo, **0/3** (valido-01, valido-02 y valido-06 tienen 4, 3 y 2 frases); sobre todos los
+válidos, **0/6**. SC-003 mide que el borrador entregado cumpla los criterios automáticos, no que
+lo que afirma sea verdadero.
+
 ### (e) Hallazgos sin resolver
 
 - **`nombre_empresa` nulo sin alternativa (valido-04, valido-06).** El investigador devolvió
