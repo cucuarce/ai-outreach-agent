@@ -298,7 +298,7 @@ commiteadas y `git status` esté limpio.
 
   Mostrarle al usuario los 6 casos sin ejecutar el sistema (depende de T033).
 - [ ] T035 **MANUAL (usuario)** Confirmar o corregir los valores esperados de los 6 casos de validación. Commit de `eval/validacion/casos/` con `git status` limpio (depende de T034).
-- [ ] T036 Correr una sola vez:
+- [ ] T036 **Condición previa**: `git diff 801dcc1 HEAD --stat -- src/` debe estar vacío, es decir, el código del sistema es el mismo que corrió en T032 (verificado vacío el 2026-10-15 en `15af134`). Si no está vacío, no correr y consultar. Correr una sola vez:
 
   ```text
   C:\venvs\outreach\Scripts\python.exe scripts/evaluar.py --casos eval/validacion/casos --modelo qwen2.5:7b --ollama-host http://localhost:11434 --timeout 900 --num-ctx 8192 --temp-redactor 0.3 --reintentos 2 --salida eval/reportes
