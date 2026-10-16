@@ -9,11 +9,10 @@
   "nombre_esperado": "Belmaré",
   "hechos_legitimos_esperados": [
     "For more than a century",
-    "AI & Tech Accelerator",
     "AI Engineer / Data Scientist",
     "Americas market",
-    "LangGraph, CrewAI, AutoGen",
+    "LangGraph",
     "Google Cloud Platform (GCP) and Databricks"
   ],
-  "notas": "Oferta id 15 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Belmaré\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: datos específicos y verificables del texto; nada de autopromoción, superlativos no verificables ni datos ambiguos. A confirmar por el usuario en T035."
+  "notas": "Oferta id 15 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Belmaré\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: fuera superlativos y rankings; dentro datos verificables (fechas, cifras, nombres, tecnologías). Como la métrica compara por contenido en la cita y cuenta por fragmento, las listas de ejemplos se acortan a su elemento más específico y queda a lo sumo un fragmento por oración (el primero que aparece en ella). Acortados por la coincidencia por contenido en la cita: \"LangGraph, CrewAI, AutoGen\" → \"LangGraph\". Quitados por fragmento por oración: \"AI & Tech Accelerator\" (misma oración que \"AI Engineer / Data Scientist\"). A confirmar por el usuario en T035."
 }

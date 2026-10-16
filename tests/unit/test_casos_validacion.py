@@ -33,6 +33,24 @@ def test_fragmentos_esperados_aparecen_en_el_texto(caso):
     assert faltantes == []
 
 
+def oraciones(texto: str) -> list[str]:
+    """Líneas del texto partidas en oraciones por punto, signo de exclamación o de pregunta."""
+    return [o for linea in texto.splitlines() for o in re.split(r"(?<=[.!?])\s+", linea) if o.strip()]
+
+
+@por_id(CASOS)
+def test_a_lo_sumo_un_fragmento_esperado_por_oracion(caso):
+    # legitimos_descartados_por_ancla cuenta por fragmento: dos fragmentos de una misma oración
+    # contarían dos veces una sola cita descartada.
+    juntos = []
+    for oracion in oraciones(caso["texto_empresa"]):
+        en_oracion = [f for f in caso["hechos_legitimos_esperados"]
+                      if normalizar_coincidencia(f) in normalizar_coincidencia(oracion)]
+        if len(en_oracion) > 1:
+            juntos.append(en_oracion)
+    assert juntos == []
+
+
 @por_id([c for c in CASOS if c["nombre_esperado"]])
 def test_nombre_esperado_aparece_en_el_texto(caso):
     assert normalizar_coincidencia(caso["nombre_esperado"]) in normalizar_coincidencia(

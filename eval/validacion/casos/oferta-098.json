@@ -9,11 +9,8 @@
   "nombre_esperado": "Nexilo",
   "hechos_legitimos_esperados": [
     "AI Engineer",
-    "sector bancario",
     "pipelines RAG",
-    "grafos de conocimiento",
-    "Knowledge Graphs",
     "sistemas core bancarios"
   ],
-  "notas": "Oferta id 98 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Nexilo\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: datos específicos y verificables del texto; nada de autopromoción, superlativos no verificables ni datos ambiguos. A confirmar por el usuario en T035."
+  "notas": "Oferta id 98 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Nexilo\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: fuera superlativos y rankings; dentro datos verificables (fechas, cifras, nombres, tecnologías). Como la métrica compara por contenido en la cita y cuenta por fragmento, las listas de ejemplos se acortan a su elemento más específico y queda a lo sumo un fragmento por oración (el primero que aparece en ella). Quitados por fragmento por oración: \"Knowledge Graphs\" (mismo dato que \"grafos de conocimiento\", que aparece antes); \"grafos de conocimiento\" (misma oración que \"pipelines RAG\"); \"sector bancario\" (misma oración que \"AI Engineer\"). A confirmar por el usuario en T035."
 }

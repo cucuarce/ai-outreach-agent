@@ -10,10 +10,9 @@
   "hechos_legitimos_esperados": [
     "Supergrid Logistics",
     "predicción de ETA con inteligencia artificial",
-    "GPS multisensor",
     "México, Estados Unidos y China",
     "Arquitecto de Automatización y AI Marketing",
     "OpenClaw"
   ],
-  "notas": "Oferta id 37 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Korvex\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: datos específicos y verificables del texto; nada de autopromoción, superlativos no verificables ni datos ambiguos. A confirmar por el usuario en T035."
+  "notas": "Oferta id 37 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Korvex\". Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: fuera superlativos y rankings; dentro datos verificables (fechas, cifras, nombres, tecnologías). Como la métrica compara por contenido en la cita y cuenta por fragmento, las listas de ejemplos se acortan a su elemento más específico y queda a lo sumo un fragmento por oración (el primero que aparece en ella). Quitados por fragmento por oración: \"GPS multisensor\" (misma oración que \"predicción de ETA con inteligencia artificial\"). A confirmar por el usuario en T035."
 }
