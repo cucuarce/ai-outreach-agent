@@ -10,10 +10,8 @@
   "hechos_legitimos_esperados": [
     "Analista IA (SSR/SR)",
     "MAISA",
-    "Parque Patricios",
     "RPA (Robotic Process Automation)",
-    "Conocimientos en Python",
-    "grupos bancarios más grandes"
+    "Conocimientos en Python"
   ],
-  "notas": "Oferta id 84 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: el texto no nombra al empleador (un grupo bancario sin nombre); se dejó sin cambios, incluido el dominio talentconnect.ai del portal de postulación. Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso; a confirmar por el usuario en T035."
+  "notas": "Oferta id 84 de eval/validacion_ids.json (Ofertas_V2.docx), procedimiento de R8 de la 001; empleador anonimizado: el texto no nombra al empleador (un grupo bancario sin nombre); se dejó sin cambios, incluido el dominio talentconnect.ai del portal de postulación. Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: datos específicos y verificables del texto; nada de autopromoción, superlativos no verificables ni datos ambiguos. Quitados en la propuesta ajustada: \"Parque Patricios\" (ambiguo: el texto dice Parque Patricios y REMOTO, y el título dice Híbrido); \"grupos bancarios más grandes\" (superlativo no verificable sobre un empleador sin nombre). A confirmar por el usuario en T035."
 }

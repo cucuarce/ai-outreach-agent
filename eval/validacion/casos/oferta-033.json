@@ -12,8 +12,7 @@
     "agentes de IA y soluciones de automatización",
     "proofs of concept (PoCs)",
     "n8n, Zapier, Airflow",
-    "OpenAI, Anthropic",
-    "3 a 5 años de experiencia"
+    "OpenAI, Anthropic"
   ],
-  "notas": "Oferta id 33 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Tandaro\" (\"Tandaro Technology\" en la línea Empleador), también en la URL y el hashtag. Texto mixto: introducción en inglés, cuerpo en español. Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso; a confirmar por el usuario en T035."
+  "notas": "Oferta id 33 de eval/validacion_ids.json (Ofertas_V1.docx), procedimiento de R8 de la 001; empleador anonimizado: en el texto figura como \"Tandaro\" (\"Tandaro Technology\" en la línea Empleador), también en la URL y el hashtag. Texto mixto: introducción en inglés, cuerpo en español. Valores esperados propuestos en T034 solo a partir del texto de la oferta, antes de ejecutar el sistema sobre este caso. Regla de esperados: datos específicos y verificables del texto; nada de autopromoción, superlativos no verificables ni datos ambiguos. Quitados en la propuesta ajustada: \"3 a 5 años de experiencia\" (requisito al candidato, no dato de la empresa). A confirmar por el usuario en T035."
 }
