@@ -609,7 +609,7 @@ Criterio que falló y palabras del borrador en cada intento (rango válido: 80 a
 |---|---|---|
 | Entre 2 y 4 de 6 válidos con borrador [probable] | falló | 1/6 |
 | Al menos un `invalido` por `longitud` [probable] | acertó | 5 de 5 `invalido` fallan por `longitud` |
-| Afirmaciones sin respaldo en la mayoría de los borradores entregados [probable] | pendiente de T037 | 1 borrador entregado (n=1) |
+| Afirmaciones sin respaldo en la mayoría de los borradores entregados [probable] | se cumple, con n=1 | 1 de 1 borrador entregado tiene afirmaciones sin respaldo (2), sección (g) |
 | SC-010 falla en algún caso donde el investigador no propone el nombre [adivinando] | no evaluable | oferta-098, el caso con `nombre_empresa` nulo y nombre esperado, no entregó borrador |
 
 ### (f) Lectura
@@ -620,3 +620,13 @@ Criterio que falló y palabras del borrador en cada intento (rango válido: 80 a
   reintento de D3 (`conservar` y `reescribir`) no lo resolvieron.
 - SC-004 y SC-005 siguen sin verificarse fuera de muestra: la validación no tiene casos
   insuficientes ni de inyección.
+
+### (g) Revisión humana (T037)
+
+1 borrador entregado (oferta-033), revisado por el usuario, con una segunda lectura de Claude
+que no cambió la lista. Resultado: **2 afirmaciones sin respaldo** en ese borrador, de modo
+que los borradores con al menos una afirmación sin respaldo son 1 de 1 revisados. La revisión
+está en `eval/revisiones/002-validacion-20261017.json`. El reporte se regeneró sin red con
+`scripts/regenerar_reporte.py --casos eval/validacion/casos`, y la evidencia actualizada
+(`reporte.md`, `reporte.json`, `revision_humana.json`) está en
+`eval/evidencia/20261017-101728-qwen2.5-7b/`. No se ajustó nada después (FR-015).

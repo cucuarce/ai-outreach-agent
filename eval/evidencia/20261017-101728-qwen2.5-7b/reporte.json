@@ -107,11 +107,11 @@
     "intentos_con_prohibidos": 0,
     "legitimos_descartados_por_ancla": {},
     "afirmaciones_sin_respaldo": {
-      "con_afirmaciones": [],
-      "revisados": 0,
-      "pendientes": [
+      "con_afirmaciones": [
         "oferta-033"
-      ]
+      ],
+      "revisados": 1,
+      "pendientes": []
     }
   },
   "errores": [],

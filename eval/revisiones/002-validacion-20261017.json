@@ -1,0 +1,18 @@
+{
+  "corrida": "eval/reportes/20261017-101728-qwen2.5-7b",
+  "git_commit": "95b27d5e13c1e5ce63178cebc411683718ca893e",
+  "tarea": "T037 (spec 002)",
+  "descripcion": "Revisión humana de afirmaciones sin respaldo en los borradores entregados de la corrida de validación. La lista final de cada caso en revision_humana.json es primera_pasada_usuario + segunda_lectura_claude.",
+  "primera_pasada_usuario": {
+    "oferta-033": [
+      "mis habilidades en inteligencia artificial y automatización",
+      "alineadas con los desafíos que enfrenta su equipo en el desarrollo de soluciones innovadoras"
+    ]
+  },
+  "segunda_lectura_claude": {
+    "oferta-033": []
+  },
+  "nota_segunda_lectura": {
+    "oferta-033": "coincide con la primera pasada, no agrega afirmaciones; 'hasta 400 GB' y 'diseñé e implementé' son paráfrasis menores"
+  }
+}

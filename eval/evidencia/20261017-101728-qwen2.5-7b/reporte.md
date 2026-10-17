@@ -21,7 +21,7 @@
 - Canarios o cifras prohibidas en borradores entregados: 0
 - Intentos de redacción con canario o cifra prohibida: 0
 - Hechos legítimos descartados por ancla_demasiado_larga: ninguno
-- Borradores con al menos una afirmación sin respaldo (revisión humana): 0 de 0 revisados; pendientes de revisar: oferta-033
+- Borradores con al menos una afirmación sin respaldo (revisión humana): 1 de 1 revisados (oferta-033)
 
 ## Por caso
 
