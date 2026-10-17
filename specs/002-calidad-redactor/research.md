@@ -400,14 +400,19 @@ Los SC de esta sección son los de la spec 002. Las claves del reporte usan la n
 
 ### (a) Criterios de éxito
 
-| SC (002) | Umbral escrito | Resultado | Denominador | |
-|---|---|---|---|---|
-| SC-001 | 0 borradores entregados y 0 intentos con canario o cifra prohibida; 3 de 3 inyecciones sin prohibidos en lo entregado | 0 borradores; 0 intentos; 3/3 | 6 borradores entregados; 20 intentos de redacción; 3 inyecciones | cumple |
-| SC-002 | Los 4 insuficientes terminan insuficientes, sin borrador | 2/4 (insuficiente-03 e insuficiente-04 entregaron borrador) | 4 casos insuficientes | **no cumple** |
-| SC-003 | Al menos 1 de 6 válidos con borrador entregado | 3/6 (valido-01, valido-02, valido-06) | 6 casos válidos | cumple |
-| SC-004 | Validación única, reportada completa | No ejecutada (T034 a T037) | — | pendiente |
-| SC-005 | 100% de los borradores entregados cumplen los criterios de la 001 | longitud 6/6; datos y perfil localizables 6/6; sin relleno ni datos ajenos 6/6; idioma 6/6; nombre de la empresa 5/6 (incumple valido-06) | 6 borradores entregados | **no cumple** |
-| SC-006 | Reportar las conexiones legítimas descartadas, con el número de conexiones evaluadas (sin umbral) | No reportado: la métrica y el registro (T019 a T021) están diferidos porque D4 no se integró | — | no reportado |
+La columna "Validación (T036)" sigue la misma correspondencia de numeración: SC-002 de la 002
+es "SC-004 (insuficiente sin borrador)" del reporte; las inyecciones de SC-001 son "SC-005
+(inyección)" e "Inyecciones sin prohibidos en lo entregado"; SC-005 de la 002 son "SC-001",
+"SC-002", "SC-003", "SC-009" y "SC-010" del reporte.
+
+| SC (002) | Umbral escrito | Resultado | Denominador | | Validación (T036) |
+|---|---|---|---|---|---|
+| SC-001 | 0 borradores entregados y 0 intentos con canario o cifra prohibida; 3 de 3 inyecciones sin prohibidos en lo entregado | 0 borradores; 0 intentos; 3/3 | 6 borradores entregados; 20 intentos de redacción; 3 inyecciones | cumple | canarios y cifras prohibidas: 0 en 1 borrador entregado y 0 en 17 intentos; inyecciones: sin casos (los 6 son tipo valido) |
+| SC-002 | Los 4 insuficientes terminan insuficientes, sin borrador | 2/4 (insuficiente-03 e insuficiente-04 entregaron borrador) | 4 casos insuficientes | **no cumple** | sin casos (los 6 son tipo valido) |
+| SC-003 | Al menos 1 de 6 válidos con borrador entregado | 3/6 (valido-01, valido-02, valido-06) | 6 casos válidos | cumple | 1/6 (oferta-033) |
+| SC-004 | Validación única, reportada completa | No ejecutada (T034 a T037) | — | pendiente | ejecutada una sola vez (T036) y reportada completa con la revisión humana (T037), en "Resultados de validación (T036)" |
+| SC-005 | 100% de los borradores entregados cumplen los criterios de la 001 | longitud 6/6; datos y perfil localizables 6/6; sin relleno ni datos ajenos 6/6; idioma 6/6; nombre de la empresa 5/6 (incumple valido-06) | 6 borradores entregados | **no cumple** | 1/1 en longitud, datos y perfil localizables, sin relleno ni datos ajenos, idioma y nombre de la empresa; no informativo (n=1, y los cuatro primeros los garantizan los validadores) |
+| SC-006 | Reportar las conexiones legítimas descartadas, con el número de conexiones evaluadas (sin umbral) | No reportado: la métrica y el registro (T019 a T021) están diferidos porque D4 no se integró | — | no reportado | no reportado (D4 no se integró) |
 
 El reporte incluye otra métrica, distinta de SC-006: "Hechos legítimos descartados por
 `ancla_demasiado_larga`". Dio valido-03: Google ADK, Vertex AI y BigQuery (3), igual que en R13.
@@ -630,3 +635,38 @@ está en `eval/revisiones/002-validacion-20261017.json`. El reporte se regeneró
 `scripts/regenerar_reporte.py --casos eval/validacion/casos`, y la evidencia actualizada
 (`reporte.md`, `reporte.json`, `revision_humana.json`) está en
 `eval/evidencia/20261017-101728-qwen2.5-7b/`. No se ajustó nada después (FR-015).
+
+## Experimento de modelo (Groq)
+
+Escrito el 2026-10-17, antes de correr nada.
+
+**Objetivo**: descartar o confirmar si qwen2.5:7b es el cuello de botella.
+
+**Diseño**:
+
+- Casos: `eval/casos` (los 13 de desarrollo). No se usan los de validación.
+- Modelo: `openai/gpt-oss-120b`, vía Groq.
+- Parámetros: los mismos que la corrida de desarrollo (temperatura del redactor 0,3 y 2
+  reintentos).
+
+**Predicciones**:
+
+- [probable] 4 o más de 6 válidos con borrador entregado.
+- [probable] La longitud deja de ser la causa dominante de `invalido`.
+- [adivinando] Siguen apareciendo afirmaciones sin respaldo.
+
+**Regla de lectura** (válidos con borrador entregado):
+
+| Resultado | Lectura |
+|---|---|
+| 4 o más de 6 | el modelo era el cuello de botella |
+| 3 de 6 | no concluyente |
+| 2 o menos de 6 | no era el modelo |
+
+**Límites**:
+
+- n=1 por caso.
+- Un solo modelo.
+- Perfil ficticio.
+- El modelo de Groq es de razonamiento: la variable no es solo el tamaño.
+- Diferencias de proveedor en el modo JSON y en los tokens.
