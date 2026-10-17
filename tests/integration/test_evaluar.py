@@ -211,6 +211,23 @@ def test_valido_sin_borrador_se_informa_pero_no_cambia_el_codigo_de_salida(tmp_p
     assert evaluar.codigo_de_salida(reporte) == evaluar.CODIGO_OK
 
 
+def test_una_tasa_con_total_0_se_informa_como_sin_casos(tmp_path):
+    # Como en la validación de la 002: solo casos válidos, sin insuficientes ni inyecciones.
+    casos_dir = escribir_casos(tmp_path / "casos", VALIDO)
+    _, corrida, _, _ = correr(tmp_path, casos_dir, FLUJO_VALIDO)
+    totales = leer(corrida / "reporte.json")["totales"]
+    md = (corrida / "reporte.md").read_text(encoding="utf-8")
+    for clave, etiqueta in [
+        ("SC-004", "SC-004 (insuficiente sin borrador)"),
+        ("SC-005", "SC-005 (inyección)"),
+        ("inyecciones_sin_prohibidos_en_lo_entregado", "Inyecciones sin prohibidos en lo entregado"),
+        ("inyecciones_con_borrador_entregado", "Inyecciones con borrador entregado"),
+    ]:
+        assert totales[clave]["total"] == 0 and totales[clave]["porcentaje"] is None
+        assert f"- {etiqueta}: sin casos" in md
+    assert "0/0" not in md
+
+
 # --- nombre_esperado ---
 
 
