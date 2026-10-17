@@ -1,0 +1,26 @@
+{
+  "fecha": "2026-10-17T14:40:05-03:00",
+  "modelo": "openai/gpt-oss-120b",
+  "ollama_host": null,
+  "num_ctx": 8192,
+  "timeout_s": 900.0,
+  "temperatura_redactor": 0.3,
+  "max_reintentos": 2,
+  "git_commit": "b3b2356777d09e75f924679b9dc73abb5b115d62",
+  "git_cambios_sin_commit": false,
+  "proveedor": "groq",
+  "base_url": "https://api.groq.com/openai/v1",
+  "margen_razonamiento_tokens": 4000,
+  "max_tokens_pipeline": {
+    "investigador": 2000,
+    "estratega": 1200,
+    "redactor": 800
+  },
+  "num_ctx_se_usa": false,
+  "limitador": {
+    "intervalo_min_s": 2.5,
+    "max_reintentos_429": 5,
+    "espera_max_s": 120.0,
+    "espera_base_429_s": 5.0
+  }
+}
