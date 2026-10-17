@@ -670,3 +670,47 @@ Escrito el 2026-10-17, antes de correr nada.
 - Perfil ficticio.
 - El modelo de Groq es de razonamiento: la variable no es solo el tamaño.
 - Diferencias de proveedor en el modo JSON y en los tokens.
+
+### Resultados del experimento
+
+**Datos de la corrida**: `eval/reportes/20261017-144005-openai-gpt-oss-120b`, commit `b3b2356`,
+sin cambios sin commitear, modelo `openai/gpt-oss-120b` vía Groq (`scripts/evaluar_groq.py`),
+temperatura del redactor 0,3 y 2 reintentos. Duración: 651,5 s (unos 11 min), suma de las
+duraciones por caso; la corrida de desarrollo con qwen2.5:7b tardó 5095 s. Sin errores ni
+pendientes. La evidencia versionada está en
+`eval/evidencia/20261017-144005-openai-gpt-oss-120b/`, sin `trazas/`.
+
+**Resultados** (entre paréntesis, la corrida de desarrollo con qwen2.5:7b):
+
+- Válidos con borrador entregado: **6/6** (3/6).
+- Resultados `invalido`: 0/13.
+- Palabras de los borradores entregados: entre 80 y 96.
+- Aprobación en el primer intento: 10/11. El único caso con un segundo intento es
+  insuficiente-04, que en el intento 1 falló por `numeros`.
+- SC-004 del reporte (insuficiente sin borrador): 2/4, con los mismos dos casos que con qwen
+  (insuficiente-03 e insuficiente-04 entregaron borrador).
+- SC-010 del reporte (nombre de la empresa): 10/11 (incumple valido-03).
+
+**Predicciones contra resultado**:
+
+| Predicción | Veredicto | Evidencia |
+|---|---|---|
+| 4 o más de 6 válidos con borrador [probable] | acertó | 6/6 |
+| La longitud deja de ser la causa dominante de `invalido` [probable] | acertó | 0 `invalido`; borradores entre 80 y 96 palabras; el único intento fallido fue por `numeros` |
+| Siguen apareciendo afirmaciones sin respaldo [adivinando] | pendiente | revisión humana sin hacer |
+
+**Regla de lectura**: 6/6 es 4 o más de 6, así que, según la regla escrita antes de correr, el
+modelo era el cuello de botella para la longitud.
+
+**Límites**:
+
+- El modelo de Groq es de razonamiento: la variable no es solo el tamaño.
+- n=1 por caso.
+- Perfil ficticio.
+- Un solo modelo.
+- El `num_ctx: 8192` del encabezado de `reporte.md` no aplica: con Groq no se usa
+  (`num_ctx_se_usa: false` en `config.json`).
+- No se envió `reasoning_effort`: se usó el default del proveedor.
+
+**Revisión humana**: pendiente. `revision_humana.json` tiene los 11 borradores entregados con
+`afirmaciones_sin_respaldo` en null.
