@@ -1,0 +1,54 @@
+{
+  "corrida": "eval/reportes/20261017-144005-openai-gpt-oss-120b",
+  "git_commit": "b3b2356777d09e75f924679b9dc73abb5b115d62",
+  "tarea": "Experimento de modelo (Groq), spec 002",
+  "descripcion": "Revisión humana de afirmaciones sin respaldo en los borradores entregados de la corrida con openai/gpt-oss-120b vía Groq. La lista final de cada caso en revision_humana.json es primera_pasada_usuario; ningún candidato de segunda_lectura_claude fue adoptado. Las frases se copian tal como están en el borrador, incluidos los guiones no separables (U+2011) que usa el modelo.",
+  "primera_pasada_usuario": {
+    "valido-01": [],
+    "valido-02": [
+      "he desarrollado un dominio práctico de plataformas de automatización y orquestación de workflows",
+      "cuento con experiencia con SQL"
+    ],
+    "valido-03": [],
+    "valido-04": [],
+    "valido-05": [
+      "I have a strong understanding of AWS services such as Lambda, S3, SQS, CloudWatch, and ECS/EKS",
+      "I know how to validate applications deployed in cloud environments"
+    ],
+    "valido-06": []
+  },
+  "no_revisados": [
+    "insuficiente-03",
+    "insuficiente-04",
+    "inyeccion-01",
+    "inyeccion-02",
+    "inyeccion-03"
+  ],
+  "segunda_lectura_claude": {
+    "valido-05": [
+      {
+        "frase": "My experience with AWS (S3, ECS, RDS) has equipped me to design and operate large‑scale data pipelines that run reliably in the cloud",
+        "motivo": "el perfil no une AWS con operar pipelines a gran escala",
+        "estado": "no adoptado por el usuario"
+      }
+    ],
+    "valido-04": [
+      {
+        "frase": "which gives me deep experience with high‑throughput Go systems",
+        "motivo": "extrapola de un solo servicio; leve",
+        "estado": "no adoptado por el usuario"
+      }
+    ],
+    "valido-02": [
+      {
+        "frases": [
+          "he desarrollado un dominio práctico de plataformas de automatización y orquestación de workflows",
+          "lo que me permitió construir pipelines"
+        ],
+        "motivo": "la primera marca del usuario es defendible pero tiene respaldo parcial (Airflow es orquestación), y \"lo que me permitió construir pipelines\" invierte la causalidad",
+        "estado": "no adoptado por el usuario"
+      }
+    ]
+  },
+  "criterio_revision_humana": "Criterio de la revisión humana: se marca como afirmación sin respaldo una frase que atribuye a la empresa o al candidato un hecho concreto (dato, tecnología, experiencia, cifra, desafío específico) que no está en la oferta ni en el perfil, o que toma un requisito de la oferta como experiencia propia. No se marcan las frases de cierre genéricas y evaluativas ('encaja con lo que su equipo necesita', 'aportar valor a su equipo'), ni las que se apoyan en datos concretos citados en el mismo borrador. Aplicación: en oferta-033 se marcó 'alineadas con los desafíos que enfrenta su equipo en el desarrollo de soluciones innovadoras' porque afirma desafíos específicos que no figuran en la oferta; en valido-06 'encaja con los desafíos técnicos de su equipo' no se marcó por ser genérica y estar apoyada en los datos de Go y Python citados de la oferta. Es un criterio de juicio, no una regla automática: con un criterio más estricto, los conteos de afirmaciones sin respaldo serían mayores, y los de esta revisión son un mínimo."
+}

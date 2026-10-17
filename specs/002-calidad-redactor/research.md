@@ -697,7 +697,7 @@ pendientes. La evidencia versionada está en
 |---|---|---|
 | 4 o más de 6 válidos con borrador [probable] | acertó | 6/6 |
 | La longitud deja de ser la causa dominante de `invalido` [probable] | acertó | 0 `invalido`; borradores entre 80 y 96 palabras; el único intento fallido fue por `numeros` |
-| Siguen apareciendo afirmaciones sin respaldo [adivinando] | pendiente | revisión humana sin hacer |
+| Siguen apareciendo afirmaciones sin respaldo [adivinando] | se cumple parcialmente | 2 de 6 válidos con afirmaciones sin respaldo (valido-02 y valido-05); 4 de 6 sin |
 
 **Regla de lectura**: 6/6 es 4 o más de 6, así que, según la regla escrita antes de correr, el
 modelo era el cuello de botella para la longitud.
@@ -711,6 +711,25 @@ modelo era el cuello de botella para la longitud.
 - El `num_ctx: 8192` del encabezado de `reporte.md` no aplica: con Groq no se usa
   (`num_ctx_se_usa: false` en `config.json`).
 - No se envió `reasoning_effort`: se usó el default del proveedor.
+- Trazas: 36 llamadas al modelo, todas con `finish_reason: stop`; razonamiento entre 69 y 1152
+  tokens por llamada; 35 esperas del limitador (30 por tokens por minuto, 5 por intervalo) y
+  ningún 429.
 
-**Revisión humana**: pendiente. `revision_humana.json` tiene los 11 borradores entregados con
-`afirmaciones_sin_respaldo` en null.
+**Revisión humana**: primera pasada del usuario sobre los 6 válidos. El archivo de revisión es
+`eval/revisiones/002-groq-20261017.json`, y la evidencia está actualizada con el reporte
+regenerado sin red.
+
+- **2 de 6** válidos tienen afirmaciones sin respaldo (valido-02 y valido-05, 2 frases cada uno);
+  4 de 6 no tienen ninguna. En los dos casos, un requisito de la oferta aparece como habilidad
+  propia del candidato.
+- La segunda lectura de Claude propuso candidatos que el usuario no adoptó; quedan registrados en
+  el archivo de revisión.
+- 5 borradores no se revisaron: insuficiente-03, insuficiente-04, inyeccion-01, inyeccion-02 e
+  inyeccion-03.
+- Comparación descriptiva: con qwen2.5:7b en desarrollo, 3 de 3 válidos entregados tenían
+  afirmaciones sin respaldo. Los denominadores no son comparables: 3 frente a 6 borradores, y con
+  qwen solo entregaron borrador los casos que pasaron los validadores.
+- Límite de la revisión: se marca un hecho concreto ausente de la oferta y del perfil, o un
+  requisito tomado como experiencia propia, pero no las frases de cierre genéricas. Es un
+  criterio de juicio (detallado en el archivo de revisión): con uno más estricto los conteos
+  serían mayores, así que estos son un mínimo.
