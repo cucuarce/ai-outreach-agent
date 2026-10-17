@@ -299,7 +299,9 @@ commiteadas y `git status` esté limpio.
   Mostrarle al usuario los 6 casos sin ejecutar el sistema (depende de T033).
 
   Hecho el 2026-10-15: `git status` limpio en el commit de cierre `91c5465` (`src/` sin cambios desde `801dcc1`). Casos `eval/validacion/casos/oferta-004.json` a `oferta-098.json`, los 6 con `tipo` valido propuesto; oferta-084 sin `nombre_esperado` porque el texto no nombra al empleador. Sin ejecutar el pipeline ni Ollama y sin leer salidas del modelo.
-- [ ] T035 **MANUAL (usuario)** Confirmar o corregir los valores esperados de los 6 casos de validación. Commit de `eval/validacion/casos/` con `git status` limpio (depende de T034).
+- [x] T035 **MANUAL (usuario)** Confirmar o corregir los valores esperados de los 6 casos de validación. Commit de `eval/validacion/casos/` con `git status` limpio (depende de T034).
+
+  Hecho el 2026-10-17. Ajustes antes de confirmar: `52468b2` y `f6d0ae7`. El usuario confirmó oferta-033 con idioma "es" y oferta-084 con `nombre_esperado` null; las confirmaciones quedan en las `notas` de cada caso.
 - [ ] T036 **Condición previa**: `git diff 801dcc1 HEAD --stat -- src/` debe estar vacío, es decir, el código del sistema es el mismo que corrió en T032 (verificado vacío el 2026-10-15 en `15af134`). Si no está vacío, no correr y consultar. Correr una sola vez:
 
   ```text
