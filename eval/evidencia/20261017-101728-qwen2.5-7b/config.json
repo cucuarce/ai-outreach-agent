@@ -1,0 +1,11 @@
+{
+  "fecha": "2026-10-17T10:17:28-03:00",
+  "modelo": "qwen2.5:7b",
+  "ollama_host": "http://localhost:11434",
+  "num_ctx": 8192,
+  "timeout_s": 900.0,
+  "temperatura_redactor": 0.3,
+  "max_reintentos": 2,
+  "git_commit": "95b27d5e13c1e5ce63178cebc411683718ca893e",
+  "git_cambios_sin_commit": false
+}

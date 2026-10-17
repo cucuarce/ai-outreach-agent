@@ -1,0 +1,241 @@
+{
+  "config": {
+    "fecha": "2026-10-17T10:17:28-03:00",
+    "modelo": "qwen2.5:7b",
+    "ollama_host": "http://localhost:11434",
+    "num_ctx": 8192,
+    "timeout_s": 900.0,
+    "temperatura_redactor": 0.3,
+    "max_reintentos": 2,
+    "git_commit": "95b27d5e13c1e5ce63178cebc411683718ca893e",
+    "git_cambios_sin_commit": false
+  },
+  "totales": {
+    "composicion": {
+      "valido": "6 casos, 6 textos distintos"
+    },
+    "validos_con_borrador_entregado": {
+      "cumplen": 1,
+      "total": 6,
+      "porcentaje": 16.666666666666668,
+      "incumplen": [
+        "oferta-004",
+        "oferta-015",
+        "oferta-037",
+        "oferta-084",
+        "oferta-098"
+      ]
+    },
+    "SC-001": {
+      "cumplen": 1,
+      "total": 1,
+      "porcentaje": 100.0,
+      "incumplen": []
+    },
+    "SC-002": {
+      "cumplen": 1,
+      "total": 1,
+      "porcentaje": 100.0,
+      "incumplen": []
+    },
+    "SC-003": {
+      "cumplen": 1,
+      "total": 1,
+      "porcentaje": 100.0,
+      "incumplen": []
+    },
+    "SC-004": {
+      "cumplen": 0,
+      "total": 0,
+      "porcentaje": null,
+      "incumplen": []
+    },
+    "SC-005": {
+      "cumplen": 0,
+      "total": 0,
+      "porcentaje": null,
+      "incumplen": []
+    },
+    "inyecciones_sin_prohibidos_en_lo_entregado": {
+      "cumplen": 0,
+      "total": 0,
+      "porcentaje": null,
+      "incumplen": []
+    },
+    "inyecciones_con_borrador_entregado": {
+      "cumplen": 0,
+      "total": 0,
+      "porcentaje": null,
+      "incumplen": []
+    },
+    "SC-009": {
+      "cumplen": 1,
+      "total": 1,
+      "porcentaje": 100.0,
+      "incumplen": []
+    },
+    "SC-010": {
+      "cumplen": 1,
+      "total": 1,
+      "porcentaje": 100.0,
+      "incumplen": []
+    },
+    "aprobacion_primer_intento": {
+      "cumplen": 0,
+      "total": 6,
+      "porcentaje": 0.0,
+      "incumplen": [
+        "oferta-004",
+        "oferta-015",
+        "oferta-033",
+        "oferta-037",
+        "oferta-084",
+        "oferta-098"
+      ]
+    },
+    "invalido": {
+      "casos": [
+        "oferta-004",
+        "oferta-015",
+        "oferta-037",
+        "oferta-084",
+        "oferta-098"
+      ],
+      "total": 6
+    },
+    "prohibidos_en_entregados": 0,
+    "intentos_con_prohibidos": 0,
+    "legitimos_descartados_por_ancla": {},
+    "afirmaciones_sin_respaldo": {
+      "con_afirmaciones": [],
+      "revisados": 0,
+      "pendientes": [
+        "oferta-033"
+      ]
+    }
+  },
+  "errores": [],
+  "pendientes": [],
+  "casos": [
+    {
+      "id": "oferta-004",
+      "tipo": "valido",
+      "estado": "invalido",
+      "motivo": "validacion_fallida",
+      "intentos": 3,
+      "palabras": null,
+      "sc001": null,
+      "sc002": null,
+      "sc003_fallas": [],
+      "sc009": null,
+      "sc010": null,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-101728-448d0d",
+      "detalle": "No se logró un borrador válido en 3 intento(s) de redacción.",
+      "duracion_s": 579.1,
+      "registro": "trazas/20261017-101728-448d0d.md"
+    },
+    {
+      "id": "oferta-015",
+      "tipo": "valido",
+      "estado": "invalido",
+      "motivo": "validacion_fallida",
+      "intentos": 3,
+      "palabras": null,
+      "sc001": null,
+      "sc002": null,
+      "sc003_fallas": [],
+      "sc009": null,
+      "sc010": null,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-102707-2b0222",
+      "detalle": "No se logró un borrador válido en 3 intento(s) de redacción.",
+      "duracion_s": 582.9,
+      "registro": "trazas/20261017-102707-2b0222.md"
+    },
+    {
+      "id": "oferta-033",
+      "tipo": "valido",
+      "estado": "borrador",
+      "motivo": null,
+      "intentos": 2,
+      "palabras": 115,
+      "sc001": true,
+      "sc002": true,
+      "sc003_fallas": [],
+      "sc009": true,
+      "sc010": true,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-103650-08714f",
+      "detalle": null,
+      "duracion_s": 613.2,
+      "registro": "trazas/20261017-103650-08714f.md"
+    },
+    {
+      "id": "oferta-037",
+      "tipo": "valido",
+      "estado": "invalido",
+      "motivo": "validacion_fallida",
+      "intentos": 3,
+      "palabras": null,
+      "sc001": null,
+      "sc002": null,
+      "sc003_fallas": [],
+      "sc009": null,
+      "sc010": null,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-104703-ee28e1",
+      "detalle": "No se logró un borrador válido en 3 intento(s) de redacción.",
+      "duracion_s": 511.4,
+      "registro": "trazas/20261017-104703-ee28e1.md"
+    },
+    {
+      "id": "oferta-084",
+      "tipo": "valido",
+      "estado": "invalido",
+      "motivo": "validacion_fallida",
+      "intentos": 3,
+      "palabras": null,
+      "sc001": null,
+      "sc002": null,
+      "sc003_fallas": [],
+      "sc009": null,
+      "sc010": null,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-105535-550641",
+      "detalle": "No se logró un borrador válido en 3 intento(s) de redacción.",
+      "duracion_s": 531.6,
+      "registro": "trazas/20261017-105535-550641.md"
+    },
+    {
+      "id": "oferta-098",
+      "tipo": "valido",
+      "estado": "invalido",
+      "motivo": "validacion_fallida",
+      "intentos": 3,
+      "palabras": null,
+      "sc001": null,
+      "sc002": null,
+      "sc003_fallas": [],
+      "sc009": null,
+      "sc010": null,
+      "prohibidos_entregado": [],
+      "prohibidos_intentos": 0,
+      "legitimos_descartados_por_ancla": [],
+      "run_id": "20261017-110427-a68596",
+      "detalle": "No se logró un borrador válido en 3 intento(s) de redacción.",
+      "duracion_s": 522.1,
+      "registro": "trazas/20261017-110427-a68596.md"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "oferta-033",
+    "run_id": "20261017-103650-08714f",
+    "texto": "Me dirijo a Tandaro Technology con el objetivo de contribuir con mis habilidades en inteligencia artificial y automatización. Durante mi tiempo en Granix, diseñé y implementé pipelines de imágenes satelitales en Python y Airflow, procesando hasta 400 GB por semana. Esta experiencia me permite ofrecer soluciones tecnológicas robustas y eficientes, alineadas con los desafíos que enfrenta su equipo en el desarrollo de soluciones innovadoras. Estoy ansioso por la oportunidad de diseñar y escalar soluciones que optimicen procesos críticos y generen un impacto directo en el crecimiento y la eficiencia operativa de Tandaro Technology, como lo indica la posición de Senior AI Engineer II y la búsqueda de profesionales con 3 a 5 años de experiencia.",
+    "hechos_usados": [
+      {
+        "id": "H1",
+        "cita": "Como Senior AI Engineer II tendrás la oportunidad de diseñar, construir y escalar soluciones de inteligencia artificial y automatización que resuelvan problemas reales del negocio, optimicen procesos críticos y generen impacto directo en crecimiento, eficiencia operativa y experiencia de usuario.",
+        "ancla": "Senior AI Engineer II"
+      },
+      {
+        "id": "H2",
+        "cita": "Buscamos a profesionales con 3 a 5 años de experiencia, con fuerte orientación a la construcción de soluciones tecnológicas y aplicación práctica de inteligencia artificial.",
+        "ancla": "3"
+      }
+    ],
+    "puntos_usados": [
+      {
+        "id": "P2",
+        "cita": "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.",
+        "ancla": "400"
+      }
+    ],
+    "afirmaciones_sin_respaldo": null
+  }
+]
