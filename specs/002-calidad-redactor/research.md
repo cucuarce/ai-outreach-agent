@@ -559,3 +559,64 @@ borrador no nombre ninguna empresa. Revisarlo es un punto obligatorio de T037.
 - Afirmaciones sin respaldo en la mayoría de los borradores entregados. [probable]
 - SC-010 falla en algún caso donde el investigador no propone el nombre de la empresa.
   [adivinando]
+
+## Resultados de validación (T036)
+
+### (a) Datos de la corrida
+
+Corrida única de T036, el 2026-10-17: `eval/reportes/20261017-101728-qwen2.5-7b`, commit
+`95b27d5`, sin cambios sin commitear (`git_cambios_sin_commit: false`). Misma configuración
+que la corrida de desarrollo y que R13: qwen2.5:7b, `num_ctx` 8192, timeout 900 s, temperatura
+del redactor 0,3 y 2 reintentos. Duración: 3340 s (unos 56 min), suma de las duraciones por
+caso. Sin errores ni pendientes. La evidencia versionada está en
+`eval/evidencia/20261017-101728-qwen2.5-7b/`, sin `trazas/`.
+
+### (b) Resultado principal
+
+**Válidos con borrador entregado: 1/6** (oferta-033, en el intento 2). En desarrollo fue 3/6 y
+en R13, 0/6. Los otros 5 casos terminaron `invalido (validacion_fallida)`. Aprobación en el
+primer intento: 0/6.
+
+SC-001, SC-002, SC-003, SC-009 y SC-010 dan 1/1. No son informativos: n=1, y los cuatro
+primeros los garantizan los validadores en todo borrador entregado (sección "Validación: qué
+mide y qué no", (b)).
+
+### (c) Fallos por intento de los casos `invalido`
+
+Criterio que falló y palabras del borrador en cada intento (rango válido: 80 a 150). En
+`hechos` y `perfil`, menciones encontradas sobre las requeridas.
+
+| Caso | Intento 1 | Intento 2 | Intento 3 | Modos |
+|---|---|---|---|---|
+| oferta-004 | `longitud` (64) | `longitud` (60) | `longitud` (57) | inicial / conservar / conservar |
+| oferta-015 | `longitud` (76), `relleno`, `hechos` 1/2, `perfil` 0/1 | los mismos (76), repite el intento 1 | `longitud` (47), `hechos` 1/2, `perfil` 0/1 | inicial / conservar / reescribir |
+| oferta-037 | `longitud` (63) | `longitud` (63), repite el intento 1 | `longitud` (70), `hechos` 1/2 | inicial / conservar / reescribir |
+| oferta-084 | `longitud` (59), `hechos` 1/2 | `longitud` (67) | `longitud` (67) | inicial / conservar / conservar |
+| oferta-098 | `longitud` (58), `hechos` 1/2 | `longitud` (58), `hechos` 1/2, repite el intento 1 | `longitud` (57), `hechos` 1/2 | inicial / conservar / reescribir |
+
+### (d) Hechos observados
+
+- Los 5 casos `invalido` fallan por `longitud`. Ningún intento de esos casos llegó a 80
+  palabras: el máximo fue 76 en 15 intentos.
+- El modo `reescribir` corrió en 3 casos (015, 037, 098), siempre en el intento 3, y no
+  mejoró: los tres siguieron por debajo de 80 palabras y con `hechos` incumplido.
+- 3 de 5 repitieron el texto del intento 1 en el intento 2 (015, 037, 098).
+- En oferta-098, `nombre_empresa` quedó nulo y el `nombre_esperado` es "Nexilo".
+
+### (e) Predicciones contra resultado
+
+| Predicción | Veredicto | Evidencia |
+|---|---|---|
+| Entre 2 y 4 de 6 válidos con borrador [probable] | falló | 1/6 |
+| Al menos un `invalido` por `longitud` [probable] | acertó | 5 de 5 `invalido` fallan por `longitud` |
+| Afirmaciones sin respaldo en la mayoría de los borradores entregados [probable] | pendiente de T037 | 1 borrador entregado (n=1) |
+| SC-010 falla en algún caso donde el investigador no propone el nombre [adivinando] | no evaluable | oferta-098, el caso con `nombre_empresa` nulo y nombre esperado, no entregó borrador |
+
+### (f) Lectura
+
+- La mejora de desarrollo (3/6) no se repitió en esta muestra (1/6).
+- No se puede separar sobreajuste de varianza: n=1 por caso, un solo perfil y un solo modelo.
+- En esta corrida, la longitud es el cuello de botella fuera de muestra, y los modos de
+  reintento de D3 (`conservar` y `reescribir`) no lo resolvieron.
+- SC-004 y SC-005 siguen sin verificarse fuera de muestra: la validación no tiene casos
+  insuficientes ni de inyección.
