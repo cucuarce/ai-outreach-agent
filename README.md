@@ -2,6 +2,108 @@
 
 Genera borradores de mensajes de contacto a empresas a partir del texto de la empresa y del perfil del candidato. Nunca envía mensajes: el borrador lo revisa y lo manda la persona.
 
+## Qué hace
+
+- **Entrada:** el texto de una empresa (por ejemplo, una oferta de empleo) pegado a mano, y el perfil profesional del candidato.
+- **Salida:** un borrador de mensaje de contacto de 80 a 150 palabras, con los datos de la empresa y los puntos del perfil que usa, cada uno con su cita.
+- **Nunca envía mensajes:** no hay ningún componente capaz de enviar nada. El borrador lo revisa y lo manda la persona (constitución, principio III).
+
+## Arquitectura
+
+Un grafo de LangGraph (`src/outreach_agent/grafo.py`). Tres agentes llaman al LLM:
+- **investigador:** extrae datos de la empresa.
+- **estratega:** cruza esos datos con el perfil.
+- **redactor:** escribe el borrador.
+
+El resto de los nodos son deterministas, y el ruteo depende solo de campos ya verificados. El LLM se usa a través de una interfaz de proveedor; los agentes no dependen de un proveedor concreto (constitución, principio IV).
+
+```mermaid
+flowchart TD
+    S([inicio]) --> P[preparar_entrada]
+    P -- sin idioma o entradas vacías --> E([fin])
+    P --> I[investigador · LLM]
+    I --> VH[verificar_hechos]
+    VH -- menos de 2 hechos --> F[finalizar]
+    VH --> ES[estratega · LLM]
+    ES --> VE[verificar_estrategia]
+    VE -- sin puntos o sin conexiones --> F
+    VE --> R[redactor · LLM]
+    R --> VB[validar_borrador]
+    VB -- falla y quedan reintentos --> R
+    VB -- ok, o falla sin reintentos --> F
+    F --> E
+```
+
+Cada ejecución termina en uno de cuatro estados, con su código de salida en la CLI:
+
+| Estado | Cuándo | Código |
+|---|---|---|
+| `borrador` | el borrador pasó la validación | 0 |
+| `insuficiente` | entradas vacías, idioma indeterminado, menos de 2 datos verificados, perfil sin puntos o el estratega no devolvió ninguna conexión válida por id (no se evalúa si la relación tiene sentido; ver Límites conocidos) | 3 |
+| `invalido` | el borrador no pasó la validación después de los reintentos | 4 |
+| `error` | fallo del proveedor o respuesta del LLM inválida | 5 |
+
+Un uso incorrecto de la CLI (por ejemplo, un archivo inexistente) termina con código 2 sin ejecutar el grafo. Cada transición queda en una traza JSONL y en un registro legible `.md`.
+
+**Defensas contra inyección de prompt** (`specs/001-outreach-draft/research.md`, "FR-012: contenido de la empresa tratado como datos"). El texto de la empresa se trata como dato, nunca como instrucción (constitución, principio VI):
+
+- **Delimitadores con nonce:** el texto va entre delimitadores con un nonce aleatorio por ejecución, después de quitarle las secuencias `<<<` y `>>>`. Las reglas van solo en el mensaje `system` y el texto solo en el `user`.
+- **Esquema:** cada agente responde un objeto JSON con esquema fijo. Una respuesta que no lo cumple se reintenta una vez y después termina en `error`.
+- **Citas literales:** cada dato de la empresa debe traer una cita que aparezca literalmente en el texto. El estratega y el redactor reciben solo las citas y anclas verificadas, no el texto crudo.
+- **Filtro de instrucciones:** se descarta todo dato cuya cita coincida con patrones de instrucción. El filtro tiene límites conocidos (ver "Límites conocidos").
+- **Enlaces y números permitidos:** el borrador no puede incluir enlaces o emails que no estén en el perfil, ni números que no estén en las citas verificadas o en el perfil.
+
+## Cómo correrlo
+
+Requisitos: Python 3.11 o posterior y, para ejecuciones reales, [Ollama](https://ollama.com) con el modelo descargado (`ollama pull qwen2.5:7b`).
+
+Instalación (desde la raíz del repo, en PowerShell):
+
+```powershell
+python -m venv venv
+venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+Tests (sin red y sin Ollama):
+
+```powershell
+pytest
+```
+
+Generar un borrador con los ejemplos del repo:
+
+```powershell
+outreach generar --empresa ejemplos/empresa_es.txt --perfil ejemplos/perfil.txt
+```
+
+Opciones de `outreach generar`:
+- `--idioma`: fuerza el idioma del borrador.
+- `--nombre-empresa`: indica el nombre de la empresa destinataria.
+- `--modelo`, `--ollama-host`, `--timeout`, `--num-ctx`, `--reintentos`, `--temp-redactor`: configuran el modelo y los reintentos.
+- `--registros`: carpeta de los registros (por defecto, `runs/`).
+- `--json`: imprime el resultado como JSON.
+
+Con `--empresa -`, el texto de la empresa se lee de stdin.
+
+Evaluación contra Ollama sobre los casos de `eval/casos`:
+
+```powershell
+python scripts/evaluar.py --modelo qwen2.5:7b
+```
+
+Los valores por defecto de `scripts/evaluar.py` coinciden con los de las corridas reportadas (`num_ctx` 8192, timeout 900 s, temperatura del redactor 0,3 y 2 reintentos), salvo que estén definidas las variables de entorno `OUTREACH_TEMP_REDACTOR` u `OUTREACH_MAX_REINTENTOS`.
+
+El reporte queda en `eval/reportes/<fecha>-<modelo>/`. `--reanudar <carpeta>` completa una corrida interrumpida. `python scripts/regenerar_reporte.py <carpeta> --casos <casos>` rearma el reporte sin red, después de completar la revisión humana.
+
+`scripts/evaluar_groq.py` es solo un experimento diagnóstico: lee `GROQ_API_KEY` solo del entorno (nunca de un flag ni de un archivo), solo corre sobre `eval/casos` y está regulado por la constitución 2.1.0, principio IV.
+
+Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credenciales de AWS y nunca se ejecutó contra Bedrock real.
+
+## Cómo se construyó
+
+Con Spec Kit: cada funcionalidad es una spec numerada en `specs/` (spec, plan, research y tareas), bajo la constitución de `.specify/memory/constitution.md`, y se evalúa con corridas sobre casos de `eval/` más revisión humana de los borradores.
+
 ## Resultados
 
 Corridas de evaluación con Ollama (qwen2.5:7b en CPU, temperatura del redactor 0,3, 2
