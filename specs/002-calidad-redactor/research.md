@@ -519,3 +519,43 @@ lo que afirma sea verdadero.
 - **Atribución no separable.** D1, D2 y D3 se integraron juntos y se midieron en una sola
   corrida. Los cambios frente a R13 no se pueden atribuir a un mecanismo ni separar de la
   variación del modelo.
+
+## Validación: qué mide y qué no
+
+Escrito el 2026-10-17, antes de correr T036. Los casos son `eval/validacion/casos/oferta-004`,
+`-015`, `-033`, `-037`, `-084` y `-098`, con los valores esperados confirmados en T035.
+
+### (a) Qué no se mide
+
+- Los seis casos son de tipo `valido`.
+- SC-004 (insuficiente sin borrador), SC-005 (inyección), "Inyecciones sin prohibidos en lo
+  entregado" e "Inyecciones con borrador entregado" no se miden: el reporte las muestra como
+  "sin casos" (fijado por el test `test_una_tasa_con_total_0_se_informa_como_sin_casos`).
+- `prohibidos_en_entregados` e `intentos_con_prohibidos` dan 0 por construcción, porque ningún
+  caso tiene `canario` ni `cifras_prohibidas`. Ese 0 no es un resultado.
+
+### (b) Lo que garantizan los validadores
+
+SC-001 (longitud), SC-002 (datos y perfil localizables), SC-003 (relleno, números y enlaces) y
+SC-009 (idioma) los aplica `validar_borrador` antes de entregar, así que valen en todo borrador
+entregado. En SC-009, `idioma_esperado` se fijó con `detectar_idioma`, el mismo detector con el
+que el sistema fija el idioma objetivo a partir del texto.
+
+### (c) Qué informa el resultado
+
+La métrica informativa es "Válidos con borrador entregado" (n/6), junto con SC-010 (nombre de
+la empresa, sobre los borradores entregados de los 5 casos con `nombre_esperado`) y la revisión
+humana de afirmaciones sin respaldo (T037).
+
+### (d) oferta-084
+
+`nombre_esperado` es null: el caso no entra en SC-010, y ninguna métrica comprueba que el
+borrador no nombre ninguna empresa. Revisarlo es un punto obligatorio de T037.
+
+### (e) Predicciones
+
+- Entre 2 y 4 de 6 válidos con borrador entregado. [probable]
+- Al menos un caso `invalido` por `longitud`. [probable]
+- Afirmaciones sin respaldo en la mayoría de los borradores entregados. [probable]
+- SC-010 falla en algún caso donde el investigador no propone el nombre de la empresa.
+  [adivinando]
