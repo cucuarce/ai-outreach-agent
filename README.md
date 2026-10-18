@@ -1,5 +1,7 @@
 # ai-outreach-agent
 
+[![tests](https://github.com/USUARIO/ai-outreach-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/USUARIO/ai-outreach-agent/actions/workflows/tests.yml)
+
 Genera borradores de mensajes de contacto a empresas a partir del texto de la empresa y del perfil del candidato. Nunca envía mensajes: el borrador lo revisa y lo manda la persona.
 
 ## Qué hace

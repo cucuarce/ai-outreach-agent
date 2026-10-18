@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar
+        run: pip install -e ".[dev]"
+      # Sin red y sin Ollama: tests/conftest.py bloquea los sockets en todos los tests.
+      - name: Tests
+        run: pytest
