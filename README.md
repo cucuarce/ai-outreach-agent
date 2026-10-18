@@ -77,6 +77,8 @@ Generar un borrador con los ejemplos del repo:
 outreach generar --empresa ejemplos/empresa_es.txt --perfil ejemplos/perfil.txt
 ```
 
+Con `qwen2.5:7b`, la longitud del borrador suele no alcanzar la pedida (80 a 150 palabras) y el resultado queda `invalido` (ver [Resultados](#resultados)).
+
 Opciones de `outreach generar`:
 - `--idioma`: fuerza el idioma del borrador.
 - `--nombre-empresa`: indica el nombre de la empresa destinataria.
