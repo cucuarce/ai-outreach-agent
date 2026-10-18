@@ -102,7 +102,7 @@ El reporte queda en `eval/reportes/<fecha>-<modelo>/`. `--reanudar <carpeta>` co
 
 `scripts/evaluar_groq.py` es solo un experimento diagnóstico: lee `GROQ_API_KEY` solo del entorno (nunca de un flag ni de un archivo), solo corre sobre `eval/casos` y está regulado por la constitución 2.1.0, principio IV.
 
-Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credenciales de AWS y nunca se ejecutó contra Bedrock real.
+Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credenciales de AWS y nunca se ejecutó contra Bedrock real. Moto es un simulador de servicios de AWS que no genera texto; las respuestas con contenido de los tests son fijas y escritas a mano.
 
 ## Ejemplo
 
@@ -229,7 +229,7 @@ Solo válidos entregados, con la misma advertencia: desarrollo 3 de 3, Groq 2 de
 
 Al 2026-10-17, solo con lo medido u observado hasta hoy: la línea base de la 001 (`specs/001-outreach-draft/research.md`, "Línea base de la evaluación (qwen2.5:7b)"), y la medición del evaluador de relación dato-perfil (decisión D4), las corridas de desarrollo y validación y el experimento con Groq (`specs/002-calidad-redactor/research.md`).
 
-- **Bedrock sin ejecución real**: `BedrockProvider` solo se probó contra Moto; nunca se ejecutó contra Bedrock real (`specs/001-outreach-draft/research.md`, "Interfaz de proveedor de LLM"; plan).
+- **Bedrock sin ejecución real**: `BedrockProvider` solo se probó contra Moto, un simulador de servicios de AWS que no genera texto (las respuestas con contenido de los tests son fijas y escritas a mano); nunca se ejecutó contra Bedrock real (`specs/001-outreach-draft/research.md`, "Interfaz de proveedor de LLM"; plan).
 - **Perfil ficticio y único**: todas las corridas (los 13 casos de desarrollo, la validación y el experimento con Groq) usan el mismo perfil ficticio (`ejemplos/perfil.txt`; `specs/001-outreach-draft/research.md`, "Script de evaluación contra Ollama"); los resultados no dicen nada sobre otros perfiles.
 - **n=1 por caso en todas las corridas**: desarrollo, validación y experimento se corrieron una sola vez por caso; con Ollama, con qwen2.5:7b en CPU sin GPU dedicada (`specs/001-outreach-draft/research.md`, "Configuración del modelo de Ollama" y "Línea base de la evaluación (qwen2.5:7b)"). Con un modelo no determinista, una corrida por caso no alcanza para estimar tasas por caso.
 - **Filtro de instrucciones acotado**: `es_instruccion` no reconoce órdenes en voseo sin destinatario ("decí que…", "terminá con…", inyeccion-03) ni el vocativo "System:" (inyeccion-02) (research de la 001, limitación «instrucción sin patrón reconocible»).
