@@ -102,6 +102,49 @@ El reporte queda en `eval/reportes/<fecha>-<modelo>/`. `--reanudar <carpeta>` co
 
 Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credenciales de AWS y nunca se ejecutó contra Bedrock real.
 
+## Ejemplo
+
+Caso `valido-01` de la corrida de desarrollo de la spec 002 (`eval/evidencia/20261015-171951-qwen2.5-7b/reporte.md`). Los casos de `eval/casos` son ficticios; la entrada de este caso es la misma que la del comando de "Cómo correrlo".
+
+**Entrada: texto de la empresa** (`ejemplos/empresa_es.txt`)
+
+> Sobre nosotros
+>
+> Campo Claro es una agtech de Rosario que ayuda a productores a planificar la siembra con datos satelitales. Hoy monitoreamos 1,2 millones de hectáreas en Argentina, Uruguay y Paraguay.
+>
+> En 2025 cerramos una ronda Serie A de 8 millones de dólares liderada por Kaszek y lanzamos Lote360, una app que estima el rinde de cada lote a partir de imágenes de Sentinel-2.
+>
+> Nuestro stack es Python, PostGIS y Airflow sobre AWS. Estamos buscando una persona para el equipo de datos que se encargue de los pipelines de imágenes y de mejorar los modelos de predicción de rinde.
+
+**Entrada: perfil** (`ejemplos/perfil.txt`)
+
+> Ingeniera de software con 6 años de experiencia en backend y datos.
+>
+> - En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana.
+> - Migré a PostGIS el sistema de cálculo de superficies de lotes y bajé el tiempo de respuesta de 9 a 2 segundos.
+> - Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto.
+> - Experiencia con AWS (S3, ECS, RDS), PostgreSQL y modelos de regresión para predicción de demanda.
+
+**Borrador** (96 palabras, entregado en el segundo intento)
+
+> Soy muy interesado en la **escalabilidad y el manejo de grandes volúmenes de datos que Campo Claro está implementando**. En Granix, construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana, **similar a la cantidad de datos que hoy monitoreas** (1,2 millones de hectáreas). Además, diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto, lo cual podría ser valioso para **la implementación de Lote360 en 2025**. Estaré encantado de discutir cómo mi experiencia puede ayudar a tu equipo a alcanzar **tus objetivos de escalabilidad**.
+
+Datos y puntos del perfil que declara el sistema, con su cita:
+
+- Dato [H1] "Hoy monitoreamos 1,2 millones de hectáreas en Argentina, Uruguay y Paraguay." (ancla: 1,2)
+- Dato [H2] "En 2025 cerramos una ronda Serie A de 8 millones de dólares liderada por Kaszek y lanzamos Lote360, una app que estima el rinde de cada lote a partir de imágenes de Sentinel-2." (ancla: 2025)
+- Perfil [P1] "En Granix (agtech) construí pipelines de imágenes satelitales en Python y Airflow que procesaban 400 GB por semana." (ancla: pipelines de imágenes satelitales)
+- Perfil [P2] "Diseñé un servicio de seguimiento en tiempo real en Go que recibe 50.000 eventos por minuto." (ancla: 50.000)
+
+En negrita, las afirmaciones sin respaldo según la revisión humana (`eval/revisiones/002-desarrollo-20261015.json`: primera pasada del usuario más la segunda lectura de Claude adoptada), registradas así:
+
+- "la implementación de Lote360 en 2025"
+- "tus objetivos de escalabilidad"
+- "escalabilidad… que Campo Claro está implementando"
+- "similar a la cantidad de datos que hoy monitoreas"
+
+Es un solo revisor con un criterio de juicio; la validación automática no detecta estas afirmaciones (ver "Límites conocidos").
+
 ## Cómo se construyó
 
 Con Spec Kit: cada funcionalidad es una spec numerada en `specs/` (spec, plan, research y tareas), bajo la constitución de `.specify/memory/constitution.md`, y se evalúa con corridas sobre casos de `eval/` más revisión humana de los borradores.
