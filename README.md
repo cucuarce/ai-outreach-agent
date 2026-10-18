@@ -108,6 +108,8 @@ Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credencia
 
 Caso `valido-01` de la corrida de desarrollo de la spec 002 (`eval/evidencia/20261015-171951-qwen2.5-7b/reporte.md`). Los casos de `eval/casos` son ficticios; la entrada de este caso es la misma que la del comando de "Cómo correrlo".
 
+Los textos de ejemplo son ficticios; cualquier nombre de empresa real que aparezca es incidental y no implica relación alguna.
+
 **Entrada: texto de la empresa** (`ejemplos/empresa_es.txt`)
 
 > Sobre nosotros
@@ -155,6 +157,7 @@ Con Spec Kit: cada funcionalidad es una spec numerada en `specs/` (spec, plan, r
 
 - **Validación**: las 6 ofertas de `eval/validacion/casos` provienen de publicaciones de LinkedIn de hace más de 3 meses y se usan solo para extraer habilidades y evaluar el sistema. El nombre del empleador está anonimizado.
 - **Perfil**: el perfil de ejemplo (`ejemplos/perfil.txt`) es ficticio.
+- **Fragmentos citados**: los fragmentos de esas 6 ofertas que aparecen citados en `eval/evidencia/20261017-101728-qwen2.5-7b/`, en `specs/002-calidad-redactor/research.md` y en los archivos de `eval/revisiones/` provienen de las mismas ofertas.
 - **Derechos**: los textos pertenecen a sus autores y se retiran a pedido.
 
 ## Resultados
