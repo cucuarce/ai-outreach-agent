@@ -104,6 +104,12 @@ Bedrock solo se probó contra Moto en los tests: no requiere cuenta ni credencia
 
 Con Spec Kit: cada funcionalidad es una spec numerada en `specs/` (spec, plan, research y tareas), bajo la constitución de `.specify/memory/constitution.md`, y se evalúa con corridas sobre casos de `eval/` más revisión humana de los borradores.
 
+## Procedencia de los datos
+
+- **Validación**: las 6 ofertas de `eval/validacion/casos` provienen de publicaciones de LinkedIn de hace más de 3 meses y se usan solo para extraer habilidades y evaluar el sistema. El nombre del empleador está anonimizado.
+- **Perfil**: el perfil de ejemplo (`ejemplos/perfil.txt`) es ficticio.
+- **Derechos**: los textos pertenecen a sus autores y se retiran a pedido.
+
 ## Resultados
 
 Corridas de evaluación con Ollama (qwen2.5:7b en CPU, temperatura del redactor 0,3, 2
